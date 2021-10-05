@@ -11,7 +11,7 @@
     <section class="header">
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="">
+                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('login') }}">
                     EngineerStack
                 </a>
                 <div class="field mt-4 ml-5">
@@ -32,10 +32,10 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary">
+                            <a class="button is-primary" href="{{ route('register') }}">
                                 <strong>アカウント作成</strong>
                             </a>
-                            <a class="button is-light">
+                            <a class="button is-light" href="{{ route('login') }}">
                                 ログイン
                             </a>
                         </div>
