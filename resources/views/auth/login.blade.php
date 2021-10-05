@@ -51,6 +51,15 @@
                     <div class="column">
                     </div>
                     <div class="column is-three-fifths">
+                        @if ($errors->any())
+                            <div class="has-text-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+	                    @endif
                         <form action="{{ route('login') }}" method="POST" >
                             @csrf
                             <h4 class="has-text-white">ご登録情報を入力してください。</h4>
