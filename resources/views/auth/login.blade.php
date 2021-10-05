@@ -52,6 +52,7 @@
                     </div>
                     <div class="column is-three-fifths">
                         <form action="{{ route('login') }}" method="POST" >
+                            @csrf
                             <h4 class="has-text-white">ご登録情報を入力してください。</h4>
                             <label for="email" class="has-text-white"><span class="has-text-danger">*必須 </span>メールアドレス</label>
                             <input class="input" id="email" type="email" placeholder="engineer@stack.com" required autofocus>
