@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Memo;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -33,9 +34,12 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(array $categories, int $user_id, int $memo_id)
     {
-        //
+        foreach($categories as $category) {
+            $store_catetory = App\Category::store(string $category,
+                                        int $user_id, int $memo_id);
+        }
     }
 
     /**

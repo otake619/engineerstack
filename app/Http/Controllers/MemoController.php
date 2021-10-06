@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreMemoRequest;
 use App\Models\Memo;
+use App\Models\Category;
 
 class MemoController extends Controller
 {
@@ -42,6 +43,10 @@ class MemoController extends Controller
         $user_id = Auth::id();
         $title = $request->input('title');
         $store_memo = App\Memo::store(int $user_id, string $title);
+        $memo_id = DB::table('memos')->insertGetId($store_memo);
+        $categories = $request->input('categories');
+        $store_categories = app()->make('App\Http\Controllers\CategoryController');
+        $store_categories->store(array $categories, int $user_id, int $memo_id);
         return view('EngineerStack.home');
     }
 
