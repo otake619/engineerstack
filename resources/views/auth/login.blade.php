@@ -14,14 +14,6 @@
                 <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('login') }}">
                     EngineerStack
                 </a>
-                <div class="field mt-4 ml-5">
-                    <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="キーワードを入力">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-search"></i>
-                        </span>
-                    </div>
-                </div>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -73,8 +65,10 @@
                                     <span class="ml-2 text-sm has-text-white">{{ __('ログイン情報を記録') }}</span>
                                 </label>
                             </div>
-                            <input type="submit" class="button is-primary is-light mt-3" value="ログイン">
+                            <input type="submit" class="button is-primary is-light mt-1" value="ログイン">
                         </form>
+                        <br>
+                        <a class="has-text-white" href="{{ route('password.request') }}">パスワードを忘れた場合</a>
                     </div>
                     <div class="column">
                     </div>
@@ -85,7 +79,7 @@
     <section class="footer">
         <div class="columns">
             <div class="column">
-                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="">
+                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="{{ route('login') }}">
                     EngineerStack
                 </a>
                 <span class="m-3">&copy;otake619 2021</span>
