@@ -11,12 +11,12 @@
     <section class="header">
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="">
+                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('dashboard') }}">
                     EngineerStack
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="キーワードを入力">
+                        <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                         <span class="icon is-small is-left">
                             <i class="fas fa-search"></i>
                         </span>
@@ -35,9 +35,10 @@
                             <a class="button is-primary">
                                 <strong>記録</strong>
                             </a>
-                            <a class="button is-light">
-                                ログアウト
-                            </a>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <input type="submit" class="button is-light" value="ログアウト">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
     <section class="footer">
         <div class="columns">
             <div class="column">
-                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="">
+                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="{{ route('dashboard') }}">
                     EngineerStack
                 </a>
                 <span class="m-3">&copy;otake619 2021</span>
