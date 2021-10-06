@@ -32,7 +32,7 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary" href="">
+                            <a class="button is-primary" href="{{ route('memos.get.form') }}">
                                 <strong>記録</strong>
                             </a>
                             <form action="{{ route('logout') }}" method="POST">

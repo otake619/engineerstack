@@ -23,6 +23,9 @@ Route::prefix('memos')->group(function () {
     Route::post('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
     Route::post('{memo_id}/update', [MemoController::class, 'update'])->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
+    Route::get('get/store', function () {
+        return view('EngineerStack.input_memo');
+    })->name('memos.get.form');
 });
 
 require __DIR__.'/auth.php';
