@@ -19,7 +19,7 @@ class Category extends Model
 
     public static function store(string $category, int $user_id, int $memo_id)
     {
-        $memo = Memo::create([
+        $category = Category::create([
             'category' => $category,
             'user_id' => $user_id,
             'memo_id' => $memo_id,

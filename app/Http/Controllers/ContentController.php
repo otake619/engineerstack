@@ -33,9 +33,11 @@ class ContentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(array $json, int $user_id, int $memo_id)
     {
-        //
+        //TODO json->text 
+        $json_to_array = jsonToArray($json);
+        $store_content = App\Content::store(array $json_to_array, int $user_id, int $memo_id);
     }
 
     /**
@@ -81,5 +83,11 @@ class ContentController extends Controller
     public function destroy(Content $content)
     {
         //
+    }
+
+    public function jsonToArray(array $json)
+    {
+
+        return $text;
     }
 }

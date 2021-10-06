@@ -47,6 +47,9 @@ class MemoController extends Controller
         $categories = $request->input('categories');
         $store_categories = app()->make('App\Http\Controllers\CategoryController');
         $store_categories->store(array $categories, int $user_id, int $memo_id);
+        $json = $request->input('json');
+        $store_content = app()->make('App\Http\Controllers\ContentController');
+        $store_content->store(array $json, int $user_id, int $memo_id);
         return view('EngineerStack.home');
     }
 
