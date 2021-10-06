@@ -56,9 +56,9 @@
                             @csrf
                             <h4 class="has-text-white">ご登録情報を入力してください。</h4>
                             <label for="email" class="has-text-white"><span class="has-text-danger">*必須 </span>メールアドレス</label>
-                            <input class="input" id="email" type="email" placeholder="engineer@stack.com" required autofocus>
+                            <input class="input" id="email" type="email" name="email" placeholder="engineer@stack.com" required autofocus>
                             <label for="password" class="has-text-white"><span class="has-text-danger">*必須 </span>パスワード</label>
-                            <input class="input" id="password" type="password" placeholder="********" required>
+                            <input class="input" id="password" name="password" type="password" placeholder="********" required>
                             <div class="block mt-4">
                                 <label for="remember_me" class="inline-flex items-center">
                                     <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
