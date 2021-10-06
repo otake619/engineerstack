@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreMemoRequest;
+use App\Models\Memo;
 
 class MemoController extends Controller
 {
@@ -31,10 +33,16 @@ class MemoController extends Controller
 
     /**
      * memoレコードを1件DBに保存
+     * 
+     * @param  \App\Http\Requests\StoreMemoRequest  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreMemoRequest $request)
     {
-
+        $user_id = Auth::id();
+        $title = $request->input('title');
+        $store_memo = App\Memo::store(int $user_id, string $title);
+        return view('EngineerStack.home');
     }
 
     /**
