@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\MemoController;
 
 Route::get('/', function () {
     return view('auth.register');
@@ -14,13 +16,13 @@ Route::prefix('user')->group(function () {
 
 });
 
-Route::prefix('memo')->group(function () {
-    Route::get('index', [MemoController::class, 'index'])->name('show_memo');
-    Route::get('get_save', [MemoController::class, 'get_save'])->name('get_save_memo');
-    Route::post('post_save', [MemoController::class, 'post_save'])->name('post_save_memo');
-    Route::get('get_edit', [MemoController::class, 'get_edit'])->name('get_update_memo');
-    Route::post('post_edit', [MemoController::class, 'post_edit'])->name('post_update_memo');
-    Route::post('post_delete', [MemoController::class, 'post_delete'])->name('delete_memo');
+Route::prefix('memos')->group(function () {
+    Route::get('index', [MemoController::class, 'index'])->name('memos.index');
+    Route::get('create', [MemoController::class, 'create'])->name('memos.create');
+    Route::post('store', [MemoController::class, 'store'])->name('memos.store');
+    Route::post('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
+    Route::post('{memo_id}/update', [MemoController::class, 'update'])->name('memos.update');
+    Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
 });
 
 require __DIR__.'/auth.php';
