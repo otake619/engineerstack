@@ -38,10 +38,10 @@
 // })
 
 $(function() {
-    $("#category").on('keyup', function(event) {
+    $("#category").keyup(function() {
         const separator = ",";
         let inputText = $(this).val();
-        let textToArray = separateText(separator, inputText);
+        textToArray = separateText(separator, inputText);
         let array = checkElement(textToArray);
         let dispText = arrayToText(textToArray);
         let tags = pushTag(array);

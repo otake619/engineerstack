@@ -5,6 +5,6 @@ const mix = require('laravel-mix');
     .js('resources/js/input_memo.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .autoload({
-    jquery: ['$', 'window.jQuery']
-});
+        jquery: ['$', 'window.jQuery']
+    });
 

@@ -10966,10 +10966,11 @@ var __webpack_exports__ = {};
 //     }, 
 // })
 $(function () {
-  $("#category").on('keyup', function (event) {
+  var textToArray;
+  $("#category").keyup(function () {
     var separator = ",";
     var inputText = $(this).val();
-    var textToArray = separateText(separator, inputText);
+    textToArray = separateText(separator, inputText);
     var array = checkElement(textToArray);
     var dispText = arrayToText(textToArray);
     var tags = pushTag(array);
@@ -10994,6 +10995,10 @@ $(function () {
     setFileSize("#file_size", fileData);
     checkSize(getFileSize(fileData));
     setPreview("#preview", getUrl(fileData));
+  });
+  $("#post_memo").submit(function () {
+    $("#category").val(textToArray);
+    console.log(textToArray);
   });
 }); //カテゴリの関数
 
