@@ -25,9 +25,9 @@ class StoreMemoRequest extends FormRequest
     {
         return [
             'categories' => 'required|array',
-            'categories.*' => 'nullable|max:30'
+            'categories.*' => 'nullable|max:30',
             'title' => 'required|max:100',
-            'memo' => 'required|json'
+            'memo' => 'json'
         ];
     }
 
