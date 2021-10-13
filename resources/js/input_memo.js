@@ -1,12 +1,17 @@
 $(function() {
+    let array;
     $("#category").keyup(function() {
         const separator = ",";
         let inputText = $(this).val();
         let textToArray = separateText(separator, inputText);
-        let array = checkElement(textToArray);
+        array = checkElement(textToArray);
         let dispText = arrayToText(textToArray);
         let tags = pushTag(array);
         $("#disp_category").html(tags);
+
+        function getCategoriesArr(array) {
+            return array;
+        }
     });
 
     $("#title").keyup(function() {
@@ -31,6 +36,37 @@ $(function() {
         checkSize(getFileSize(fileData));
         setPreview("#preview", getUrl(fileData));
     });
+
+    $("#post_memo").on('click', function () {
+        let title = $("#title").val();
+
+        $.ajaxSetup( {
+            headers: {
+                'X-CSRF-TOKEN': $( 'meta[name="csrf-token"]' ).attr( 'content' )
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "/memos/store",
+            datatype: "json",
+            data: {
+                "categories": array,
+                "title": title
+            },
+
+            success: function(data) {
+                console.log("通信成功");
+                $("#category").val(array);
+            },
+            error: function(data) {
+                console.log("通信失敗");
+            }
+        });
+
+        return false;
+    });
+    
 });
 
 //カテゴリの関数

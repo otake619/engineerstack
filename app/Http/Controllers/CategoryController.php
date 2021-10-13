@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\Memo;
 use Illuminate\Http\Request;
@@ -37,8 +38,7 @@ class CategoryController extends Controller
     public function store(array $categories, int $user_id, int $memo_id)
     {
         foreach($categories as $category) {
-            $store_catetory = App\Category::store(string $category,
-                                        int $user_id, int $memo_id);
+            Category::store($category, $user_id, $memo_id);
         }
     }
 

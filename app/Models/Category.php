@@ -15,7 +15,7 @@ class Category extends Model
         'memo_id',
         'created_user_id',
         'updated_user_id'
-    ]
+    ];
 
     public static function store(string $category, int $user_id, int $memo_id)
     {

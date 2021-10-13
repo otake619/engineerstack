@@ -10928,14 +10928,19 @@ var __webpack_exports__ = {};
   \************************************/
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 $(function () {
+  var array;
   $("#category").keyup(function () {
     var separator = ",";
     var inputText = $(this).val();
     var textToArray = separateText(separator, inputText);
-    var array = checkElement(textToArray);
+    array = checkElement(textToArray);
     var dispText = arrayToText(textToArray);
     var tags = pushTag(array);
     $("#disp_category").html(tags);
+
+    function getCategoriesArr(array) {
+      return array;
+    }
   });
   $("#title").keyup(function () {
     var id = "#count_title";
@@ -10956,6 +10961,31 @@ $(function () {
     setFileSize("#file_size", fileData);
     checkSize(getFileSize(fileData));
     setPreview("#preview", getUrl(fileData));
+  });
+  $("#post_memo").on('click', function () {
+    var title = $("#title").val();
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $.ajax({
+      type: "post",
+      url: "/memos/store",
+      datatype: "json",
+      data: {
+        "categories": array,
+        "title": title
+      },
+      success: function success(data) {
+        console.log("通信成功");
+        $("#category").val(array);
+      },
+      error: function error(data) {
+        console.log("通信失敗");
+      }
+    });
+    return false;
   });
 }); //カテゴリの関数
 
