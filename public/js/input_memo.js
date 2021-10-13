@@ -10927,50 +10927,11 @@ var __webpack_exports__ = {};
   !*** ./resources/js/input_memo.js ***!
   \************************************/
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-// const editor = new EditorJS({ 
-//     holder: 'editor', 
-//     tools: { 
-//         header: {
-//             class: Header, 
-//             inlineToolbar: ['link'] 
-//         }, 
-//         list: { 
-//             class: List, 
-//             inlineToolbar: true 
-//         },
-//         checklist: {
-//             class: Checklist
-//         },
-//         quote: {
-//             class: Quote 
-//         },
-//         embed: {
-//             class: Embed 
-//         },
-//         image: {
-//             class: SimpleImage
-//         },
-//         code: {
-//             class: CodeTool
-//         },
-//         table: {
-//             class: Table 
-//         },
-//         Marker: {
-//             class: Marker 
-//         },
-//         inlineCode: {
-//             class: InlineCode,
-//             shortcut: 'CMD+SHIFT+M',
-//         },
-//     }, 
-// })
 $(function () {
-  var textToArray;
   $("#category").keyup(function () {
     var separator = ",";
     var inputText = $(this).val();
-    textToArray = separateText(separator, inputText);
+    var textToArray = separateText(separator, inputText);
     var array = checkElement(textToArray);
     var dispText = arrayToText(textToArray);
     var tags = pushTag(array);
@@ -10995,10 +10956,6 @@ $(function () {
     setFileSize("#file_size", fileData);
     checkSize(getFileSize(fileData));
     setPreview("#preview", getUrl(fileData));
-  });
-  $("#post_memo").submit(function () {
-    $("#category").val(textToArray);
-    console.log(textToArray);
   });
 }); //カテゴリの関数
 

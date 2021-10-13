@@ -117,8 +117,7 @@
             </div>
         </div>
     </section>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="{{ asset('js/input_memo.js') }}"></script>
+    <script src="{{ asset('js/navbar.js') }}"></script>
 </body>
 </html>

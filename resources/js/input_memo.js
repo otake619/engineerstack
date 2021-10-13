@@ -1,47 +1,8 @@
-// const editor = new EditorJS({ 
-//     holder: 'editor', 
-//     tools: { 
-//         header: {
-//             class: Header, 
-//             inlineToolbar: ['link'] 
-//         }, 
-//         list: { 
-//             class: List, 
-//             inlineToolbar: true 
-//         },
-//         checklist: {
-//             class: Checklist
-//         },
-//         quote: {
-//             class: Quote 
-//         },
-//         embed: {
-//             class: Embed 
-//         },
-//         image: {
-//             class: SimpleImage
-//         },
-//         code: {
-//             class: CodeTool
-//         },
-//         table: {
-//             class: Table 
-//         },
-//         Marker: {
-//             class: Marker 
-//         },
-//         inlineCode: {
-//             class: InlineCode,
-//             shortcut: 'CMD+SHIFT+M',
-//         },
-//     }, 
-// })
-
 $(function() {
     $("#category").keyup(function() {
         const separator = ",";
         let inputText = $(this).val();
-        textToArray = separateText(separator, inputText);
+        let textToArray = separateText(separator, inputText);
         let array = checkElement(textToArray);
         let dispText = arrayToText(textToArray);
         let tags = pushTag(array);
