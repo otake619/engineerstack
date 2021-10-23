@@ -17,8 +17,7 @@ class CreateMemosTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('title');
-            $table->integer('created_user_id');
-            $table->integer('updated_user_id')->nullable();
+            $table->json('memo_data');
             $table->timestamps();
         });
     }

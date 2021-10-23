@@ -11,19 +11,12 @@ class Category extends Model
 
     protected $fillable = [
         'category',
-        'user_id',
-        'memo_id',
-        'created_user_id',
-        'updated_user_id'
     ];
 
-    public static function store(string $category, int $user_id, int $memo_id)
+    public static function store(string $category)
     {
         $category = Category::create([
             'category' => $category,
-            'user_id' => $user_id,
-            'memo_id' => $memo_id,
-            'created_user_id' => $user_id
         ]);
     }
 }

@@ -37,9 +37,7 @@ class CategoryController extends Controller
      */
     public function store(array $categories, int $user_id, int $memo_id)
     {
-        foreach($categories as $category) {
-            Category::store($category, $user_id, $memo_id);
-        }
+    
     }
 
     /**

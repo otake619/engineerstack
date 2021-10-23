@@ -10,18 +10,17 @@ class Memo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
         'user_id',
-        'created_user_id',
-        'updated_user_id'
+        'title',
+        'memo_data'
     ];
 
-    public static function store(int $user_id, string $title)
+    public static function store(int $user_id, string $title, array $memo_data)
     {
         $memo = Memo::create([
             'user_id' => $user_id,
             'title' => $title,
-            'created_user_id' => $user_id
+            'memo_data' => $memo_data
         ]);
 
         return $memo->id;
