@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id()->comment('自動増分値');
             $table->string('name')->comment('カテゴリー名');
-            $table->timestamps()->comment('タイムスタンプ');
+            $table->timestamps();
         });
     }
 

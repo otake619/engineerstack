@@ -17,7 +17,7 @@ class CategoryMemosTable extends Migration
             $table->id()->comment('自動増分値');
             $table->integer('category_id')->comment('categoriesテーブルのid');
             $table->integer('memo_id')->comment('memosテーブルのid');
-            $table->timestamps()->comment('タイムスタンプ');
+            $table->timestamps();
         });
     }
 
