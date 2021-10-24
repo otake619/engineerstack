@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMemosTable extends Migration
+class CategoryMemosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateMemosTable extends Migration
      */
     public function up()
     {
-        Schema::create('memos', function (Blueprint $table) {
+        Schema::create('category_memos', function (Blueprint $table) {
             $table->id()->comment('自動増分値');
-            $table->integer('user_id')->comment('usersテーブルのid');
-            $table->string('title')->comment('メモのタイトル');
-            $table->json('memo_data')->comment('editor.jsで作成したjsonメモデータ');
+            $table->integer('category_id')->comment('categoriesテーブルのid');
+            $table->integer('memo_id')->comment('memosテーブルのid');
             $table->timestamps()->comment('タイムスタンプ');
         });
     }
@@ -29,6 +28,6 @@ class CreateMemosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('memos');
+        Schema::dropIfExists('category_memos');
     }
 }

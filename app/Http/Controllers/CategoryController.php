@@ -35,11 +35,9 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(array $categories, int $user_id, int $memo_id)
+    public function store()
     {
-        foreach($categories as $category) {
-            Category::store($category, $user_id, $memo_id);
-        }
+    
     }
 
     /**
