@@ -38,9 +38,12 @@ class MemoController extends Controller
      * 
      * @param  \App\Http\Requests\StoreMemoRequest  $request
      * @return \Illuminate\Http\Response
+     * ToDo 後でStoreMemoRequestに型を書き換えて、フォームバリデーションを
+     * 実装
      */
-    public function store(StoreMemoRequest $request)
+    public function store(Request $request)
     {
+        
         return view('EngineerStack.home');
     }
 

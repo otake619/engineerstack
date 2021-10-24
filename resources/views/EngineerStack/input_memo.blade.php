@@ -56,15 +56,17 @@
                     </div>
                     <form action="{{ route('memos.store') }}" method="POST">
                         @csrf
-                        @if ($errors->any())
-                            <div class="has-text-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-	                    @endif
+                        <div class="errors">
+                            @if ($errors->any())
+                                <div class="has-text-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
                         <div class="field">
                             <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 1カテゴリ30文字まで<br>半角カンマ「,」で区切って入力</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
@@ -90,7 +92,9 @@
                         </div>
                         <div class="editor_field">
                             <label for="editor">コンテンツ<br><span>*任意</span></label>
-                            <div id="editor" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
+                            <div class="editor_wrapper p-5">
+                                <div id="editor" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
+                            </div>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">
                             <p class="is-size-4"><i class="fas fa-save"></i>保存</p>
