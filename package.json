@@ -24,6 +24,7 @@
         "tailwindcss": "^2.0.2"
     },
     "dependencies": {
+        "@editorjs/editorjs": "^2.22.2",
         "@fortawesome/fontawesome-free": "^5.15.4",
         "bulma": "^0.9.3",
         "font-awesome": "^4.7.0",

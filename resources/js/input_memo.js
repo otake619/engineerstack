@@ -1,4 +1,16 @@
+import EditorJS from '@editorjs/editorjs';
+
 $(function() {
+    const editor = new EditorJS({
+        holder: 'editor'
+    });
+
+    editor.save().then((outputData) => {
+        console.log('Article data: ', outputData)
+    }).catch((error) => {
+        console.log('Saving failed: ', error)
+    });
+
     $("#category").keyup(function() {
         const separator = ",";
         let inputText = $(this).val();
