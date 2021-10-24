@@ -1,10 +1,9 @@
 $(function() {
-    let array;
     $("#category").keyup(function() {
         const separator = ",";
         let inputText = $(this).val();
         let textToArray = separateText(separator, inputText);
-        array = checkElement(textToArray);
+        let array = checkElement(textToArray);
         let dispText = arrayToText(textToArray);
         let tags = pushTag(array);
         $("#disp_category").html(tags);
@@ -19,52 +18,6 @@ $(function() {
         let limit = 100;
         let countTitle = $(this).val().length;
         countText(id, limit, countTitle);
-    });
-
-    $("#memo").keyup(function() {
-        const id = "#count_memo";
-        let limit = 2000;
-        let countMemo = $(this).val().length;
-        countText(id, limit, countMemo);
-    });
-
-    $("#file").change(function() {
-        //TODO: error時の対応も記述
-        let fileData = this.files[0];
-        setFileName("#file_name", fileData);
-        setFileSize("#file_size", fileData);
-        checkSize(getFileSize(fileData));
-        setPreview("#preview", getUrl(fileData));
-    });
-
-    $("#post_memo").on('click', function () {
-        let title = $("#title").val();
-
-        $.ajaxSetup( {
-            headers: {
-                'X-CSRF-TOKEN': $( 'meta[name="csrf-token"]' ).attr( 'content' )
-            }
-        });
-
-        $.ajax({
-            type: "post",
-            url: "/memos/store",
-            datatype: "json",
-            data: {
-                "categories": array,
-                "title": title
-            },
-
-            success: function(data) {
-                console.log("通信成功");
-                $("#category").val(array);
-            },
-            error: function(data) {
-                console.log("通信失敗");
-            }
-        });
-
-        return false;
     });
     
 });
@@ -177,68 +130,6 @@ function changeClass(id, isNormal) {
 
 function changeText(id, text) {
     $(id).text(text);
-}
-//ここまで
-
-//ファイルの関数
-function getFileSize(fileInfo) {
-    let size = fileInfo.size/1024/1024;
-    size = Math.ceil(size * 1000)/1000;
-    let fileSize = size + "MB";
-    return fileSize;
-}
-
-function getFileName(fileInfo) {
-    let fileName = fileInfo.name;
-    return fileName;
-}
-
-function setFileSize(id, fileInfo) {
-    let fileSize = getFileSize(fileInfo);
-    $(id).text(fileSize);
-}
-
-function setFileName(id, fileInfo) {
-    let fileName = getFileName(fileInfo);
-    $(id).text(fileName);
-}
-
-function checkSize(fileSize) {
-    let rowFileSize = fileSize.slice(0, -2);
-    rowFileSize = Number(rowFileSize);
-    
-    if(rowFileSize > 5.0) {
-        const isDisabled = true;
-        const id = "#post_memo";
-        const isNormal = false;
-        switchDisabled(id, isDisabled);
-        changeText("#file_size", "5.0MBを超えています!");
-        changeClass("#file_size", isNormal);
-    } else {
-        const isDisabled = false;
-        const id = "#post_memo";
-        const isNormal = true;
-        switchDisabled(id, isDisabled);
-        changeClass("#file_size", isNormal);
-    }
-}
-
-function setPreview(id, url) {
-    $(id).attr("src", url);
-}
-
-function getUrl(fileData) {
-    let blobUrl = window.URL.createObjectURL(fileData);
-    return blobUrl;
-}
-//ここまで
-//ボタンの関数
-function switchDisabled(id, isDisabled) {
-    if(isDisabled) {
-        $(id).attr("disabled", true);
-    } else {
-        $(id).attr("disabled", false);
-    }
 }
 //ここまで
 
