@@ -7,10 +7,6 @@ $(function() {
         let dispText = arrayToText(textToArray);
         let tags = pushTag(array);
         $("#disp_category").html(tags);
-
-        function getCategoriesArr(array) {
-            return array;
-        }
     });
 
     $("#title").keyup(function() {
@@ -19,7 +15,6 @@ $(function() {
         let countTitle = $(this).val().length;
         countText(id, limit, countTitle);
     });
-    
 });
 
 //カテゴリの関数
