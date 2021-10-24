@@ -14,16 +14,11 @@ class CreateMemosTable extends Migration
     public function up()
     {
         Schema::create('memos', function (Blueprint $table) {
-            //自動増分値。
-            $table->id();
-            //usersテーブルのid。
-            $table->integer('user_id');
-            //メモのタイトル。
-            $table->string('title');
-            //editor.jsでのjson形式でのメモデータ。
-            $table->json('memo_data');
-            //タイムスタンプ。created_atとupdated_at。
-            $table->timestamps();
+            $table->id()->comment('自動増分値');
+            $table->integer('user_id')->comment('usersテーブルのid');
+            $table->string('title')->comment('メモのタイトル');
+            $table->json('memo_data')->comment('editor.jsで作成したjsonメモデータ');
+            $table->timestamps()->comment('タイムスタンプ');
         });
     }
 
