@@ -10986,10 +10986,11 @@ __webpack_require__.r(__webpack_exports__);
 
 $(function () {
   var editor = new (_editorjs_editorjs__WEBPACK_IMPORTED_MODULE_0___default())({
-    holder: 'editor'
+    holder: 'editorjs'
   });
   $("#post_memo").click(function () {
     editor.save().then(function (outputData) {
+      $('#memo_data').val(JSON.stringify(outputData));
       console.log('Article data: ', outputData);
     })["catch"](function (error) {
       console.log('Saving failed: ', error);

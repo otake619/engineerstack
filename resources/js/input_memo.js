@@ -2,14 +2,15 @@ import EditorJS from '@editorjs/editorjs';
 
 $(function() {
     const editor = new EditorJS({
-        holder: 'editor'
+        holder: 'editorjs'
     });
 
     $("#post_memo").click(function() {
         editor.save().then((outputData) => {
-            console.log('Article data: ', outputData)
+            $('#memo_data').val(JSON.stringify(outputData));
+            console.log('Article data: ', outputData);
         }).catch((error) => {
-            console.log('Saving failed: ', error)
+            console.log('Saving failed: ', error);
         });
     });
 
