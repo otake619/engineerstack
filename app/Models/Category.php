@@ -10,13 +10,13 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category',
+        'name',
     ];
 
-    public static function store(string $category)
+    public static function store(string $name)
     {
         $category = Category::create([
-            'category' => $category,
+            'name' => $name,
         ]);
     }
 }

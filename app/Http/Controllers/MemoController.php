@@ -41,16 +41,6 @@ class MemoController extends Controller
      */
     public function store(StoreMemoRequest $request)
     {
-        // $user_id = Auth::id();
-        // $title = $request->input('title');
-        // $store_memo = Memo::store($user_id, $title);
-        // $memo_id = $store_memo;
-        // $categories = $request->input('categories');
-        // $store_categories = app()->make('App\Http\Controllers\CategoryController');
-        // $store_categories->store($categories, $user_id, $memo_id);
-        // $json = $request->input('json');
-        // $store_content = app()->make('App\Http\Controllers\ContentController');
-        // $store_content->store(array $json, int $user_id, int $memo_id);
         return view('EngineerStack.home');
     }
 

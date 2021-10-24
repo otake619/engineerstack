@@ -14,9 +14,13 @@ class CategoryMemosTable extends Migration
     public function up()
     {
         Schema::create('category_memos', function (Blueprint $table) {
+            //自動増分値。
             $table->id();
+            //categoryテーブルのid。
             $table->integer('category_id');
+            //memosテーブルのid。
             $table->integer('memo_id');
+            //タイムスタンプ。created_atとupdated_at。
             $table->timestamps();
         });
     }

@@ -14,8 +14,11 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
+            //自動増分値。
             $table->id();
-            $table->string('category');
+            //カテゴリー名。
+            $table->string('name');
+            //タイムスタンプ。created_atとupdated_at。
             $table->timestamps();
         });
     }
