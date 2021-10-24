@@ -10988,10 +10988,12 @@ $(function () {
   var editor = new (_editorjs_editorjs__WEBPACK_IMPORTED_MODULE_0___default())({
     holder: 'editor'
   });
-  editor.save().then(function (outputData) {
-    console.log('Article data: ', outputData);
-  })["catch"](function (error) {
-    console.log('Saving failed: ', error);
+  $("#post_memo").click(function () {
+    editor.save().then(function (outputData) {
+      console.log('Article data: ', outputData);
+    })["catch"](function (error) {
+      console.log('Saving failed: ', error);
+    });
   });
   $("#category").keyup(function () {
     var separator = ",";

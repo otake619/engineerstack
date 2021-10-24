@@ -5,10 +5,12 @@ $(function() {
         holder: 'editor'
     });
 
-    editor.save().then((outputData) => {
-        console.log('Article data: ', outputData)
-    }).catch((error) => {
-        console.log('Saving failed: ', error)
+    $("#post_memo").click(function() {
+        editor.save().then((outputData) => {
+            console.log('Article data: ', outputData)
+        }).catch((error) => {
+            console.log('Saving failed: ', error)
+        });
     });
 
     $("#category").keyup(function() {
