@@ -15,7 +15,7 @@ class Memo extends Model
         'memo_data'
     ];
 
-    public static function store(int $user_id, string $title, array $memo_data)
+    public static function store(int $user_id, string $title, string $memo_data)
     {
         $memo = Memo::create([
             'user_id' => $user_id,

@@ -54,7 +54,7 @@
                     <div class="title mt-5">
                         <h4 class="is-size-4">メモをとる</h4>
                     </div>
-                    <form>
+                    <form action="{{ route('memos.store') }}" method="POST">
                         @csrf
                         <div class="errors">
                             @if ($errors->any())

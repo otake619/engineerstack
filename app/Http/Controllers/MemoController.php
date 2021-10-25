@@ -43,7 +43,12 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $user_id = Auth::id();
+        $categories = $request->input('categories');
+        $title = $request->input('title');
+        $memo_data = $request->input('memo_data');
+        $insert_memo = Memo::store($user_id, $title, $memo_data);
+        return view('EngineerStack.input_memo');
     }
 
     /**
