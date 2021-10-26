@@ -38,10 +38,20 @@ class MemoController extends Controller
      * 
      * @param  \App\Http\Requests\StoreMemoRequest  $request
      * @return \Illuminate\Http\Response
+     * ToDo 後でStoreMemoRequestに型を書き換えて、フォームバリデーションを
+     * 実装
      */
-    public function store(StoreMemoRequest $request)
+    public function store(Request $request)
     {
-        return view('EngineerStack.home');
+        $user_id = Auth::id();
+        //$categories: 今は使わないが後ほど使用
+        //後ほどCategoriesServiceとCategoryControllerと連携して
+        //カンマ区切りで1つずつ分けてDBへ保存する処理を実装
+        $categories = $request->input('categories');
+        $title = $request->input('title');
+        $memo_data = $request->input('memo_data');
+        $insert_memo = Memo::store($user_id, $title, $memo_data);
+        return view('EngineerStack.input_memo');
     }
 
     /**
