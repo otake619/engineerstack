@@ -44,6 +44,9 @@ class MemoController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::id();
+        //$categories: 今は使わないが後ほど使用
+        //後ほどCategoriesServiceとCategoryControllerと連携して
+        //カンマ区切りで1つずつ分けてDBへ保存する処理を実装
         $categories = $request->input('categories');
         $title = $request->input('title');
         $memo_data = $request->input('memo_data');
