@@ -1,14 +1,14 @@
 <?php
-    class CategoriesService {
+    class CategoryService {
         /**
          * メモ記録画面で入力されたカテゴリー文字列を配列に変換してMemoController
-         * へ返す。。
+         * へ返す。
          * @param 
          * string: $categories
          * @return 
          * array: $categories_arr
          */
-        public function StrToArr($categories)
+        public function str_to_arr($categories)
         {
             $separater = ",";
             $categories_arr = explode($separater, $categories);
