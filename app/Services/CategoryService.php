@@ -8,7 +8,7 @@
          * @return 
          * array: $categories_arr
          */
-        public function str_to_arr($categories)
+        public function strToArr($categories)
         {
             $separater = ",";
             $categories_arr = explode($separater, $categories);
