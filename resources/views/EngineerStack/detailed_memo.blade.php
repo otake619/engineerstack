@@ -60,7 +60,7 @@
                     <i class="fas fa-tape"></i><span id="categories"></span>
                 </div>
                 <div class="memo mt-5">
-                    <div id="editorjs"></div>
+                    <div id="editorjs" style="background-color: #99DDFF;"></div>
                     <div class="settings has-text-right mt-4">
                         <div class="dropdown">
                             <div class="dropdown-trigger">
@@ -164,7 +164,7 @@
             $("#modal-close").click(function() {
                 $(".modal").toggleClass("is-active");
             });
-            
+
             const editor = new  EditorJS({
                 holder: 'editorjs',
                 data: memoData
