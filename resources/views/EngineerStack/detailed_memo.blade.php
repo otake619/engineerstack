@@ -60,7 +60,7 @@
                     <i class="fas fa-tape"></i><span id="categories"></span>
                 </div>
                 <div class="memo mt-5">
-                    <div id="editorjs" style="background-color: #99DDFF;"></div>
+                    <div id="editorjs"></div>
                     <div class="settings has-text-right mt-4">
                         <div class="dropdown">
                             <div class="dropdown-trigger">
@@ -167,6 +167,7 @@
 
             const editor = new  EditorJS({
                 holder: 'editorjs',
+                readOnly: true,
                 data: memoData
             });
         });
