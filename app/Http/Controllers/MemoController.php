@@ -35,11 +35,6 @@ class MemoController extends Controller
         return view('EngineerStack.home', compact('memos', 'memo_data'));
     }
 
-    public function create()
-    {
-
-    }
-
     /**
      * memoレコードを1件DBに保存
      * 
@@ -118,7 +113,7 @@ class MemoController extends Controller
             //TODO: カテゴリ機能実装時に必ず修正。
             $categories = "php, Laravel, MVC, EngineerStack";
             $memo_data = Memo::find($memo_id)->memo_data;
-           return view('EngineerStack.detailed_memo',
+            return view('EngineerStack.detailed_memo',
                     compact('title', 'categories', 'memo_data', 'memo_id'));
         }
     }
