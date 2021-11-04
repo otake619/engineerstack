@@ -132,6 +132,7 @@
     <script>
         $(function() {
             const editor = new EditorJS({
+                minHeight: 50,
                 holder: 'editorjs'
             });
 

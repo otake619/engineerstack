@@ -22,10 +22,17 @@ class MemoController extends Controller
 
     /**
      * 全memoレコードの取得
+     * 
+     * @return array $memos
+     * $user_idに該当するアカウントの全メモデータ。
      */
     public function index()
     {
-
+        $user_id = Auth::id();
+        //後でカテゴリーの参照とViewへの返却も実装
+        $memos = Memo::where('user_id', $user_id)->get();
+        $memo_data = Memo::where('user_id', $user_id)->get('memo_data');
+        return view('EngineerStack.home', compact('memos', 'memo_data'));
     }
 
     public function create()
