@@ -11,7 +11,7 @@
     <section class="header">
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="">
+                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('dashboard') }}">
                     EngineerStack
                 </a>
                 <div class="field mt-4 ml-5">
@@ -73,9 +73,10 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
                                 <div class="dropdown-content">
-                                    <a href="./log_update.html" class="dropdown-item has-text-left">
-                                        <span>メモを編集する</span>
-                                    </a>
+                                    <form action="{{ $memo_id }}/edit" method="POST">
+                                        @csrf
+                                        <button class="dropdown-item has-text-left" style="background: none; border: 0px; white-space: normal;">メモを編集する</button>
+                                    </form>
                                     <hr class="dropdown-divider">
                                     <a id="delete_memo" href="#" class="dropdown-item has-text-left">
                                         <span class="has-text-danger">メモを削除する</span>

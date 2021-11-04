@@ -85,7 +85,13 @@
                                 <span class="tag"><i class="fas fa-tape"></i>MVC</span>
                             </div><br>
                             <div class="title">
-                                <h4 class="is-size-5 has-text-weight-bold has-text-link">{{ $memo->title }}</h4>
+                                <form action="{{ route('memos.show') }}" method="POST">
+                                    @csrf 
+                                    <input type="hidden" name="memo_id" value="{{ $memo->id }}">
+                                    <input type="hidden" name="memo_data" id="memo_data" value="{{ $memo->memo_data }}">
+                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ $memo->title }}" type="submit"
+                                    style="background: none; border: 0px; white-space: normal;">
+                                </form>
                             </div>
                             <div id="data_{{ $loop->index }}">
                             </div><br>
