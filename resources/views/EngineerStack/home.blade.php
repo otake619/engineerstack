@@ -45,13 +45,17 @@
             </div>
         </nav>
     </section>
-    @if(isset($memos))
+    @if($memos->isEmpty())
+        <section class="content">
+            <p>まだメモは投稿されていません。</p>
+        </section>
+    @else 
         <section class="content">
             <div class="title has-text-centered m-5">
                 <p class="is-size-4 is-text-weight-bold">最近のメモ</p>
             </div>
             <div class="columns">
-                <div class="column is-one-thirds">
+                <div class="column is-2">
                     <div class="category p-5">
                         <span class="tag"><i class="fas fa-tape"></i>php</span><br>
                         <span class="tag"><i class="fas fa-tape"></i>Laravel</span><br>
@@ -69,9 +73,9 @@
                         <span class="tag"><i class="fas fa-tape"></i>アイデア</span><br>
                     </div>
                 </div>
-                <div class="column is-one-thirds">
-                    <div class="memos">
-                        <div class="memo box column m-3">
+                <div class="memos columns is-multiline">
+                    @foreach($memos as $memo)
+                        <div class="memo column is-5 box m-3">
                             <div class="category">
                                 <span class="tag is-primary"><i class="fas fa-tape"></i>つまづきポイント</span>
                                 <span class="tag"><i class="fas fa-tape"></i>ログ</span>
@@ -81,73 +85,15 @@
                                 <span class="tag"><i class="fas fa-tape"></i>MVC</span>
                             </div><br>
                             <div class="title">
-                                <h4 class="is-size-5 has-text-weight-bold has-text-link">{{ $memos[0]->title }}</h4>
+                                <h4 class="is-size-5 has-text-weight-bold has-text-link">{{ $memo->title }}</h4>
                             </div>
-                            <div id="data_0">
+                            <div id="data_{{ $loop->index }}">
                             </div><br>
                             <div class="post-time">
-                                <p id="time_0"></p>
+                                <p>{{ $memo->created_at->format('Y年m月d日投稿') }}</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="column is-one-thirds">
-                    <div class="memos">
-                        <div class="memo box column m-3">
-                            <div class="category">
-                                <span class="tag is-primary"><i class="fas fa-tape"></i>つまづきポイント</span>
-                                <span class="tag"><i class="fas fa-tape"></i>ログ</span>
-                                <span class="tag"><i class="fas fa-tape"></i>思考プロセス</span>
-                                <span class="tag"><i class="fas fa-tape"></i>php</span>
-                                <span class="tag"><i class="fas fa-tape"></i>Laravel</span>
-                                <span class="tag"><i class="fas fa-tape"></i>MVC</span>
-                            </div><br>
-                            <div class="title">
-                                <h4 class="is-size-5 has-text-weight-bold has-text-link">{{ $memos[1]->title }}</h4>
-                            </div>
-                            <div id="data_1">
-                            </div><br>
-                            <div class="post-time">
-                                <p id="time_1"></p>
-                            </div>
-                        </div>
-                        <div class="memo box column m-3">
-                            <div class="category">
-                                <span class="tag is-primary"><i class="fas fa-tape"></i>つまづきポイント</span>
-                                <span class="tag"><i class="fas fa-tape"></i>ログ</span>
-                                <span class="tag"><i class="fas fa-tape"></i>思考プロセス</span>
-                                <span class="tag"><i class="fas fa-tape"></i>php</span>
-                                <span class="tag"><i class="fas fa-tape"></i>Laravel</span>
-                                <span class="tag"><i class="fas fa-tape"></i>MVC</span>
-                            </div><br>
-                            <div class="title">
-                                <h4 class="is-size-5 has-text-weight-bold has-text-link">{{ $memos[2]->title }}</h4>
-                            </div>
-                            <div id="data_2">
-                            </div><br>
-                            <div class="post-time">
-                                <p id="time_2"></p>
-                            </div>
-                        </div>
-                        <div class="memo box column m-3">
-                            <div class="category">
-                                <span class="tag is-primary"><i class="fas fa-tape"></i>つまづきポイント</span>
-                                <span class="tag"><i class="fas fa-tape"></i>ログ</span>
-                                <span class="tag"><i class="fas fa-tape"></i>思考プロセス</span>
-                                <span class="tag"><i class="fas fa-tape"></i>php</span>
-                                <span class="tag"><i class="fas fa-tape"></i>Laravel</span>
-                                <span class="tag"><i class="fas fa-tape"></i>MVC</span>
-                            </div><br>
-                            <div class="title">
-                                <h4 class="is-size-5 has-text-weight-bold has-text-link">{{ $memos[3]->title }}</h4>
-                            </div>
-                            <div id="data_3">
-                            </div><br>
-                            <div class="post-time">
-                                <p id="time_3"></p>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
             <div class="columns">
@@ -162,11 +108,7 @@
                 </div>
             </div>
         </section>
-    @else 
-        <section class="content">
-
-        </section>
-    @endisset
+    @endif
     <section class="footer">
         <div class="columns">
             <div class="column">
@@ -195,17 +137,17 @@
     <script>
         $(function () {
             let memoData = @json($memo_data);
+            let memoLength = JSON.parse(JSON.stringify(memoData)).length;
 
-            for(let index=0;index<4;index++) {
+            for(let index=0;index<memoLength;index++) {
                 let data = memoData[index];
-                data = data['memo_data'];
+                data = data.memo_data;
                 data = JSON.parse(data);
                 let post_time = data.time;
                 post_time = new Date(post_time);
                 data = jsonConvertHtml(data);
                 let data_id = `#data_${index}`;
                 $(data_id).html(data);
-                console.log(post_time);
                 post_time = getStringFromDate(post_time);
                 let time_id = `#time_${index}`;
                 $(time_id).text(post_time);
