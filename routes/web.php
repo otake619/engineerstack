@@ -8,9 +8,7 @@ Route::get('/', function () {
     return view('auth.register');
 });
 
-Route::get('/dashboard', function () {
-    return view('EngineerStack.home');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::prefix('user')->group(function () {
 

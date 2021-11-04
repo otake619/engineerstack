@@ -168,6 +168,7 @@
             const editor = new  EditorJS({
                 holder: 'editorjs',
                 readOnly: true,
+                minHeight: 50,
                 data: memoData
             });
         });
@@ -182,7 +183,7 @@
             let second_str = date.getSeconds();
             
             
-            format_str = 'YYYY年MM月DD日 hh時mm分ss秒に作成';
+            format_str = 'YYYY年MM月DD日 hh時mm分ss秒に投稿';
             format_str = format_str.replace(/YYYY/g, year_str);
             format_str = format_str.replace(/MM/g, month_str);
             format_str = format_str.replace(/DD/g, day_str);
