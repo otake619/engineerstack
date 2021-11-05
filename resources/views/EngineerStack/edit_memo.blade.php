@@ -75,7 +75,7 @@
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" id="title" class="input is-success" placeholder="タイトル" value="{{ $memo->title }}">
+                                        <input type="text" name="title" id="title" class="input is-success" placeholder="タイトル" value="{{ $memo->title }}">
                                     </div>
                                 </div>
                             </div>

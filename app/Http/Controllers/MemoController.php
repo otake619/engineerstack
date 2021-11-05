@@ -52,9 +52,9 @@ class MemoController extends Controller
         $categories = $request->input('categories');
         $title = $request->input('title');
         $memo_data = $request->input('memo_data');
-        $insert_memo = Memo::store($user_id, $title, $memo_data);
+        $memo_id = Memo::store($user_id, $title, $memo_data);
         return view('EngineerStack.detailed_memo', compact('memo_data',
-                                            'title', 'categories'));
+                                            'title', 'categories', 'memo_id'));
     }
 
     /**
@@ -86,12 +86,14 @@ class MemoController extends Controller
     {
         $memo_id = $request->input('memo_id');
         $memo_data = $request->input('memo_data');
+        $title = $request->input('title');
         $memo_owner = Memo::find($memo_id)->user_id;
         if($memo_owner != Auth::id()) {
             redirect()->route('dashboard');
         } else {
             //更新処理
-            Memo::where('id', $memo_id)->update(['memo_data' => $memo_data]);
+            Memo::where('id', $memo_id)
+                        ->update(['memo_data' => $memo_data, 'title' => $title]);
             $title = Memo::find($memo_id)->title;
             //TODO: カテゴリ機能実装時に必ず修正。
             $categories = "php, Laravel, MVC, EngineerStack";
