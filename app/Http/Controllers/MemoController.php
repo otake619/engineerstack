@@ -35,11 +35,6 @@ class MemoController extends Controller
         return view('EngineerStack.home', compact('memos', 'memo_data'));
     }
 
-    public function create()
-    {
-
-    }
-
     /**
      * memoレコードを1件DBに保存
      * 
@@ -65,19 +60,62 @@ class MemoController extends Controller
     /**
      * 指定memoレコードの編集
      * @param  int  $id
+     * TODO: 後ほど、user_idが異なるアカウントでredirectが
+     * 発動するかテスト
      */
     public function edit($id)
     {
-
+        $memo_id = $id;
+        $memo = Memo::find($memo_id);
+        $memo_owner = $memo->user_id;
+        if($memo_owner != Auth::id()) {
+            redirect()->route('dashboard');
+        } else {
+            $memo_data = $memo['memo_data'];
+            return view('EngineerStack.edit_memo'
+                    , compact('memo', 'memo_data'));
+        }
     }
 
     /**
      * 指定memoレコードの更新
      * @param  int  $id
+     * 
      */
-    public function update($id)
+    public function update(Request $request)
     {
+        $memo_id = $request->input('memo_id');
+        $memo_data = $request->input('memo_data');
+        $memo_owner = Memo::find($memo_id)->user_id;
+        if($memo_owner != Auth::id()) {
+            redirect()->route('dashboard');
+        } else {
+            //更新処理
+            Memo::where('id', $memo_id)->update(['memo_data' => $memo_data]);
+            $title = Memo::find($memo_id)->title;
+            //TODO: カテゴリ機能実装時に必ず修正。
+            $categories = "php, Laravel, MVC, EngineerStack";
+            $memo_data = Memo::find($memo_id)->memo_data;
+            return view('EngineerStack.detailed_memo'
+                    , compact('title', 'categories', 'memo_data', 'memo_id'));
+        }
+    }
 
+    public function show(Request $request)
+    {
+        $memo_id = $request->input('memo_id');
+        $memo_data = $request->input('memo_data');
+        $memo_owner = Memo::find($memo_id)->user_id;
+        if($memo_owner != Auth::id()) {
+            redirect()->route('dashboard');
+        } else {
+            $title = Memo::find($memo_id)->title;
+            //TODO: カテゴリ機能実装時に必ず修正。
+            $categories = "php, Laravel, MVC, EngineerStack";
+            $memo_data = Memo::find($memo_id)->memo_data;
+            return view('EngineerStack.detailed_memo',
+                    compact('title', 'categories', 'memo_data', 'memo_id'));
+        }
     }
 
     /**

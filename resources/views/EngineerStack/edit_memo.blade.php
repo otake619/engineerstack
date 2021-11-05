@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>メモ記録 EngineerStack</title>
+    <title>メモ編集 EngineerStack</title>
 </head>
 <body>
     <section class="header">
@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="キーワードを入力">
+                        <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                         <span class="icon is-small is-left">
                             <i class="fas fa-search"></i>
                         </span>
@@ -33,7 +33,7 @@
                     <div class="navbar-item">
                         <div class="buttons">
                             <a class="button is-primary" href="{{ route('memos.get.input') }}">
-                                <i class="fas fa-pen"></i><strong>記録</strong>
+                                <strong>記録</strong>
                             </a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -46,34 +46,25 @@
         </nav>
     </section>
     <section class="content">
-        <div class="input-memo p-5">
+        <div class="form p-5">
             <div class="columns">
                 <div class="column"></div>
                 <div class="column is-three-fifths">
                     <div class="title mt-5">
-                        <h4 class="is-size-4">メモをとる</h4>
+                        <h4 class="is-size-4">メモを編集する</h4>
                     </div>
-                    <form action="{{ route('memos.store') }}" method="POST">
-                        @csrf
-                        <div class="errors">
-                            @if ($errors->any())
-                                <div class="has-text-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                        </div>
+                    <form action="{{ route('memos.update')}}" method="POST">
+                        @csrf 
+                        <input type="hidden" id="memo_data" name="memo_data">
+                        <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                         <div class="field">
-                            <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 1カテゴリ30文字まで<br>半角カンマ「,」で区切って入力</span></label><br>
+                            <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 1カテゴリ30文字まで</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
-                            <span class="is-primary" id="disp_category"></span>
+                            <span id="disp_category"></span>
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" name="categories" class="input is-success" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,...">
+                                        <input id="category" type="text" class="input is-success" placeholder="タイトル" value="MVCでわからなかったところ, php, Laravel, つまづき, MVC">
                                     </div>
                                 </div>
                             </div>
@@ -84,20 +75,17 @@
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" name="title" id="title" class="input is-success" placeholder="タイトルを入力" maxlength="100">
+                                        <input type="text" id="title" class="input is-success" placeholder="タイトル" value="{{ $memo->title }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="editor_field">
-                            <label for="editor">コンテンツ<br><span>*任意</span></label>
-                            <div class="editor_wrapper p-5">
-                                <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
-                                <input type="hidden" id="memo_data" name="memo_data" value="{{ $article->content ?? "" }}">
-                            </div>
+                        <div class="memo">
+                            <label for="editorjs">メモ<br><span class="has-text-danger">*必須</span></label>
+                            <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">
-                            <p class="is-size-4"><i class="fas fa-save"></i>保存</p>
+                            <i class="far fa-edit"></i>更新
                         </button>
                     </form>
                 </div>
@@ -130,9 +118,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
     <script>
         $(function() {
+            let memoData = @json($memo_data);
+            memoData = JSON.parse(memoData);
+
             const editor = new EditorJS({
                 minHeight: 50,
-                holder: 'editorjs'
+                holder: 'editorjs',
+                data: memoData
             });
 
             $("#post_memo").click(function() {

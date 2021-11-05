@@ -19,11 +19,12 @@ Route::prefix('memos')->group(function () {
     Route::get('create', [MemoController::class, 'create'])->name('memos.create');
     Route::post('store', [MemoController::class, 'store'])->name('memos.store');
     Route::post('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
-    Route::post('{memo_id}/update', [MemoController::class, 'update'])->name('memos.update');
+    Route::post('update', [MemoController::class, 'update'])->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
     Route::get('get/store', function () {
         return view('EngineerStack.input_memo');
     })->name('memos.get.input');
+    Route::post('show', [MemoController::class, 'show'])->name('memos.show');
 });
 
 require __DIR__.'/auth.php';
