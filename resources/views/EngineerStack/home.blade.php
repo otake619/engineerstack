@@ -52,7 +52,7 @@
     @else 
         <section class="content">
             <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">最近のメモ</p>
+                <p class="is-size-4 is-text-weight-bold">メモ一覧</p>
             </div>
             <div class="columns">
                 <div class="column is-2">

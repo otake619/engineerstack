@@ -90,7 +90,7 @@
                             </div>
                         </div>
                         <div class="editor_field">
-                            <label for="editor">コンテンツ<br><span>*任意</span></label>
+                            <label for="editor">メモ<br><span class="has-text-danger">*必須</span></label>
                             <div class="editor_wrapper p-5">
                                 <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
                                 <input type="hidden" id="memo_data" name="memo_data" value="{{ $article->content ?? "" }}">
