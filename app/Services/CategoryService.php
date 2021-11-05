@@ -1,4 +1,6 @@
 <?php
+    namespace App\Services;
+    
     class CategoryService {
         /**
          * メモ記録画面で入力されたカテゴリー文字列を配列に変換してMemoController

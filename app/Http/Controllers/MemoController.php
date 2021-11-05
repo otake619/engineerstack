@@ -60,6 +60,8 @@ class MemoController extends Controller
         $title = $request->input('title');
         $memo_data = $request->input('memo_data');
         $memo_id = Memo::store($user_id, $title, $memo_data);
+        $insert_categories = app()->make('App\Http\Controllers\CategoryController');
+        $insert_categories->store($categories, $memo_id);
         return view('EngineerStack.detailed_memo', compact('memo_data',
                                             'title', 'categories', 'memo_id'));
     }
