@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\Memo;
-use Illuminate\Http\Request;
-use App\Services\CategoryService;
+use App\Models\CategoryMemo;
 
-class CategoryController extends Controller
+class CategoryMemosController extends Controller
 {
-    private $category;
-
-    public function __construct(CategoryService $category_service)
+    /**
+     * コンストラクタでmiddleware('auth');
+     * を設定しているので、ログイン前では
+     * メモに関するデータにはアクセスできません。
+     * 
+     * @return void
+     */
+    public function __construct()
     {
-        $this->category = $category_service;
+        $this->middleware('auth');
     }
 
     /**
@@ -43,20 +48,9 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($categories, $memo_id)
+    public function store($memo_id, $category_id)
     {
-        $category_arr = $this->category->strToArr($categories);
-        $arr_length = count($category_arr);
-        for($index=0;$index<$arr_length;$index++) {
-            $is_exist = Category::where('name', $category_arr[$index])->exists();
-            if($is_exist) {
-                $category_id = Category::where('name', $category_arr[$index])->first()->id;
-            } else {
-                $category_id = Category::store($category_arr[$index]);
-            }
-            $insert_category_memos = app()->make('App\Http\Controllers\CategoryMemosController');
-            $insert_category_memos->store($memo_id, $category_id);
-        }
+        CategoryMemo::store($memo_id, $category_id);
     }
 
     /**
@@ -65,7 +59,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show()
     {
         //
     }
@@ -73,10 +67,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\M
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit()
     {
         //
     }
@@ -88,7 +82,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update()
     {
         //
     }
@@ -99,7 +93,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy()
     {
         //
     }

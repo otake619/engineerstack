@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Memo extends Model
+class CategoryMemo extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -16,19 +16,15 @@ class Memo extends Model
     ];
 
     protected $fillable = [
-        'user_id',
-        'title',
-        'memo_data'
+        'memo_id',
+        'category_id'
     ];
 
-    public static function store(int $user_id, string $title, string $memo_data)
+    public static function store(int $memo_id, int $category_id)
     {
-        $memo = Memo::create([
-            'user_id' => $user_id,
-            'title' => $title,
-            'memo_data' => $memo_data
+        $category_memo = CategoryMemo::create([
+            'memo_id' => $memo_id,
+            'category_id' => $category_id
         ]);
-
-        return $memo->id;
     }
 }
