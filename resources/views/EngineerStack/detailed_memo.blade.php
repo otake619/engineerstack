@@ -78,9 +78,9 @@
                                         <button class="dropdown-item has-text-left" style="background: none; border: 0px; white-space: normal;">メモを編集する</button>
                                     </form>
                                     <hr class="dropdown-divider">
-                                    <a id="delete_memo" href="#" class="dropdown-item has-text-left">
-                                        <span class="has-text-danger">メモを削除する</span>
-                                    </a>
+                                    <button id="delete_memo" class="dropdown-item has-text-left has-text-danger" style="background: none; border: 0px; white-space: normal;">
+                                        メモを削除する
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,11 @@
                                                 <button class="delete" aria-label="close"></button>
                                             </header>
                                             <footer class="modal-card-foot">
-                                                <button class="button is-danger"><i class="fas fa-trash-alt"></i>削除</button>
+                                                <form action="{{ $memo_id }}/destroy" method="POST">
+                                                    @csrf 
+                                                    <input type="hidden" name="memo_id" value="{{ $memo_id }}">
+                                                    <button class="button is-danger"><i class="fas fa-trash-alt"></i>削除</button>
+                                                </form>
                                                 <button id="modal-close" class="button">キャンセル</button>
                                             </footer>
                                         </div>

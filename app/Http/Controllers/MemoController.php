@@ -69,7 +69,7 @@ class MemoController extends Controller
         $memo = Memo::find($memo_id);
         $memo_owner = $memo->user_id;
         if($memo_owner != Auth::id()) {
-            redirect()->route('dashboard');
+            return redirect()->route('dashboard');
         } else {
             $memo_data = $memo['memo_data'];
             return view('EngineerStack.edit_memo'
@@ -89,7 +89,7 @@ class MemoController extends Controller
         $title = $request->input('title');
         $memo_owner = Memo::find($memo_id)->user_id;
         if($memo_owner != Auth::id()) {
-            redirect()->route('dashboard');
+            return redirect()->route('dashboard');
         } else {
             //更新処理
             Memo::where('id', $memo_id)
@@ -109,7 +109,7 @@ class MemoController extends Controller
         $memo_data = $request->input('memo_data');
         $memo_owner = Memo::find($memo_id)->user_id;
         if($memo_owner != Auth::id()) {
-            redirect()->route('dashboard');
+            return redirect()->route('dashboard');
         } else {
             $title = Memo::find($memo_id)->title;
             //TODO: カテゴリ機能実装時に必ず修正。
@@ -124,8 +124,15 @@ class MemoController extends Controller
      * 指定memoレコードの削除
      * @param  int  $id
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-
+        $memo_id = $request->input('memo_id');
+        $memo_owner = Memo::find($memo_id)->user_id;
+        if($memo_owner != Auth::id()) {
+            return redirect()->route('dashboard');
+        } else {
+            Memo::destroy($memo_id);
+            return redirect()->route('memos.deleted');
+        }
     }
 }
