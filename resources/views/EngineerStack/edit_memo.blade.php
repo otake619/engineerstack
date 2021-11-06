@@ -64,7 +64,7 @@
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input id="category" type="text" class="input is-success" placeholder="タイトル" value="MVCでわからなかったところ, php, Laravel, つまづき, MVC">
+                                        <input id="category" type="text" class="input is-success" placeholder="カテゴリ">
                                     </div>
                                 </div>
                             </div>
@@ -120,6 +120,8 @@
         $(function() {
             let memoData = @json($memo_data);
             memoData = JSON.parse(memoData);
+            let categories = @json($categories);
+            $('#category').val(categories);
 
             const editor = new EditorJS({
                 minHeight: 50,

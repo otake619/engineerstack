@@ -57,32 +57,20 @@
             <div class="columns">
                 <div class="column is-2">
                     <div class="category p-5">
-                        <span class="tag"><i class="fas fa-tape"></i>php</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>Laravel</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>SQL</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>MVC</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>CRUD</span><br>
-                        <span class="tag is-primary"><i class="fas fa-tape"></i>つまづきポイント</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>悩んだ点</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>解決策</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>思考プロセス</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>javascript</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>qiita</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>zenn</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>気づき</span><br>
-                        <span class="tag"><i class="fas fa-tape"></i>アイデア</span><br>
+                        @foreach($memos as $memo)
+                            @foreach($memo->categories->pluck('name') as $category)
+                                <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span><br>
+                            @endforeach
+                        @endforeach
                     </div>
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
                         <div class="memo column is-5 box m-3">
                             <div class="category">
-                                <span class="tag is-primary"><i class="fas fa-tape"></i>つまづきポイント</span>
-                                <span class="tag"><i class="fas fa-tape"></i>ログ</span>
-                                <span class="tag"><i class="fas fa-tape"></i>思考プロセス</span>
-                                <span class="tag"><i class="fas fa-tape"></i>php</span>
-                                <span class="tag"><i class="fas fa-tape"></i>Laravel</span>
-                                <span class="tag"><i class="fas fa-tape"></i>MVC</span>
+                                @foreach($memo->categories->pluck('name') as $category)
+                                    <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span>
+                                @endforeach
                             </div><br>
                             <div class="title">
                                 <form action="{{ route('memos.show') }}" method="POST">
