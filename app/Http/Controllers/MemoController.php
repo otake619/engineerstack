@@ -79,11 +79,11 @@ class MemoController extends Controller
     {
         $memo_id = $id;
         $memo = Memo::find($memo_id);
+        $categories = Memo::find($memo_id)->categories->pluck('name');
         $this->checkOwner($memo_id);
         $memo_data = $memo['memo_data'];
         return view('EngineerStack.edit_memo'
-                , compact('memo', 'memo_data'));
-        
+                , compact('memo', 'memo_data', 'categories'));
     }
 
     /**
@@ -132,7 +132,7 @@ class MemoController extends Controller
         $this->checkOwner($memo_id);
         $title = Memo::find($memo_id)->title;
         //TODO: カテゴリ機能実装時に必ず修正。
-        $categories = "php, Laravel, MVC, EngineerStack";
+        $categories = Memo::find($memo_id)->categories->pluck('name');
         $memo_data = Memo::find($memo_id)->memo_data;
         return view('EngineerStack.detailed_memo',
                 compact('title', 'categories', 'memo_data', 'memo_id'));

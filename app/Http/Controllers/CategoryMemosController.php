@@ -50,7 +50,11 @@ class CategoryMemosController extends Controller
      */
     public function store($memo_id, $category_id)
     {
-        CategoryMemo::store($memo_id, $category_id);
+        $is_exist = CategoryMemo::where('memo_id', $memo_id)
+                                ->where('category_id', $category_id)->exists();
+        if(!$is_exist) {
+            CategoryMemo::store($memo_id, $category_id);
+        }
     }
 
     /**

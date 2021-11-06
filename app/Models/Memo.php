@@ -31,4 +31,16 @@ class Memo extends Model
 
         return $memo->id;
     }
+
+    public function categories()
+    {
+        return $this->hasManyThrough(
+            Category::class,
+            CategoryMemo::class,
+            'memo_id',
+            'id',
+            null,
+            'category_id'
+        );
+    }
 }
