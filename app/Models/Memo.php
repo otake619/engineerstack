@@ -21,6 +21,17 @@ class Memo extends Model
         'memo_data'
     ];
 
+    /**
+     * メモ記録画面で入力されたメモをDBへ格納する関数。
+     * @param int $user_id
+     * メモデータを記録したuserのid。
+     * @param string $title
+     * メモデータのタイトル。
+     * @param string $memo_data
+     * editor.jsで作成されたメモデータ。
+     * @return int $memo->id 
+     * DBに格納されたmemoレコードのid。
+     */
     public static function store(int $user_id, string $title, string $memo_data)
     {
         $memo = Memo::create([
@@ -32,6 +43,10 @@ class Memo extends Model
         return $memo->id;
     }
 
+    /**
+     * 
+     * 
+     */
     public function categories()
     {
         return $this->hasManyThrough(

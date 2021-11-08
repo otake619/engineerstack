@@ -23,7 +23,7 @@ class MemoController extends Controller
     }
 
     /**
-     * この関数はメモの全権取得を担当しています。
+     * この関数はメモの全件取得を担当しています。
      * @param void
      * @return Illuminate\View\View
      * ホーム画面を返します。
@@ -47,15 +47,12 @@ class MemoController extends Controller
      * が含まれています。
      * @return @return Illuminate\View\View
      * メモの詳細画面を返します。
-     * ToDo 後でStoreMemoRequestに型を書き換えて、フォームバリデーションを
+     * TODO 後でStoreMemoRequestに型を書き換えて、フォームバリデーションを
      * 実装
      */
     public function store(Request $request)
     {
         $user_id = Auth::id();
-        //$categories: 今は使わないが後ほど使用
-        //後ほどCategoriesServiceとCategoryControllerと連携して
-        //カンマ区切りで1つずつ分けてDBへ保存する処理を実装
         $categories = $request->input('categories');
         $title = $request->input('title');
         $memo_data = $request->input('memo_data');
@@ -103,11 +100,9 @@ class MemoController extends Controller
         $memo_data = $request->input('memo_data');
         $title = $request->input('title');
         $this->checkOwner($memo_id);
-        //更新処理
         Memo::where('id', $memo_id)
                     ->update(['memo_data' => $memo_data, 'title' => $title]);
         $title = Memo::find($memo_id)->title;
-        //TODO: カテゴリ機能実装時に必ず修正。
         $categories = "php, Laravel, MVC, EngineerStack";
         $memo_data = Memo::find($memo_id)->memo_data;
         return view('EngineerStack.detailed_memo'
@@ -131,7 +126,6 @@ class MemoController extends Controller
         $memo_data = $request->input('memo_data');
         $this->checkOwner($memo_id);
         $title = Memo::find($memo_id)->title;
-        //TODO: カテゴリ機能実装時に必ず修正。
         $categories = Memo::find($memo_id)->categories->pluck('name');
         $memo_data = Memo::find($memo_id)->memo_data;
         return view('EngineerStack.detailed_memo',
