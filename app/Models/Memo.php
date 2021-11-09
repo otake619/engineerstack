@@ -44,17 +44,15 @@ class Memo extends Model
     }
 
     /**
-     * 
-     * 
+     * Memoレコードに紐づくCategoryレコードを返す関数。
+     * @return mixed Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function categories()
     {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Category::class,
             CategoryMemo::class,
             'memo_id',
-            'id',
-            null,
             'category_id'
         );
     }

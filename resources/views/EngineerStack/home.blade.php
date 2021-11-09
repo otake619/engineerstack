@@ -57,10 +57,8 @@
             <div class="columns">
                 <div class="column is-2">
                     <div class="category p-5">
-                        @foreach($memos as $memo)
-                            @foreach($memo->categories->pluck('name') as $category)
-                                <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span><br>
-                            @endforeach
+                        @foreach($categories as $category)
+                            <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span><br>
                         @endforeach
                     </div>
                 </div>

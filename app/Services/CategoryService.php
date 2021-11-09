@@ -10,7 +10,7 @@
          * @param string: $categories
          * @return array: $categories_arr
          */
-        public function strToArr($categories)
+        public function strToArr(string $categories)
         {
             $separater = ",";
             $categories_arr = explode($separater, $categories);
@@ -45,5 +45,25 @@
                 $insert_category_memos = app()->make('App\Http\Controllers\CategoryMemosController');
                 $insert_category_memos->store($memo_id, $category_id);
             }
+        }
+
+        /**
+         * この関数はmemoコレクションを受け取ってmemoコレクションに対応する
+         * categoryを重複を許さないコレクションとして返す。
+         * @param object $memos
+         * memoコレクション。
+         * @return object $unique_categories
+         * 一意なcategoryコレクション。
+         */
+        public function getCategories(object $memos) 
+        {
+            $category_collection = collect();
+            
+            foreach($memos as $memo) {
+                $to_collection = collect($memo->categories);
+                $category_collection = $category_collection->concat($to_collection);
+            }
+            $unique_categories = $category_collection->unique('name')->pluck('name');
+            return $unique_categories;
         }
     }
