@@ -20,6 +20,16 @@ class CategoryMemo extends Model
         'category_id'
     ];
 
+    /**
+     * メモ記録画面で入力されたメモデータのうち、
+     * メモとカテゴリを紐づける役割であるCategoryMemoレコードを
+     * DBへ格納する関数。
+     * @param int $memo_id
+     * memoレコードのid。
+     * @param int $category_id
+     * categoryレコードのid。
+     * @return void
+     */
     public static function store(int $memo_id, int $category_id)
     {
         $category_memo = CategoryMemo::create([

@@ -19,6 +19,13 @@ class Category extends Model
         'name',
     ];
 
+    /**
+     * メモ記録画面で入力されたカテゴリをDBへ格納する関数。
+     * @param string $name
+     * メモ入力画面で入力されたカテゴリ名。
+     * @return int $category->id
+     * DBにinsertされたcategoryレコードのid。
+     */
     public static function store(string $name)
     {
         $category = Category::create([
