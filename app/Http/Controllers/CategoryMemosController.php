@@ -31,7 +31,7 @@ class CategoryMemosController extends Controller
      * categoryレコードのid。
      * @return void
      */
-    public function store($memo_id, $category_id)
+    public function store(int $memo_id, int $category_id)
     {
         $is_exist = CategoryMemo::where('memo_id', $memo_id)
                                 ->where('category_id', $category_id)->exists();

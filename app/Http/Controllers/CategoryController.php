@@ -34,7 +34,7 @@ class CategoryController extends Controller
      * @param int $memo_id : メモのid
      * @return void
      */
-    public function store($categories, $memo_id)
+    public function store(string $categories, int $memo_id)
     {
         $this->category->insertCategoryMemos($categories, $memo_id);
     }

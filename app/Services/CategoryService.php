@@ -30,7 +30,7 @@
          * メモのinsert時に取得したメモのid。
          * @return void
          */
-        public function insertCategoryMemos($categories, $memo_id)
+        public function insertCategoryMemos(string $categories, int $memo_id)
         {
             $category_arr = $this->strToArr($categories);
             $arr_length = count($category_arr);

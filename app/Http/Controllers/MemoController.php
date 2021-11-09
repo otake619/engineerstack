@@ -72,7 +72,7 @@ class MemoController extends Controller
      * TODO: 後ほど、user_idが異なるアカウントでredirectが
      * 発動するかテスト
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         $memo_id = $id;
         $memo = Memo::find($memo_id);
@@ -159,7 +159,7 @@ class MemoController extends Controller
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      * ホーム画面を返します。
      */
-    public function checkOwner($memo_id)
+    public function checkOwner(int $memo_id)
     {
         $memo_owner = Memo::find($memo_id)->user_id;
         
