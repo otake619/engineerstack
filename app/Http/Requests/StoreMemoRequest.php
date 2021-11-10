@@ -24,16 +24,16 @@ class StoreMemoRequest extends FormRequest
     public function rules()
     {
         return [
-            'categories' => 'required|array',
-            'categories.*' => 'nullable|max:30',
             'title' => 'required|max:100',
-            'memo' => 'json'
+            'memo' => 'json',
+            'memo_count' => 'max:100'
         ];
     }
 
     public function messages()
     {
         return [
+            'title.max:100' => 'カテゴリは100文字以内に収めてください。',
             'categories.required' => 'カテゴリは必ず1つの入力が必要です',
             'categories.*.max:30' => '各カテゴリは最大30文字です'
         ];

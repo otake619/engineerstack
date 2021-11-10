@@ -58,7 +58,7 @@ class MemoController extends Controller
      * TODO 後でStoreMemoRequestに型を書き換えて、フォームバリデーションを
      * 実装
      */
-    public function store(Request $request)
+    public function store(StoreMemoRequest $request)
     {
         $user_id = Auth::id();
         $categories = $request->input('categories');
