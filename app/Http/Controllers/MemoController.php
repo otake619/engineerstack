@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreMemoRequest;
 use App\Models\Memo;
 use App\Models\Category;
+use App\Services\MemoService;
 
 class MemoController extends Controller
 {
+    private $memo;
+
     /**
      * コンストラクタでmiddleware('auth');
      * を設定しているので、ログイン前では
@@ -17,9 +20,10 @@ class MemoController extends Controller
      * 
      * @return void
      */
-    public function __construct()
+    public function __construct(MemoService $memoService)
     {
         $this->middleware('auth');
+        $this->memo = $memoService;
     }
 
     /**
@@ -33,8 +37,12 @@ class MemoController extends Controller
         $user_id = Auth::id();
         //後でカテゴリーの参照とViewへの返却も実装
         $memos = Memo::where('user_id', $user_id)->get();
+        //TODO $memosがある時点で、$memo_dataいらないのでは？後で検討。
+        //他の関数でも変数の重複が見られるから、要検討。
+        $get_categories = app()->make('App\Http\Controllers\CategoryController');
+        $categories = $get_categories->getCategories($memos);
         $memo_data = Memo::where('user_id', $user_id)->get('memo_data');
-        return view('EngineerStack.home', compact('memos', 'memo_data'));
+        return view('EngineerStack.home', compact('memos', 'memo_data', 'categories'));
     }
 
     /**

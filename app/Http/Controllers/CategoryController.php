@@ -38,4 +38,16 @@ class CategoryController extends Controller
     {
         $this->category->insertCategoryMemos($categories, $memo_id);
     }
+
+    /**
+     * @param object $memos
+     * memoコレクション。
+     * @return object $categories
+     * categoryコレクション。
+     */
+    public function getCategories(object $memos)
+    {
+        $categories = $this->category->getCategories($memos);
+        return $categories;
+    }
 }
