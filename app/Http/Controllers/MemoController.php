@@ -8,6 +8,7 @@ use App\Http\Requests\StoreMemoRequest;
 use App\Models\Memo;
 use App\Models\Category;
 use App\Services\MemoService;
+use Illuminate\Support\Facades\DB;
 
 class MemoController extends Controller
 {
