@@ -67,13 +67,13 @@
                             @endif
                         </div>
                         <div class="field">
-                            <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 1カテゴリ30文字まで<br>半角カンマ「,」で区切って入力</span></label><br>
+                            <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 合計150文字まで<br>半角カンマ「,」で区切って入力</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
                             <span class="is-primary" id="disp_category"></span>
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" name="categories" class="input is-success" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,...">
+                                        <input type="text" name="categories" class="input is-success" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,..." maxlength="154" required autofocus>
                                     </div>
                                 </div>
                             </div>
@@ -84,15 +84,18 @@
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" name="title" id="title" class="input is-success" placeholder="タイトルを入力" maxlength="100">
+                                        <input type="text" name="title" id="title" class="input is-success" placeholder="タイトルを入力" maxlength="100" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="editor_field">
-                            <label for="editor">メモ<br><span class="has-text-danger">*必須</span></label>
+                            <label for="editor">メモ<br><span class="has-text-danger">*必須 3000文字以内</span></label>
+                            <div id="editorjsCnt"></div>
                             <div class="editor_wrapper p-5">
                                 <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
+                                <input type="hidden" id="categories_count" name="categories_count">
+                                <input type="hidden" id="memo_count" name="memo_count">
                                 <input type="hidden" id="memo_data" name="memo_data" value="{{ $article->content ?? "" }}">
                             </div>
                         </div>
@@ -132,15 +135,28 @@
         $(function() {
             const editor = new EditorJS({
                 minHeight: 50,
-                holder: 'editorjs'
+                holder: 'editorjs',
+                onChange: () => {
+                    let myCode = $('#editorjs').html();
+                    let cleanCode = myCode.replace(/<(?:.|\n)*?>/gm, '').replace(/(\r\n|\n|\r)/gm,"").replace('&nbsp;','');
+                    cleanCode = cleanCode.slice(0, -52);
+                    let numChars = cleanCode.length;
+                    if(numChars < 0) {
+                        numChars = 0;
+                    }
+                    $('#editorjsCnt').text(numChars + "文字入力されています。");
+                    $('#memo_count').val(cleanCode);
+                }
             });
+
+            
+
 
             $("#post_memo").click(function() {
                 editor.save().then((outputData) => {
                     $('#memo_data').val(JSON.stringify(outputData));
-                    console.log('Article data: ', outputData);
                 }).catch((error) => {
-                    console.log('Saving failed: ', error);
+
                 });
             });
 
@@ -148,10 +164,13 @@
                 const separator = ",";
                 let inputText = $(this).val();
                 let textToArray = separateText(separator, inputText);
-                let array = checkElement(textToArray);
+                //let array = checkElement(textToArray);
                 let dispText = arrayToText(textToArray);
-                let tags = pushTag(array);
+                let tags = pushTag(textToArray);
                 $("#disp_category").html(tags);
+                let arrayLength = textToArray.length;
+                console.log(arrayLength);
+                $('#categories_count').val(arrayLength);
             });
 
             $("#title").keyup(function() {
@@ -192,26 +211,26 @@
             }
         }
 
-        function checkElement(array) {
-            const id = "#count_category";
+        // function checkElement(array) {
+        //     const id = "#count_category";
 
-            for(let i=0;i<array.length;i++) {
-                if(array[i] === '' || array[i].length === 0) {
-                    array.splice(i, 1);
-                } else if(array[i].length > 30) {
-                    const isNormal = false;
-                    const text = "カテゴリが30文字を超えています!";
-                    changeText(id, text);
-                    changeClass(id, isNormal);
-                    return;
-                } else {
-                    const isNormal = true;
-                    changeClass(id, isNormal);
-                }
-            }
-            countCategory(array);
-            return array;
-        }
+        //     for(let i=0;i<array.length;i++) {
+        //         if(array[i] === '' || array[i].length === 0) {
+        //             array.splice(i, 1);
+        //         } else if(array[i].length > 30) {
+        //             const isNormal = false;
+        //             const text = "カテゴリが30文字を超えています!";
+        //             changeText(id, text);
+        //             changeClass(id, isNormal);
+        //             return;
+        //         } else {
+        //             const isNormal = true;
+        //             changeClass(id, isNormal);
+        //         }
+        //     }
+        //     countCategory(array);
+        //     return array;
+        // }
 
         function createElement(tag, type, text) {
             let element = $(`<${tag}>`, {class:type, text: text});
