@@ -91,7 +91,11 @@ class MemoController extends Controller
     {
         $memo_id = $id;
         $is_owner = $this->memo->checkOwner($memo_id);
-        $this->isOwner($is_owner);
+        
+        if(!$is_owner) {
+            return redirect()->route('dashboard');
+        }
+
         $memo = Memo::find($memo_id);
         $categories = Memo::find($memo_id)->categories->pluck('name');
         $memo_data = $memo['memo_data'];
@@ -171,21 +175,5 @@ class MemoController extends Controller
         $this->memo->checkOwner($memo_id);
         Memo::destroy($memo_id);
         return redirect()->route('memos.deleted');
-    }
-
-    /**
-     * 他のアカウントのメモを操作させないための関数。
-     * @param bool $is_owner
-     * メモを発行したアカウントであればtrue,それ以外はfalseを返す。
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     * ホーム画面を返す。
-     */
-    public function isOwner(bool $is_owner)
-    {
-        if($is_owner) {
-
-        } else {
-            return redirect()->route('dashboard');
-        }
     }
 }
