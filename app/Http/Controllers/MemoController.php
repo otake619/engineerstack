@@ -65,8 +65,7 @@ class MemoController extends Controller
         $title = $request->input('title');
         $memo_data = $request->input('memo_data');
         $memo_id = Memo::store($user_id, $title, $memo_data);
-        $insert_categories = app()->make('App\Http\Controllers\CategoryController');
-        $insert_categories->store($categories, $memo_id);
+        $insert_categories = $this->memo->insertCategories($categories, $memo_id);
         return view('EngineerStack.detailed_memo', compact('memo_data',
                                             'title', 'categories', 'memo_id'));
     }
@@ -85,7 +84,7 @@ class MemoController extends Controller
         $memo_id = $id;
         $memo = Memo::find($memo_id);
         $categories = Memo::find($memo_id)->categories->pluck('name');
-        $this->checkOwner($memo_id);
+        $this->memo->checkOwner($memo_id);
         $memo_data = $memo['memo_data'];
         return view('EngineerStack.edit_memo'
                 , compact('memo', 'memo_data', 'categories'));
@@ -107,7 +106,7 @@ class MemoController extends Controller
         $memo_id = $request->input('memo_id');
         $memo_data = $request->input('memo_data');
         $title = $request->input('title');
-        $this->checkOwner($memo_id);
+        $this->memo->checkOwner($memo_id);
         Memo::where('id', $memo_id)
                     ->update(['memo_data' => $memo_data, 'title' => $title]);
         $title = Memo::find($memo_id)->title;
@@ -115,7 +114,6 @@ class MemoController extends Controller
         $memo_data = Memo::find($memo_id)->memo_data;
         return view('EngineerStack.detailed_memo'
                 , compact('title', 'categories', 'memo_data', 'memo_id'));
-        
     }
 
     /** 
@@ -132,7 +130,7 @@ class MemoController extends Controller
     {
         $memo_id = $request->input('memo_id');
         $memo_data = $request->input('memo_data');
-        $this->checkOwner($memo_id);
+        $this->memo->checkOwner($memo_id);
         $title = Memo::find($memo_id)->title;
         $categories = Memo::find($memo_id)->categories->pluck('name');
         $memo_data = Memo::find($memo_id)->memo_data;
@@ -152,27 +150,8 @@ class MemoController extends Controller
     public function destroy(Request $request)
     {
         $memo_id = $request->input('memo_id');
-        $this->checkOwner($memo_id);
+        $this->memo->checkOwner($memo_id);
         Memo::destroy($memo_id);
         return redirect()->route('memos.deleted');
-    }
-
-    /**
-     * この関数はメモに対して何らの処理を加える際に、
-     * メモの所有者以外のアカウントがメモに処理を加え
-     * ることを防ぐ処理を担当しています。
-     * 
-     * @param int $memo_id
-     * メモの主キーです。
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     * ホーム画面を返します。
-     */
-    public function checkOwner(int $memo_id)
-    {
-        $memo_owner = Memo::find($memo_id)->user_id;
-        
-        if($memo_owner != Auth::id()) {
-            return redirect()->route('dashboard');
-        }
     }
 }

@@ -79,10 +79,10 @@
                                     style="background: none; border: 0px; white-space: normal;">
                                 </form>
                             </div>
-                            <div id="data_{{ $loop->index }}">
+                            <div id="data_{{ $loop->index }}" style="overflow-wrap: break-word">
                             </div><br>
                             <div class="post-time">
-                                <p>{{ $memo->created_at->format('Y年m月d日投稿') }}</p>
+                                <p>{{ $memo->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
                     @endforeach
