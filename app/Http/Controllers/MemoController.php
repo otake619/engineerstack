@@ -8,6 +8,7 @@ use App\Http\Requests\StoreMemoRequest;
 use App\Models\Memo;
 use App\Models\Category;
 use App\Services\MemoService;
+use Illuminate\Support\Facades\DB;
 
 class MemoController extends Controller
 {
@@ -158,6 +159,19 @@ class MemoController extends Controller
         $memo_data = Memo::find($memo_id)->memo_data;
         return view('EngineerStack.detailed_memo',
                 compact('title', 'categories', 'memo_data', 'memo_id'));
+    }
+
+    public function search(Request $request)
+    {
+        $user_id = Auth::id();
+        $search_word = $request->input('search_word');
+        $memos = Memo::where('title', 'LIKE', "%$search_word%")
+            ->where('memo_data', 'LIKE', "%$search_word%")
+            ->where('user_id', $user_id)->get();
+        $memo_data = $memos->pluck('memo_data');
+        $categories = $this->memo->getCategories($memos);
+        return view('EngineerStack.search_result', 
+                compact('search_word', 'memos', 'memo_data', 'categories'));
     }
 
     /**

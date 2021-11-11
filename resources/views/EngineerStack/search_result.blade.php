@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>ホーム</title>
+    <title>検索結果 EngineerStack</title>
 </head>
 <body>
     <section class="header">
@@ -50,12 +50,12 @@
     </section>
     @if($memos->isEmpty())
         <section class="content">
-            <p>まだメモは投稿されていません。</p>
+            <p>{{ $search_word }} はヒットしませんでした。</p>
         </section>
     @else 
         <section class="content">
             <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">メモ一覧</p>
+                <p class="is-size-4 is-text-weight-bold">{{ $search_word }} に関するメモ一覧</p>
             </div>
             <div class="columns">
                 <div class="column is-2">
@@ -131,12 +131,11 @@
     <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
     <script>
         $(function () {
-            let memoData = @json($memo_data);
-            let memoLength = JSON.parse(JSON.stringify(memoData)).length;
+            let memoData = @json($memo_data ?? []);
+            let memoLength = memoData.length;
 
             for(let index=0;index<memoLength;index++) {
                 let data = memoData[index];
-                data = data.memo_data;
                 data = JSON.parse(data);
                 let post_time = data.time;
                 post_time = new Date(post_time);
