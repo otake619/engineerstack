@@ -161,7 +161,7 @@ class MemoController extends Controller
                 compact('title', 'categories', 'memo_data', 'memo_id'));
     }
 
-    public function search(Request $request)
+    public function searchTitle(Request $request)
     {
         $user_id = Auth::id();
         $search_word = $request->input('search_word');
@@ -170,6 +170,19 @@ class MemoController extends Controller
             ->where('user_id', $user_id)->get();
         $memo_data = $memos->pluck('memo_data');
         $categories = $this->memo->getCategories($memos);
+        return view('EngineerStack.search_result', 
+                compact('search_word', 'memos', 'memo_data', 'categories'));
+    }
+
+    public function searchCategory(Request $request)
+    {
+        $user_id = Auth::id();
+        $category = $request->input('category');
+        $search_word = $category;
+        $posted_memo = Memo::where('user_id', $user_id)->get();
+        $memos = $this->memo->getMemos($category);
+        $memo_data = $memos->pluck('memo_data');
+        $categories = $this->memo->getCategories($posted_memo);
         return view('EngineerStack.search_result', 
                 compact('search_word', 'memos', 'memo_data', 'categories'));
     }

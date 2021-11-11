@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <form action="{{ route('memos.search') }}" method="POST">
+                        <form action="{{ route('memos.search.title') }}" method="POST">
                             @csrf 
                             <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                             <span class="icon is-small is-left">
@@ -61,7 +61,11 @@
                 <div class="column is-2">
                     <div class="category p-5">
                         @foreach($categories as $category)
-                            <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span><br>
+                            <form action="{{ route('memos.search.category') }}" method="POST">
+                                @csrf 
+                                <input type="hidden" name="category" value="{{ $category }}">
+                                <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span><br></button>
+                            </form>
                         @endforeach
                     </div>
                 </div>
@@ -70,7 +74,7 @@
                         <div class="memo column is-5 box m-3">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span>
+                                    <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
                             <div class="title">
@@ -78,7 +82,7 @@
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                                     <input type="hidden" name="memo_data" id="memo_data" value="{{ $memo->memo_data }}">
-                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ $memo->title }}" type="submit"
+                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 15) }}" type="submit"
                                     style="background: none; border: 0px; white-space: normal;">
                                 </form>
                             </div>

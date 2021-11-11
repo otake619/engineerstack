@@ -4,7 +4,7 @@
     use Illuminate\Support\Facades\Auth;
     use App\Models\Memo;
     use App\Models\Category;
-    use App\Models\CategoryMemos;
+    use App\Models\CategoryMemo;
 
     class MemoService {
         /**
@@ -100,5 +100,18 @@
             $get_categories = app()->make('App\Http\Controllers\CategoryController');
             $categories = $get_categories->getCategories($memos);
             return $categories;
+        }
+
+        public function getMemos(string $category)
+        {
+            $memos = collect();
+            $category_id = Category::where('name', $category)->pluck('id');
+            $memo_ids = CategoryMemo::where('category_id', $category_id)->pluck('memo_id');
+            $memo_count = count($memo_ids);
+            for($index = 0; $index < $memo_count; $index++) {
+                $memo = Memo::where('id', $memo_ids[$index])->get();
+                $memos = $memos->concat($memo);
+            }
+            return $memos;
         }
     }

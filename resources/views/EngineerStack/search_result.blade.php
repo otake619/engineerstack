@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <form action="{{ route('memos.search') }}" method="POST">
+                        <form action="{{ route('memos.search.title') }}" method="POST">
                             @csrf 
                             <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                             <span class="icon is-small is-left">
@@ -50,27 +50,43 @@
     </section>
     @if($memos->isEmpty())
         <section class="content">
-            <p>{{ $search_word }} はヒットしませんでした。</p>
+            <p>{{ Str::limit($search_word, 10) }} はヒットしませんでした。</p>
         </section>
     @else 
         <section class="content">
             <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">{{ $search_word }} に関するメモ一覧</p>
+                <p class="is-size-4 is-text-weight-bold">{{ Str::limit($search_word, 20) }} に関するメモ一覧</p>
             </div>
             <div class="columns">
                 <div class="column is-2">
                     <div class="category p-5">
                         @foreach($categories as $category)
-                            <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span><br>
+                            <form action="{{ route('memos.search.category') }}" method="POST">
+                                @csrf 
+                                <input type="hidden" name="category" value="{{ $category }}">
+                                @if ($category == $search_word)
+                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span></button>
+                                @else 
+                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span></button>
+                                @endif
+                            </form>
                         @endforeach
                     </div>
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3">
-                            <div class="category">
+                        <div class="memo column is-5 box m-3" style="min-width: 300px;">
+                            <div class="category is-flex">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span>
+                                    <form action="{{ route('memos.search.category') }}" method="POST">
+                                        @csrf 
+                                        <input type="hidden" name="category" value="{{ $category }}">
+                                        @if ($category == $search_word)
+                                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
+                                        @else 
+                                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
+                                        @endif
+                                    </form>
                                 @endforeach
                             </div><br>
                             <div class="title">
@@ -78,7 +94,7 @@
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                                     <input type="hidden" name="memo_data" id="memo_data" value="{{ $memo->memo_data }}">
-                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ $memo->title }}" type="submit"
+                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 20) }}" type="submit"
                                     style="background: none; border: 0px; white-space: normal;">
                                 </form>
                             </div>
