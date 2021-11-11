@@ -73,10 +73,7 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
                                 <div class="dropdown-content">
-                                    <form action="{{ $memo_id }}/edit" method="GET">
-                                        @csrf
-                                        <button class="dropdown-item has-text-left" style="background: none; border: 0px; white-space: normal;">メモを編集する</button>
-                                    </form>
+                                    <a href="{{ $memo_id }}/edit" class="dropdown-item has-text-left">メモを編集する</a>
                                     <hr class="dropdown-divider">
                                     <button id="delete_memo" class="dropdown-item has-text-left has-text-danger" style="background: none; border: 0px; white-space: normal;">
                                         メモを削除する

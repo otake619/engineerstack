@@ -33,12 +33,20 @@
          * ホーム画面へリダイレクト。
          */
         public function checkOwner(int $memo_id)
-        {
+        {   
+            $is_exist = Memo::where('id', $memo_id)->first();
+
+            if(is_null($is_exist)) {
+                return false;
+            }
+
             $memo_owner = Memo::find($memo_id)->user_id;
             
             if($memo_owner != Auth::id()) {
-                return redirect()->route('dashboard');
+                return false;
             }
+
+            return true;
         }
 
         /**
@@ -78,5 +86,19 @@
             $categories_arr = array_filter($categories_arr, "strlen");
             $categories_arr = array_map("trim", $categories_arr);
             return $categories_arr;
+        }
+
+        /**
+         * memoのidと一致するcategoryレコードのnameを取得して返す。
+         * @param object $memos 
+         * memoのコレクション
+         * @return object $categories
+         * categoryコレクションのnameカラムだけ抜き出したコレクション。
+         */
+        public function getCategories(object $memos)
+        {
+            $get_categories = app()->make('App\Http\Controllers\CategoryController');
+            $categories = $get_categories->getCategories($memos);
+            return $categories;
         }
     }
