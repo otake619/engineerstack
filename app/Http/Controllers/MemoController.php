@@ -64,10 +64,16 @@ class MemoController extends Controller
         $categories = $request->input('categories');
         $title = $request->input('title');
         $memo_data = $request->input('memo_data');
-        $memo_id = Memo::store($user_id, $title, $memo_data);
-        $insert_categories = $this->memo->insertCategories($categories, $memo_id);
-        return view('EngineerStack.detailed_memo', compact('memo_data',
+
+        try {
+            $memo_id = Memo::store($user_id, $title, $memo_data);
+            $insert_categories = $this->memo->insertCategories($categories, $memo_id);
+            return view('EngineerStack.detailed_memo', compact('memo_data',
                                             'title', 'categories', 'memo_id'));
+        } catch (Exception $exception) {
+            return redirect()->route('dashboard');
+        }
+        
     }
 
     /**
@@ -101,19 +107,25 @@ class MemoController extends Controller
      * @return Illuminate\View\View
      * メモ詳細画面を返す。
      */
-    public function update(Request $request)
+    public function update(StoreMemoRequest $request)
     {
         $memo_id = $request->input('memo_id');
         $memo_data = $request->input('memo_data');
         $title = $request->input('title');
+        $categories = $request->input('categories');
         $this->memo->checkOwner($memo_id);
-        Memo::where('id', $memo_id)
+
+        try {
+            Memo::where('id', $memo_id)
                     ->update(['memo_data' => $memo_data, 'title' => $title]);
-        $title = Memo::find($memo_id)->title;
-        $categories = "php, Laravel, MVC, EngineerStack";
-        $memo_data = Memo::find($memo_id)->memo_data;
-        return view('EngineerStack.detailed_memo'
-                , compact('title', 'categories', 'memo_data', 'memo_id'));
+            $title = Memo::find($memo_id)->title;
+            $this->memo->categoriesSync($memo_id, $categories);
+            $memo_data = Memo::find($memo_id)->memo_data;
+            return view('EngineerStack.detailed_memo'
+                    , compact('title', 'categories', 'memo_data', 'memo_id'));
+        } catch (Exception $exception) {
+            return redirect()->route('dashboard');
+        }
     }
 
     /** 

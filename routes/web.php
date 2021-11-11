@@ -18,7 +18,7 @@ Route::prefix('memos')->group(function () {
     Route::get('index', [MemoController::class, 'index'])->name('memos.index');
     Route::get('create', [MemoController::class, 'create'])->name('memos.create');
     Route::post('store', [MemoController::class, 'store'])->name('memos.store');
-    Route::post('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
+    Route::get('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
     Route::post('update', [MemoController::class, 'update'])->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
     Route::post('show', [MemoController::class, 'show'])->name('memos.show');
