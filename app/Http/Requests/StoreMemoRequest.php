@@ -41,7 +41,8 @@ class StoreMemoRequest extends FormRequest
     {
         return [
             'title.max:100' => 'カテゴリは100文字以内に収めてください。',
-            'categories_count.regex' => 'カテゴリの最大数は5つです。'
+            'categories_count.regex' => 'カテゴリの最大数は5つです。',
+            'categories_count.required' => 'カテゴリは必須です。'
         ];
     }
 
@@ -55,7 +56,7 @@ class StoreMemoRequest extends FormRequest
         return [
             'title' => 'メモのタイトル',
             'memo_count' => 'メモの文字数',
-            'categories' => 'カテゴリ'
+            'categories' => 'カテゴリ',
         ];
     }
 }

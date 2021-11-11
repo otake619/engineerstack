@@ -73,7 +73,7 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
                                 <div class="dropdown-content">
-                                    <form action="{{ $memo_id }}/edit" method="POST">
+                                    <form action="{{ $memo_id }}/edit" method="GET">
                                         @csrf
                                         <button class="dropdown-item has-text-left" style="background: none; border: 0px; white-space: normal;">メモを編集する</button>
                                     </form>

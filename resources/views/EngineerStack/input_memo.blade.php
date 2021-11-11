@@ -169,7 +169,6 @@
                 let tags = pushTag(textToArray);
                 $("#disp_category").html(tags);
                 let arrayLength = textToArray.length;
-                console.log(arrayLength);
                 $('#categories_count').val(arrayLength);
             });
 
@@ -210,27 +209,6 @@
                 changeClass(id, isNormal);
             }
         }
-
-        // function checkElement(array) {
-        //     const id = "#count_category";
-
-        //     for(let i=0;i<array.length;i++) {
-        //         if(array[i] === '' || array[i].length === 0) {
-        //             array.splice(i, 1);
-        //         } else if(array[i].length > 30) {
-        //             const isNormal = false;
-        //             const text = "カテゴリが30文字を超えています!";
-        //             changeText(id, text);
-        //             changeClass(id, isNormal);
-        //             return;
-        //         } else {
-        //             const isNormal = true;
-        //             changeClass(id, isNormal);
-        //         }
-        //     }
-        //     countCategory(array);
-        //     return array;
-        // }
 
         function createElement(tag, type, text) {
             let element = $(`<${tag}>`, {class:type, text: text});
