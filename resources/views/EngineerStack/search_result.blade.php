@@ -76,15 +76,15 @@
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
                         <div class="memo column is-5 box m-3" style="min-width: 300px;">
-                            <div class="category is-flex">
+                            <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <form action="{{ route('memos.search.category') }}" method="POST">
+                                    <form action="{{ route('memos.search.category') }}" method="POST" style="display: inline">
                                         @csrf 
                                         <input type="hidden" name="category" value="{{ $category }}">
                                         @if ($category == $search_word)
-                                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
+                                            <button style="background: none; border: 0px;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
                                         @else 
-                                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
+                                            <button style="background: none; border: 0px;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
                                         @endif
                                     </form>
                                 @endforeach
