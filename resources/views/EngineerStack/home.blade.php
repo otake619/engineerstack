@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <form action="{{ route('memos.search.title') }}" method="POST">
+                        <form action="{{ route('memos.search.title') }}" method="GET">
                             @csrf 
                             <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                             <span class="icon is-small is-left">
@@ -61,7 +61,7 @@
                 <div class="column is-2">
                     <div class="category p-5">
                         @foreach($categories as $category)
-                            <form action="{{ route('memos.search.category') }}" method="POST">
+                            <form action="{{ route('memos.search.category') }}" method="">
                                 @csrf 
                                 <input type="hidden" name="category" value="{{ $category }}">
                                 <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span><br></button>
@@ -97,13 +97,26 @@
             </div>
             <div class="columns">
                 <div class="column">
-                    <div class="paging has-text-centered mt-5">
-                        <a href="">1</a>
-                        <a href="">2</a>
-                        <a href="">3</a>
-                        <a href="">4</a>
-                        <a class="ml-5" href="">次へ</a>
-                    </div>
+                    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                        <ul class="pagination-list">
+                            {{-- ページネーションが正しく動作していない。 --}}
+                            @if($memos->currentPage() == 1)
+                                @if($memos->currentPage() == $memos->lastPage())
+                                    <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
+                                @else 
+                                    <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
+                                    <li><a class="pagination-next" href="{{ $memos->nextPageUrl() }}">次のページ</a></li>
+                                @endif
+                            @elseif($memos->currentPage() == $memos->lastPage())
+                                <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
+                            @else 
+                                <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
+                                <li><a class="pagination-next" href="{{ $memos->nextPageUrl() }}">次のページ</a></li>
+                            @endif
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </section>
@@ -135,12 +148,11 @@
     <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
     <script>
         $(function () {
-            let memoData = @json($memo_data);
-            let memoLength = JSON.parse(JSON.stringify(memoData)).length;
+            let memoData = @json($memos->pluck('memo_data') ?? []);
+            let memoLength = memoData.length;
 
             for(let index=0;index<memoLength;index++) {
                 let data = memoData[index];
-                data = data.memo_data;
                 data = JSON.parse(data);
                 let post_time = data.time;
                 post_time = new Date(post_time);

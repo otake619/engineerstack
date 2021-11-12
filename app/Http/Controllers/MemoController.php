@@ -9,6 +9,7 @@ use App\Models\Memo;
 use App\Models\Category;
 use App\Services\MemoService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
 
 class MemoController extends Controller
 {
@@ -37,12 +38,11 @@ class MemoController extends Controller
     {
         $user_id = Auth::id();
         //後でカテゴリーの参照とViewへの返却も実装
-        $memos = Memo::where('user_id', $user_id)->get();
+        $memos = Memo::where('user_id', $user_id)->paginate(6);
         //TODO $memosがある時点で、$memo_dataいらないのでは？後で検討。
         //他の関数でも変数の重複が見られるから、要検討。
         $categories = $this->memo->getCategories($memos);
-        $memo_data = Memo::where('user_id', $user_id)->get('memo_data');
-        return view('EngineerStack.home', compact('memos', 'memo_data', 'categories'));
+        return view('EngineerStack.home', compact('memos', 'categories'));
     }
 
     /**
@@ -76,7 +76,6 @@ class MemoController extends Controller
             DB::rollback();
             return redirect()->route('dashboard');
         }
-        
     }
 
     /**
@@ -166,12 +165,10 @@ class MemoController extends Controller
         $user_id = Auth::id();
         $search_word = $request->input('search_word');
         $memos = Memo::where('title', 'LIKE', "%$search_word%")
-            ->where('memo_data', 'LIKE', "%$search_word%")
-            ->where('user_id', $user_id)->get();
-        $memo_data = $memos->pluck('memo_data');
+            ->where('user_id', $user_id)->paginate(6);
         $categories = $this->memo->getCategories($memos);
         return view('EngineerStack.search_result', 
-                compact('search_word', 'memos', 'memo_data', 'categories'));
+                compact('search_word', 'memos', 'categories'));
     }
 
     public function searchCategory(Request $request)
@@ -181,10 +178,9 @@ class MemoController extends Controller
         $search_word = $category;
         $posted_memo = Memo::where('user_id', $user_id)->get();
         $memos = $this->memo->getMemos($category);
-        $memo_data = $memos->pluck('memo_data');
         $categories = $this->memo->getCategories($posted_memo);
         return view('EngineerStack.search_result', 
-                compact('search_word', 'memos', 'memo_data', 'categories'));
+                compact('search_word', 'memos','categories'));
     }
 
     /**
