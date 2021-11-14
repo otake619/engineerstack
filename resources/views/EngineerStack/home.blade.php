@@ -71,7 +71,7 @@
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3">
+                        <div class="memo column is-5 box m-3" style="min-width: 300px">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
@@ -81,7 +81,7 @@
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
-                                    <input type="hidden" name="memo_data" id="memo_data" value="{{ $memo->memo_data }}">
+                                    <input type="hidden" name="memo_data" value="{{ $memo->memo_data }}">
                                     <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 15) }}" type="submit"
                                     style="background: none; border: 0px; white-space: normal;">
                                 </form>

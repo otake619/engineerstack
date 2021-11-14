@@ -163,9 +163,13 @@ class MemoController extends Controller
     public function searchTitle(Request $request)
     {
         $user_id = Auth::id();
+        $memos = Memo::where('user_id', $user_id)->get();
         $search_word = $request->input('search_word');
-        $memos = Memo::where('title', 'LIKE', "%$search_word%")
-            ->where('user_id', $user_id)->paginate(6);
+        $search_title = Memo::where('title', 'LIKE', "%$search_word%")
+            ->where('user_id', $user_id)->get();
+        $search_memo = Memo::whereJsonContains("memo_data->blocks->data->text", "%$search_word%")->get();
+        dd($search_memo);
+        die;
         $categories = $this->memo->getCategories($memos);
         return view('EngineerStack.search_result', 
                 compact('search_word', 'memos', 'categories'));
