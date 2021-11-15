@@ -167,12 +167,34 @@ class MemoController extends Controller
         $search_word = $request->input('search_word');
         $search_title = Memo::where('title', 'LIKE', "%$search_word%")
             ->where('user_id', $user_id)->get();
-        $search_memo = Memo::whereJsonContains("memo_data->blocks->data->text", "%$search_word%")->get();
-        dd($search_memo);
-        die;
+        $search_memo = Memo::where("memo_data->blocks", 'LIKE', "%$search_word%")->pluck('memo_data');
+        $memo_count = count($search_memo);
+        $search_memo = json_decode($search_memo, true);
+        $hit_id = [];
+        for($index = 0; $index < $memo_count; $index++) {
+            $memo = $search_memo[$index];
+            $json_memo = json_decode($memo, true);
+            $block_count = count($json_memo['blocks']);
+            for($block = 0; $block < $block_count; $block++) {
+                if(strpos($json_memo['blocks'][$block]['data']['text'], $search_word) !== false) {
+                    $id = $json_memo['blocks'][$block]['id'];
+                    array_push($hit_id, $id);
+                }
+            }
+        }
+        
+        $hit_memos = collect();
+        $length = count($hit_id);
+        for($index = 0; $index < $length; $index++) {
+            $search_json = Memo::where("memo_data->blocks", 'LIKE', "%$hit_id[$index]%")->get();
+            $hit_memos = $hit_memos->concat($search_json);
+        }
+
+        $hit_memos = $hit_memos->concat($search_title);
+        $hit_memos = $hit_memos->unique('memo_data');
         $categories = $this->memo->getCategories($memos);
         return view('EngineerStack.search_result', 
-                compact('search_word', 'memos', 'categories'));
+                compact('search_word', 'hit_memos', 'categories'));
     }
 
     public function searchCategory(Request $request)
@@ -181,10 +203,10 @@ class MemoController extends Controller
         $category = $request->input('category');
         $search_word = $category;
         $posted_memo = Memo::where('user_id', $user_id)->get();
-        $memos = $this->memo->getMemos($category);
+        $hit_memos = $this->memo->getMemos($category);
         $categories = $this->memo->getCategories($posted_memo);
         return view('EngineerStack.search_result', 
-                compact('search_word', 'memos','categories'));
+                compact('search_word', 'hit_memos','categories'));
     }
 
     /**

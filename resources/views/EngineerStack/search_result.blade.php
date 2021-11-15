@@ -48,7 +48,7 @@
             </div>
         </nav>
     </section>
-    @if($memos->isEmpty())
+    @if($hit_memos->isEmpty())
         <section class="content">
             <p>{{ Str::limit($search_word, 10) }} はヒットしませんでした。</p>
         </section>
@@ -74,19 +74,15 @@
                     </div>
                 </div>
                 <div class="memos columns is-multiline">
-                    @foreach($memos as $memo)
+                    @foreach($hit_memos as $memo)
                         <div class="memo column is-5 box m-3" style="min-width: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <form action="{{ route('memos.search.category') }}" method="POST" style="display: inline">
-                                        @csrf 
-                                        <input type="hidden" name="category" value="{{ $category }}">
-                                        @if ($category == $search_word)
-                                            <button style="background: none; border: 0px;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
-                                        @else 
-                                            <button style="background: none; border: 0px;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 10) }}</span><br></button>
-                                        @endif
-                                    </form>
+                                    @if ($category == $search_word)
+                                        <span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
+                                    @else 
+                                        <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
+                                    @endif
                                 @endforeach
                             </div><br>
                             <div class="title">
@@ -94,7 +90,7 @@
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                                     <input type="hidden" name="memo_data" id="memo_data" value="{{ $memo->memo_data }}">
-                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 20) }}" type="submit"
+                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 100) }}" type="submit"
                                     style="background: none; border: 0px; white-space: normal;">
                                 </form>
                             </div>
@@ -107,7 +103,7 @@
                     @endforeach
                 </div>
             </div>
-            <div class="columns">
+            {{-- <div class="columns">
                 <div class="column">
                     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                         <ul class="pagination-list">
@@ -118,15 +114,14 @@
                                 <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
                                 <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
                             @else  --}}
-                                <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
+                                {{-- <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
                                 <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
                                 <li><a class="pagination-next" href="{{ $memos->nextPageUrl() }}">次のページ</a></li>
                             {{-- @endif --}}
-                        </ul>
-                        {{ $memos->links() }}
+                        {{-- </ul>
                     </nav>
-                </div>
-            </div>
+                </div> 
+            </div> --}}
         </section>
     @endif
     <section class="footer">
@@ -156,7 +151,7 @@
     <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
     <script>
         $(function () {
-            let memoData = @json($memos->pluck('memo_data') ?? []);
+            let memoData = @json($hit_memos->pluck('memo_data') ?? []);
             let memoLength = memoData.length;
 
             for(let index=0;index<memoLength;index++) {
