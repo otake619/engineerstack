@@ -65,9 +65,9 @@
                                 @csrf 
                                 <input type="hidden" name="category" value="{{ $category }}">
                                 @if ($category == $search_word)
-                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span></button>
+                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
                                 @else 
-                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span></button>
+                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
                                 @endif
                             </form>
                         @endforeach

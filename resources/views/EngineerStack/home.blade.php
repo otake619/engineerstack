@@ -61,10 +61,10 @@
                 <div class="column is-2">
                     <div class="category p-5">
                         @foreach($categories as $category)
-                            <form action="{{ route('memos.search.category') }}" method="">
+                            <form action="{{ route('memos.search.category') }}">
                                 @csrf 
                                 <input type="hidden" name="category" value="{{ $category }}">
-                                <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span><br></button>
+                                <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
                             </form>
                         @endforeach
                     </div>
