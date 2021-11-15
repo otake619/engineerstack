@@ -41,7 +41,8 @@ class MemoController extends Controller
         $memos = Memo::where('user_id', $user_id)->paginate(6);
         //TODO $memosがある時点で、$memo_dataいらないのでは？後で検討。
         //他の関数でも変数の重複が見られるから、要検討。
-        $categories = $this->memo->getCategories($memos);
+        $posted_memos = Memo::where('user_id', $user_id)->get();
+        $categories = $this->memo->getCategories($posted_memos);
         return view('EngineerStack.home', compact('memos', 'categories'));
     }
 
@@ -164,6 +165,7 @@ class MemoController extends Controller
     {
         $user_id = Auth::id();
         $memos = Memo::where('user_id', $user_id)->get();
+        $categories = $this->memo->getCategories($memos);
         $search_word = $request->input('search_word');
         $search_title = Memo::where('title', 'LIKE', "%$search_word%")
             ->where('user_id', $user_id)->get();
@@ -192,7 +194,6 @@ class MemoController extends Controller
 
         $hit_memos = $hit_memos->concat($search_title);
         $hit_memos = $hit_memos->unique('memo_data');
-        $categories = $this->memo->getCategories($memos);
         return view('EngineerStack.search_result', 
                 compact('search_word', 'hit_memos', 'categories'));
     }
