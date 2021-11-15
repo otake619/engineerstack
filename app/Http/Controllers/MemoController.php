@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Services\MemoService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
+use Exception;
 
 class MemoController extends Controller
 {
