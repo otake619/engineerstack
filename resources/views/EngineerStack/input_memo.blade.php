@@ -96,7 +96,7 @@
                                 <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
                                 <input type="hidden" id="categories_count" name="categories_count">
                                 <input type="hidden" id="memo_count" name="memo_count">
-                                <input type="hidden" id="memo_data" name="memo_data" value="{{ $article->content ?? "" }}">
+                                <input type="hidden" id="memo_data" name="memo_data" value="">
                             </div>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">

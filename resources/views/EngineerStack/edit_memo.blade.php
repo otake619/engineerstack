@@ -16,10 +16,13 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-search"></i>
-                        </span>
+                        <form action="{{ route('memos.search') }}" method="GET">
+                            @csrf 
+                            <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </form>
                     </div>
                 </div>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">

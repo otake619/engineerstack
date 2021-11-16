@@ -22,7 +22,8 @@ Route::prefix('memos')->group(function () {
     Route::post('update', [MemoController::class, 'update'])->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
     Route::post('show', [MemoController::class, 'show'])->name('memos.show');
-    Route::post('search', [MemoController::class, 'search'])->name('memos.search');
+    Route::get('search', [MemoController::class, 'search'])->name('memos.search');
+    Route::get('search_category', [MemoController::class, 'searchCategory'])->name('memos.search.category');
     Route::get('get/store', function () {
         return view('EngineerStack.input_memo');
     })->name('memos.get.input');

@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <form action="{{ route('memos.search') }}" method="POST">
+                        <form action="{{ route('memos.search') }}" method="GET">
                             @csrf 
                             <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                             <span class="icon is-small is-left">
@@ -50,27 +50,39 @@
     </section>
     @if($memos->isEmpty())
         <section class="content">
-            <p>{{ $search_word }} はヒットしませんでした。</p>
+            <p>{{ Str::limit($search_word, 10) }} はヒットしませんでした。</p>
         </section>
     @else 
         <section class="content">
             <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">{{ $search_word }} に関するメモ一覧</p>
+                <p class="is-size-4 is-text-weight-bold">{{ Str::limit($search_word, 20) }} に関するメモ一覧</p>
             </div>
             <div class="columns">
                 <div class="column is-2">
                     <div class="category p-5">
                         @foreach($categories as $category)
-                            <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span><br>
+                            <form action="{{ route('memos.search.category') }}" method="GET">
+                                @csrf 
+                                <input type="hidden" name="search_word" value="{{ $category }}">
+                                @if ($category == $search_word)
+                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
+                                @else 
+                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
+                                @endif
+                            </form>
                         @endforeach
                     </div>
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3">
+                        <div class="memo column is-5 box m-3" style="min-width: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <span class="tag"><i class="fas fa-tape"></i>{{ $category }}</span>
+                                    @if ($category == $search_word)
+                                        <span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
+                                    @else 
+                                        <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
+                                    @endif
                                 @endforeach
                             </div><br>
                             <div class="title">
@@ -78,7 +90,7 @@
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                                     <input type="hidden" name="memo_data" id="memo_data" value="{{ $memo->memo_data }}">
-                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ $memo->title }}" type="submit"
+                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 100) }}" type="submit"
                                     style="background: none; border: 0px; white-space: normal;">
                                 </form>
                             </div>
@@ -93,14 +105,27 @@
             </div>
             <div class="columns">
                 <div class="column">
-                    <div class="paging has-text-centered mt-5">
-                        <a href="">1</a>
-                        <a href="">2</a>
-                        <a href="">3</a>
-                        <a href="">4</a>
-                        <a class="ml-5" href="">次へ</a>
-                    </div>
-                </div>
+                    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                        <ul class="pagination-list">
+                            {{-- 1ページしか存在しない場合 --}}
+                            @if ($current_page == 1)
+                                @if ($current_page == $total_pages)
+                                    <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                                @else 
+                                    <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                                    <li><a class="pagination-next" href="search?page={{$current_page + 1}}&search_word={{$search_word}}">次のページ</a></li>
+                                @endif
+                            @elseif($current_page == $total_pages)
+                                <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                            @else 
+                                <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                                <li><a class="pagination-next" href="search?page={{$current_page + 1}}&search_word={{$search_word}}">次のページ</a></li>
+                            @endif
+                        </ul>
+                    </nav>
+                </div> 
             </div>
         </section>
     @endif
@@ -131,7 +156,7 @@
     <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
     <script>
         $(function () {
-            let memoData = @json($memo_data ?? []);
+            let memoData = @json($memos->pluck('memo_data') ?? []);
             let memoLength = memoData.length;
 
             for(let index=0;index<memoLength;index++) {

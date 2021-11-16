@@ -1,10 +1,11 @@
 <?php
     namespace App\Services;
 
+    use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Auth;
     use App\Models\Memo;
     use App\Models\Category;
-    use App\Models\CategoryMemos;
+    use App\Models\CategoryMemo;
 
     class MemoService {
         /**
@@ -100,5 +101,93 @@
             $get_categories = app()->make('App\Http\Controllers\CategoryController');
             $categories = $get_categories->getCategories($memos);
             return $categories;
+        }
+
+        public function getMemos(string $category)
+        {
+            $memos = collect();
+            $category_id = Category::where('name', $category)->pluck('id');
+            $memo_ids = CategoryMemo::where('category_id', $category_id)->pluck('memo_id');
+            $memo_count = count($memo_ids);
+            for($index = 0; $index < $memo_count; $index++) {
+                $memo = Memo::where('id', $memo_ids[$index])->get();
+                $memos = $memos->concat($memo);
+            }
+            return $memos;
+        }
+
+        /**
+         * この関数はキーワードでのメモ検索を担当しています。
+         * @param Illuminate\Http\Request $request
+         * $requestには、キーワード、現在のページ番号が入っています。
+         * @return Illuminate\View\View
+         * メモ検索結果を返します。
+         */
+        public function search(Request $request)
+        {
+            $user_id = Auth::id();
+            $memos = Memo::where('user_id', $user_id)->get();
+            $categories = $this->getCategories($memos);
+            $search_word = $request->input('search_word');
+            $search_title = Memo::where('title', 'LIKE', "%$search_word%")
+                ->where('user_id', $user_id)->get();
+            $search_memo = Memo::where("memo_data->blocks", 'LIKE', "%$search_word%")->pluck('memo_data');
+            $memo_count = count($search_memo);
+            $search_memo = json_decode($search_memo, true);
+            $hit_id = [];
+            for($index = 0; $index < $memo_count; $index++) {
+                $memo = $search_memo[$index];
+                $json_memo = json_decode($memo, true);
+                $block_count = count($json_memo['blocks']);
+                for($block = 0; $block < $block_count; $block++) {
+                    if(strpos($json_memo['blocks'][$block]['data']['text'], $search_word) !== false) {
+                        $id = $json_memo['blocks'][$block]['id'];
+                        array_push($hit_id, $id);
+                    }
+                }
+            }
+            
+            $hit_memos = collect();
+            $length = count($hit_id);
+            for($index = 0; $index < $length; $index++) {
+                $search_json = Memo::where("memo_data->blocks", 'LIKE', "%$hit_id[$index]%")->get();
+                $hit_memos = $hit_memos->concat($search_json);
+            }
+
+            $hit_memos = $hit_memos->concat($search_title);
+            $hit_memos = $hit_memos->unique('memo_data');
+            $current_page = $request->input('page');
+            if(empty($current_page)) {
+                $current_page = 1;
+            }
+            $memos = $hit_memos->forPage($current_page, 6);
+            $total_pages = (int)ceil(count($hit_memos)/6);
+            return view('EngineerStack.search_result', 
+                    compact('search_word', 'memos', 'categories', 'current_page', 'total_pages'));
+        }
+
+        /**
+         * この関数はカテゴリでのメモ検索を担当しています。
+         * @param Illuminate\Http\Request $request
+         * $requestには、カテゴリ名が入っています。
+         * @return Illuminate\View\View
+         * メモ検索結果を返します。
+         */
+        public function searchCategory(Request $request)
+        {
+            $user_id = Auth::id();
+            $category = $request->input('search_word');
+            $search_word = $category;
+            $posted_memo = Memo::where('user_id', $user_id)->get();
+            $hit_memos = $this->getMemos($category);
+            $categories = $this->getCategories($posted_memo);
+            $current_page = $request->input('page');
+            if(empty($current_page)) {
+                $current_page = 1;
+            }
+            $memos = $hit_memos->forPage($current_page, 6);
+            $total_pages = (int)ceil(count($hit_memos)/6);
+            return view('EngineerStack.search_result', 
+                    compact('search_word', 'memos','categories', 'current_page', 'total_pages'));
         }
     }

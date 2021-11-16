@@ -9,6 +9,8 @@ use App\Models\Memo;
 use App\Models\Category;
 use App\Services\MemoService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
+use Exception;
 
 class MemoController extends Controller
 {
@@ -37,12 +39,12 @@ class MemoController extends Controller
     {
         $user_id = Auth::id();
         //後でカテゴリーの参照とViewへの返却も実装
-        $memos = Memo::where('user_id', $user_id)->get();
+        $memos = Memo::where('user_id', $user_id)->paginate(6);
         //TODO $memosがある時点で、$memo_dataいらないのでは？後で検討。
         //他の関数でも変数の重複が見られるから、要検討。
-        $categories = $this->memo->getCategories($memos);
-        $memo_data = Memo::where('user_id', $user_id)->get('memo_data');
-        return view('EngineerStack.home', compact('memos', 'memo_data', 'categories'));
+        $posted_memos = Memo::where('user_id', $user_id)->get();
+        $categories = $this->memo->getCategories($posted_memos);
+        return view('EngineerStack.home', compact('memos', 'categories'));
     }
 
     /**
@@ -76,7 +78,6 @@ class MemoController extends Controller
             DB::rollback();
             return redirect()->route('dashboard');
         }
-        
     }
 
     /**
@@ -161,17 +162,28 @@ class MemoController extends Controller
                 compact('title', 'categories', 'memo_data', 'memo_id'));
     }
 
+    /**
+     * この関数はキーワードでのメモ検索を担当しています。
+     * @param Illuminate\Http\Request $request
+     * $requestには、キーワード、現在のページ番号が入っています。
+     * @return Illuminate\View\View
+     * メモ検索結果を返します。
+     */
     public function search(Request $request)
     {
-        $user_id = Auth::id();
-        $search_word = $request->input('search_word');
-        $memos = Memo::where('title', 'LIKE', "%$search_word%")
-            ->where('memo_data', 'LIKE', "%$search_word%")
-            ->where('user_id', $user_id)->get();
-        $memo_data = $memos->pluck('memo_data');
-        $categories = $this->memo->getCategories($memos);
-        return view('EngineerStack.search_result', 
-                compact('search_word', 'memos', 'memo_data', 'categories'));
+        return $this->memo->search($request);
+    }
+
+    /**
+     * この関数はカテゴリでのメモ検索を担当しています。
+     * @param Illuminate\Http\Request $request
+     * $requestには、カテゴリ名が入っています。
+     * @return Illuminate\View\View
+     * メモ検索結果を返します。
+     */
+    public function searchCategory(Request $request)
+    {
+        return $this->memo->searchCategory($request);
     }
 
     /**
