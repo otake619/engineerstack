@@ -63,7 +63,7 @@
                         @foreach($categories as $category)
                             <form action="{{ route('memos.search.category') }}">
                                 @csrf 
-                                <input type="hidden" name="category" value="{{ $category }}">
+                                <input type="hidden" name="search_word" value="{{ $category }}">
                                 <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
                             </form>
                         @endforeach

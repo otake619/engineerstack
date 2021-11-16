@@ -63,7 +63,7 @@
                         @foreach($categories as $category)
                             <form action="{{ route('memos.search.category') }}" method="GET">
                                 @csrf 
-                                <input type="hidden" name="category" value="{{ $category }}">
+                                <input type="hidden" name="search_word" value="{{ $category }}">
                                 @if ($category == $search_word)
                                     <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
                                 @else 

@@ -176,7 +176,7 @@
         public function searchCategory(Request $request)
         {
             $user_id = Auth::id();
-            $category = $request->input('category');
+            $category = $request->input('search_word');
             $search_word = $category;
             $posted_memo = Memo::where('user_id', $user_id)->get();
             $hit_memos = $this->getMemos($category);
@@ -185,8 +185,8 @@
             if(empty($current_page)) {
                 $current_page = 1;
             }
-            $memos = $hit_memos->forPage($current_page, 1);
-            $total_pages = (int)ceil(count($hit_memos)/1);
+            $memos = $hit_memos->forPage($current_page, 6);
+            $total_pages = (int)ceil(count($hit_memos)/6);
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories', 'current_page', 'total_pages'));
         }
