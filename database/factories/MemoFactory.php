@@ -16,8 +16,26 @@ class MemoFactory extends Factory
 
     public function definition()
     {
+        $memo_data = {
+                        "time": $this->$faker->unixTime,
+                        "blocks": [
+                            {
+                                "id": $this->$faker->randomNumber(10),
+                                "data": {
+                                    "text": $this->$faker->realText(50)
+                                },
+                                "type": "paragraph"
+                            }
+                        ],
+                        "version": "2.22.2"
+                    };
+
         return [
-            //
+            'user_id' => 1,
+            'title' => $this->faker->sentence,
+            'memo_data' => $memo_data,
+            'created_at' => now(),
+            'updated_at' => now()
         ];
     }
 }
