@@ -162,53 +162,28 @@ class MemoController extends Controller
                 compact('title', 'categories', 'memo_data', 'memo_id'));
     }
 
-    public function searchTitle(Request $request)
+    /**
+     * この関数はキーワードでのメモ検索を担当しています。
+     * @param Illuminate\Http\Request $request
+     * $requestには、キーワード、現在のページ番号が入っています。
+     * @return Illuminate\View\View
+     * メモ検索結果を返します。
+     */
+    public function search(Request $request)
     {
-        $user_id = Auth::id();
-        $memos = Memo::where('user_id', $user_id)->get();
-        $categories = $this->memo->getCategories($memos);
-        $search_word = $request->input('search_word');
-        $search_title = Memo::where('title', 'LIKE', "%$search_word%")
-            ->where('user_id', $user_id)->get();
-        $search_memo = Memo::where("memo_data->blocks", 'LIKE', "%$search_word%")->pluck('memo_data');
-        $memo_count = count($search_memo);
-        $search_memo = json_decode($search_memo, true);
-        $hit_id = [];
-        for($index = 0; $index < $memo_count; $index++) {
-            $memo = $search_memo[$index];
-            $json_memo = json_decode($memo, true);
-            $block_count = count($json_memo['blocks']);
-            for($block = 0; $block < $block_count; $block++) {
-                if(strpos($json_memo['blocks'][$block]['data']['text'], $search_word) !== false) {
-                    $id = $json_memo['blocks'][$block]['id'];
-                    array_push($hit_id, $id);
-                }
-            }
-        }
-        
-        $hit_memos = collect();
-        $length = count($hit_id);
-        for($index = 0; $index < $length; $index++) {
-            $search_json = Memo::where("memo_data->blocks", 'LIKE', "%$hit_id[$index]%")->get();
-            $hit_memos = $hit_memos->concat($search_json);
-        }
-
-        $hit_memos = $hit_memos->concat($search_title);
-        $hit_memos = $hit_memos->unique('memo_data');
-        return view('EngineerStack.search_result', 
-                compact('search_word', 'hit_memos', 'categories'));
+        return $this->memo->search($request);
     }
 
+    /**
+     * この関数はカテゴリでのメモ検索を担当しています。
+     * @param Illuminate\Http\Request $request
+     * $requestには、カテゴリ名が入っています。
+     * @return Illuminate\View\View
+     * メモ検索結果を返します。
+     */
     public function searchCategory(Request $request)
     {
-        $user_id = Auth::id();
-        $category = $request->input('category');
-        $search_word = $category;
-        $posted_memo = Memo::where('user_id', $user_id)->get();
-        $hit_memos = $this->memo->getMemos($category);
-        $categories = $this->memo->getCategories($posted_memo);
-        return view('EngineerStack.search_result', 
-                compact('search_word', 'hit_memos','categories'));
+        return $this->memo->searchCategory($request);
     }
 
     /**

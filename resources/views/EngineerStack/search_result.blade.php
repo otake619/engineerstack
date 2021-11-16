@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <form action="{{ route('memos.search.title') }}" method="GET">
+                        <form action="{{ route('memos.search') }}" method="GET">
                             @csrf 
                             <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
                             <span class="icon is-small is-left">
@@ -48,7 +48,7 @@
             </div>
         </nav>
     </section>
-    @if($hit_memos->isEmpty())
+    @if($memos->isEmpty())
         <section class="content">
             <p>{{ Str::limit($search_word, 10) }} はヒットしませんでした。</p>
         </section>
@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class="memos columns is-multiline">
-                    @foreach($hit_memos as $memo)
+                    @foreach($memos as $memo)
                         <div class="memo column is-5 box m-3" style="min-width: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
@@ -103,25 +103,30 @@
                     @endforeach
                 </div>
             </div>
-            {{-- <div class="columns">
+            <div class="columns">
                 <div class="column">
                     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                         <ul class="pagination-list">
-                            {{-- @if($memos->currentPage() == 1)
-                                <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
-                                <li><a class="pagination-next" href="{{ $memos->nextPageUrl() }}">次のページ</a></li>
-                            @elseif($memos->currentPage() == $memos->lastPage())
-                                <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
-                                <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
-                            @else  --}}
-                                {{-- <li><a class="pagination-previous" href="{{ $memos->previousPageUrl() }}">前のページ</a></li>
-                                <li><a class="pagination-link is-current" aria-current="page">{{ $memos->currentPage() }}</a></li>
-                                <li><a class="pagination-next" href="{{ $memos->nextPageUrl() }}">次のページ</a></li>
-                            {{-- @endif --}}
-                        {{-- </ul>
+                            {{-- 1ページしか存在しない場合 --}}
+                            @if ($current_page == 1)
+                                @if ($current_page == $total_pages)
+                                    <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                                @else 
+                                    <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                                    <li><a class="pagination-next" href="search?page={{$current_page + 1}}&search_word={{$search_word}}">次のページ</a></li>
+                                @endif
+                            @elseif($current_page == $total_pages)
+                                <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                            @else 
+                                <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
+                                <li><a class="pagination-next" href="search?page={{$current_page + 1}}&search_word={{$search_word}}">次のページ</a></li>
+                            @endif
+                        </ul>
                     </nav>
                 </div> 
-            </div> --}}
+            </div>
         </section>
     @endif
     <section class="footer">
@@ -151,7 +156,7 @@
     <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
     <script>
         $(function () {
-            let memoData = @json($hit_memos->pluck('memo_data') ?? []);
+            let memoData = @json($memos->pluck('memo_data') ?? []);
             let memoLength = memoData.length;
 
             for(let index=0;index<memoLength;index++) {
