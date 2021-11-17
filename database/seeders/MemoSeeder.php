@@ -5,21 +5,18 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Memo;
+use App\Models\CategoryMemo;
 
 class MemoSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * ダミーデータを作成する関数。
      *
      * @return void
      */
     public function run()
     {
-        Memo::factory()
-            ->hasAttached(
-                Category::factory()->count(1),
-                ['name' => $this->faker->word]
-            )
-        ->create();
+        $memo = Memo::factory()
+                ->has(Category::factory()->count(5))->create();
     }
 }

@@ -5,16 +5,22 @@ namespace Database\Factories;
 use App\Models\Memo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Faker\Generator as Faker;
 
 class MemoFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
+     * モデルの名前。
      *
      * @var string
      */
     protected $model = Memo::class;
 
+    /**
+     * $modelの状態を記述。
+     *
+     * @return array
+     */
     public function definition()
     {
         $memo_data = "{
@@ -31,6 +37,7 @@ class MemoFactory extends Factory
                         \"version\": \"2.22.2\"
                     }";
                 
+
         return [
             'user_id' => 1,
             'title' => $this->faker->sentence,

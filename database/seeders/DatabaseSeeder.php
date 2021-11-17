@@ -4,17 +4,18 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Memo;
+use App\Models\Category;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * ダミーデータを作成する関数。
      *
      * @return void
      */
     public function run()
     {
-        \App\Models\Memo::factory(10)->create();
-        $memos = Memo::all();
+        Memo::factory(1)->create();
+        Category::factory(5)->create();
     }
 }
