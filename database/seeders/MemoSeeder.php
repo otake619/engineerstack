@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Category;
+use App\Models\Memo;
 
 class MemoSeeder extends Seeder
 {
@@ -13,6 +15,11 @@ class MemoSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Memo::factory()
+            ->hasAttached(
+                Category::factory()->count(1),
+                ['name' => $this->faker->word]
+            )
+        ->create();
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Memo;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class MemoFactory extends Factory
 {
@@ -16,20 +17,20 @@ class MemoFactory extends Factory
 
     public function definition()
     {
-        $memo_data = {
-                        "time": $this->$faker->unixTime,
-                        "blocks": [
+        $memo_data = "{
+                        \"time\": \"{$this->faker->unixTime}\",
+                        \"blocks\": [
                             {
-                                "id": $this->$faker->randomNumber(10),
-                                "data": {
-                                    "text": $this->$faker->realText(50)
+                                \"id\": \"0{$this->faker->unixTime}\",
+                                \"data\": {
+                                    \"text\": \"{$this->faker->realText(50)}\"
                                 },
-                                "type": "paragraph"
+                                \"type\": \"paragraph\"
                             }
                         ],
-                        "version": "2.22.2"
-                    };
-
+                        \"version\": \"2.22.2\"
+                    }";
+                
         return [
             'user_id' => 1,
             'title' => $this->faker->sentence,
