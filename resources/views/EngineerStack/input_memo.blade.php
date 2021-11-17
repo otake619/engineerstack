@@ -131,11 +131,24 @@
                 crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
     <script>
         $(function() {
             const editor = new EditorJS({
                 minHeight: 50,
                 holder: 'editorjs',
+                tools: {
+                    header: {
+                        class: Header, 
+                        inlineToolbar: ['link'] 
+                    },        
+                    list: List,        
+                    checklist: Checklist,
+                    quote: Quote,
+                },
                 onChange: () => {
                     let myCode = $('#editorjs').html();
                     let cleanCode = myCode.replace(/<(?:.|\n)*?>/gm, '').replace(/(\r\n|\n|\r)/gm,"").replace('&nbsp;','');

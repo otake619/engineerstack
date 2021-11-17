@@ -133,6 +133,11 @@
                 crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
     <script>
         $(function() {
             let memoData = @json($memo_data);
@@ -143,6 +148,15 @@
             const editor = new EditorJS({
                 minHeight: 50,
                 holder: 'editorjs',
+                tools: {
+                    header: {
+                        class: Header, 
+                        inlineToolbar: ['link'] 
+                    },        
+                    list: List,        
+                    checklist: Checklist,
+                    quote: Quote,
+                },
                 data: memoData,
             });
 
