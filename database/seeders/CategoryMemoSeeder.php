@@ -5,8 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Memo;
 use App\Models\Category;
+use App\Models\CategoryMemo;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-class DatabaseSeeder extends Seeder
+class CategoryMemoSeeder extends Seeder
 {
     /**
      * ダミーデータを作成する関数。
@@ -15,7 +17,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Memo::factory(1)->create();
-        Category::factory(5)->create();
+        CategoryMemo::factory()->count(5)->create();
     }
 }

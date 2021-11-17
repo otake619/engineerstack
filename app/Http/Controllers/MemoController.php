@@ -122,7 +122,11 @@ class MemoController extends Controller
         $memo_data = $request->input('memo_data');
         $title = $request->input('title');
         $categories = $request->input('categories');
-        $check_owner = $this->memo->checkOwner($memo_id);
+        $is_owner = $this->memo->checkOwner($memo_id);
+        
+        if(!$is_owner) {
+            return redirect()->route('dashboard');
+        }
         DB::beginTransaction();
 
         try {
@@ -154,7 +158,11 @@ class MemoController extends Controller
     {
         $memo_id = $request->input('memo_id');
         $memo_data = $request->input('memo_data');
-        $this->memo->checkOwner($memo_id);
+        $is_owner = $this->memo->checkOwner($memo_id);
+        
+        if(!$is_owner) {
+            return redirect()->route('dashboard');
+        }
         $title = Memo::find($memo_id)->title;
         $categories = Memo::find($memo_id)->categories->pluck('name');
         $memo_data = Memo::find($memo_id)->memo_data;
@@ -198,7 +206,11 @@ class MemoController extends Controller
     public function destroy(Request $request)
     {
         $memo_id = $request->input('memo_id');
-        $this->memo->checkOwner($memo_id);
+        $is_owner = $this->memo->checkOwner($memo_id);
+        
+        if(!$is_owner) {
+            return redirect()->route('dashboard');
+        }
         Memo::destroy($memo_id);
         return redirect()->route('memos.deleted');
     }
