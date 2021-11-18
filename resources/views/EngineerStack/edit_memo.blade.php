@@ -85,17 +85,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="field">
-                            <label for="comment">タイトル<br><span class="has-text-danger">*必須 最大100文字まで</span></label><br>
-                            <span class="has-text-primary" id="count_title">残り100文字入力可能</span>
-                            <div class="control has-text-centered">
-                                <div class="field">
-                                    <div class="control">
-                                        <input type="text" name="title" id="title" class="input is-success" placeholder="タイトル" value="{{ $memo->title }}">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="memo">
                             <label for="editorjs">メモ<br><span class="has-text-danger">*必須</span></label>
                             <div id="editorjsCnt"></div>
@@ -132,12 +121,11 @@
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.19.3/dist/editor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function() {
             let memoData = @json($memo_data);
@@ -154,8 +142,8 @@
                         inlineToolbar: ['link'] 
                     },        
                     list: List,        
-                    checklist: Checklist,
                     quote: Quote,
+                    code: CodeTool,
                 },
                 data: memoData,
             });
@@ -172,9 +160,8 @@
 
                 editor.save().then((outputData) => {
                     $('#memo_data').val(JSON.stringify(outputData));
-                    console.log('Article data: ', outputData);
                 }).catch((error) => {
-                    console.log('Saving failed: ', error);
+
                 });
             });
 
@@ -187,13 +174,6 @@
                 $("#disp_category").html(tags);
                 let arrayLength = textToArray.length;
                 $('#categories_count').val(arrayLength);
-            });
-
-            $("#title").keyup(function() {
-                const id = "#count_title";
-                let limit = 100;
-                let countTitle = $(this).val().length;
-                countText(id, limit, countTitle);
             });
         });
 

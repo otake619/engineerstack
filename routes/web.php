@@ -26,10 +26,10 @@ Route::prefix('memos')->group(function () {
     Route::get('search_category', [MemoController::class, 'searchCategory'])->name('memos.search.category');
     Route::get('get/store', function () {
         return view('EngineerStack.input_memo');
-    })->name('memos.get.input');
+    })->middleware('auth')->name('memos.get.input');
     Route::get('get/deleted', function () {
         return view('EngineerStack.deleted_memo');
-    })->name('memos.deleted');
+    })->middleware('auth')->name('memos.deleted');
 });
 
 require __DIR__.'/auth.php';

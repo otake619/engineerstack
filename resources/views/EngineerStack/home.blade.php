@@ -77,17 +77,16 @@
                                     <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
-                            <div class="title">
+                            <div id="data_{{ $loop->index }}" style="overflow-wrap: break-word">
+                            </div><br>
+                            <div class="memo-data mb-3">
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                                     <input type="hidden" name="memo_data" value="{{ $memo->memo_data }}">
-                                    <input class="is-size-5 has-text-weight-bold has-text-link" value="{{ Str::limit($memo->title, 100) }}" type="submit"
-                                    style="background: none; border: 0px; white-space: normal;">
+                                    <input type="submit" value="メモ詳細へ" class="button is-link">
                                 </form>
                             </div>
-                            <div id="data_{{ $loop->index }}" style="overflow-wrap: break-word">
-                            </div><br>
                             <div class="post-time">
                                 <p>{{ $memo->created_at->diffForHumans() }}</p>
                             </div>

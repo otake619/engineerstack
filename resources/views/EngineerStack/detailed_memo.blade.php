@@ -56,9 +56,6 @@
                 <div class="created_at">
                     <span id="created_at"></span>
                 </div>
-                <div class="title mt-3">
-                    <h4 class="is-size-3" id="title"></h4>
-                </div>
                 <div class="category">
                     <i class="fas fa-tape"></i><span id="categories"></span>
                 </div>
@@ -140,14 +137,13 @@
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.19.3/dist/editor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function () {
-            let title = @json($title);
             let categories = @json($categories);
             let memoData = @json($memo_data);
             memoData = JSON.parse(memoData);
@@ -155,7 +151,6 @@
             created_at = new Date(created_at);
             created_at = getStringFromDate(created_at);
             $('#created_at').text(created_at);
-            $('#title').text(title);
             $('#categories').text(categories);
 
             $(".settings").click(function() {
@@ -178,7 +173,16 @@
                 holder: 'editorjs',
                 readOnly: true,
                 minHeight: 50,
-                data: memoData
+                data: memoData,
+                tools: {
+                    header: {
+                        class: Header, 
+                        inlineToolbar: ['link'] 
+                    },        
+                    list: List,        
+                    quote: Quote,
+                    code: CodeTool
+                },
             });
         });
 
