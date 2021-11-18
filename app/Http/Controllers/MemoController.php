@@ -71,6 +71,7 @@ class MemoController extends Controller
                                             'categories', 'memo_id'));
         } catch (Exception $exception) {
             DB::rollback();
+            dd($exception);
             return redirect()->route('dashboard');
         }
     }

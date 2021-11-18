@@ -71,7 +71,7 @@
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px">
+                        <div class="memo column is-5 box m-3" style="min-width: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>

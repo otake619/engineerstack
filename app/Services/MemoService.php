@@ -208,6 +208,7 @@
                 }
             }
 
+            $memo_text = htmlspecialchars($memo_text, ENT_QUOTES, 'UTF-8');
             return $memo_text;
         }
 
