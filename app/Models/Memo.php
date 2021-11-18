@@ -18,7 +18,8 @@ class Memo extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'memo_data'
+        'memo_data',
+        'memo_text'
     ];
 
     /**
@@ -29,15 +30,18 @@ class Memo extends Model
      * メモデータのタイトル。
      * @param string $memo_data
      * editor.jsで作成されたメモデータ。
+     * @param string $memo_text
+     * editor.jsで作成されたメモデータから抽出したテキスト部分。
+     * 検索機能で使用する。
      * @return int $memo->id 
      * DBに格納されたmemoレコードのid。
      */
-    public static function store(int $user_id, string $title, string $memo_data)
+    public static function store(int $user_id, string $memo_data, string $memo_text)
     {
         $memo = Memo::create([
             'user_id' => $user_id,
-            'title' => $title,
-            'memo_data' => $memo_data
+            'memo_data' => $memo_data,
+            'memo_text' => $memo_text
         ]);
 
         return $memo->id;

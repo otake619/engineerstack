@@ -126,42 +126,19 @@
         public function search(Request $request)
         {
             $user_id = Auth::id();
-            $memos = Memo::where('user_id', $user_id)->get();
-            $categories = $this->getCategories($memos);
             $search_word = $request->input('search_word');
-            $search_title = Memo::where('title', 'LIKE', "%$search_word%")
-                ->where('user_id', $user_id)->get();
-            $search_memo = Memo::where("memo_data->blocks", 'LIKE', "%$search_word%")->pluck('memo_data');
-            $memo_count = count($search_memo);
-            $search_memo = json_decode($search_memo, true);
-            $hit_id = [];
-            for($index = 0; $index < $memo_count; $index++) {
-                $memo = $search_memo[$index];
-                $json_memo = json_decode($memo, true);
-                $block_count = count($json_memo['blocks']);
-                for($block = 0; $block < $block_count; $block++) {
-                    if(strpos($json_memo['blocks'][$block]['data']['text'], $search_word) !== false) {
-                        $id = $json_memo['blocks'][$block]['id'];
-                        array_push($hit_id, $id);
-                    }
-                }
-            }
-            
-            $hit_memos = collect();
-            $length = count($hit_id);
-            for($index = 0; $index < $length; $index++) {
-                $search_json = Memo::where("memo_data->blocks", 'LIKE', "%$hit_id[$index]%")->get();
-                $hit_memos = $hit_memos->concat($search_json);
-            }
-
-            $hit_memos = $hit_memos->concat($search_title);
-            $hit_memos = $hit_memos->unique('memo_data');
             $current_page = $request->input('page');
+            $all_memos = Memo::where('user_id', $user_id)->get();
+            $categories = $this->getCategories($all_memos);
+
+            $memos = Memo::where('user_id', $user_id)
+                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+
             if(empty($current_page)) {
                 $current_page = 1;
             }
-            $memos = $hit_memos->forPage($current_page, 6);
-            $total_pages = (int)ceil(count($hit_memos)/6);
+            $memos = $memos->forPage($current_page, 6);
+            $total_pages = (int)ceil(count($memos)/6);
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos', 'categories', 'current_page', 'total_pages'));
         }
@@ -178,9 +155,9 @@
             $user_id = Auth::id();
             $category = $request->input('search_word');
             $search_word = $category;
-            $posted_memo = Memo::where('user_id', $user_id)->get();
+            $all_memos = Memo::where('user_id', $user_id)->get();
             $hit_memos = $this->getMemos($category);
-            $categories = $this->getCategories($posted_memo);
+            $categories = $this->getCategories($all_memos);
             $current_page = $request->input('page');
             if(empty($current_page)) {
                 $current_page = 1;
@@ -189,5 +166,84 @@
             $total_pages = (int)ceil(count($hit_memos)/6);
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories', 'current_page', 'total_pages'));
+        }
+
+        /**
+         * editor.jsで作成されたjsonデータを受け取り、
+         * text部分を抽出してtextを返す関数。
+         * @param string $memo_data
+         * メモ入力画面にて作成されたメモデータ。
+         * @return string $memo_text
+         * メモ入力画面にて作成されたメモデータの
+         * テキスト部分。
+         */
+        public function getMemoText(string $memo_data)
+        {
+            $memo_data = json_decode($memo_data, true);
+            $memo_text = "";
+            $block_length = count($memo_data['blocks']);
+            $block = $memo_data['blocks'];
+    
+            for($block_index = 0; $block_index < $block_length; $block_index++) {
+                $type = $block[$block_index]['type'];
+
+                switch($type) {
+                    case "paragraph": 
+                        $memo_text .= $this->getParagraphText($block[$block_index]);
+                        break;
+                    case "code": 
+                        $memo_text .= $this->getCodeText($block[$block_index]);
+                        break;
+                    case "quote": 
+                        $memo_text .= $this->getQuoteText($block[$block_index]);
+                        break;
+                    case "header":
+                        $memo_text .= $this->getHeaderText($block[$block_index]);
+                        break;
+                    case "list":
+                        $memo_text .= $this->getListText($block[$block_index]);
+                        break;
+                    default: 
+                        return;
+                }
+            }
+
+            return $memo_text;
+        }
+
+        public function getParagraphText(array $data) {
+            $text = "";
+            $text .= $data['data']['text'];
+            return $text . "\n";
+        }
+
+        public function getCodeText(array $data) {
+            $text = "";
+            $text .= $data['data']['code'];
+            return $text . "\n";
+        }
+
+        public function getQuoteText(array $data) {
+            $text = "";
+            $text .= $data['data']['text'];
+            $text .= $data['data']['caption'];
+            return $text . "\n";
+        }
+
+        public function getHeaderText(array $data) {
+            $text = "";
+            $text .= $data['data']['text'];
+            return $text . "\n";
+        }
+
+        public function getListText(array $data) {
+            $text = "";
+            $item_length = count($data['data']['items']);
+
+            for($index = 0; $index < $item_length; $index++) {
+                $text .= $data['data']['items'][$index];
+            }
+
+            return $text . "\n";
         }
     }

@@ -78,17 +78,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="field">
-                            <label for="comment">タイトル<br><span class="has-text-danger">*必須 最大100文字まで</span></label><br>
-                            <span class="has-text-primary" id="count_title">残り100文字入力可能</span>
-                            <div class="control has-text-centered">
-                                <div class="field">
-                                    <div class="control">
-                                        <input type="text" name="title" id="title" class="input is-success" placeholder="タイトルを入力" maxlength="100" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="editor_field">
                             <label for="editor">メモ<br><span class="has-text-danger">*必須 3000文字以内</span></label>
                             <div id="editorjsCnt"></div>
@@ -130,12 +119,25 @@
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.19.3/dist/editor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function() {
             const editor = new EditorJS({
                 minHeight: 50,
                 holder: 'editorjs',
+                tools: {
+                    header: {
+                        class: Header, 
+                        inlineToolbar: ['link'] 
+                    },        
+                    list: List,        
+                    quote: Quote,
+                    code: CodeTool
+                },
                 onChange: () => {
                     let myCode = $('#editorjs').html();
                     let cleanCode = myCode.replace(/<(?:.|\n)*?>/gm, '').replace(/(\r\n|\n|\r)/gm,"").replace('&nbsp;','');
@@ -144,13 +146,11 @@
                     if(numChars < 0) {
                         numChars = 0;
                     }
+                    console.log(cleanCode);
                     $('#editorjsCnt').text(numChars + "文字入力されています。");
                     $('#memo_count').val(cleanCode);
                 }
             });
-
-            
-
 
             $("#post_memo").click(function() {
                 editor.save().then((outputData) => {
@@ -170,13 +170,6 @@
                 $("#disp_category").html(tags);
                 let arrayLength = textToArray.length;
                 $('#categories_count').val(arrayLength);
-            });
-
-            $("#title").keyup(function() {
-                const id = "#count_title";
-                let limit = 100;
-                let countTitle = $(this).val().length;
-                countText(id, limit, countTitle);
             });
         });
 

@@ -38,10 +38,7 @@ class MemoController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        //後でカテゴリーの参照とViewへの返却も実装
         $memos = Memo::where('user_id', $user_id)->paginate(6);
-        //TODO $memosがある時点で、$memo_dataいらないのでは？後で検討。
-        //他の関数でも変数の重複が見られるから、要検討。
         $posted_memos = Memo::where('user_id', $user_id)->get();
         $categories = $this->memo->getCategories($posted_memos);
         return view('EngineerStack.home', compact('memos', 'categories'));
@@ -53,27 +50,25 @@ class MemoController extends Controller
      * $requestには、
      * メモのmemo_data
      * カテゴリーのcategories
-     * メモのtitle
      * が含まれています。
      * @return Illuminate\View\View
      * メモの詳細画面を返します。
-     * TODO 後でStoreMemoRequestに型を書き換えて、フォームバリデーションを
-     * 実装
      */
     public function store(StoreMemoRequest $request)
     {
         $user_id = Auth::id();
         $categories = $request->input('categories');
-        $title = $request->input('title');
         $memo_data = $request->input('memo_data');
+        $memo_text = $this->memo->getMemoText($memo_data);
+
         DB::beginTransaction();
 
         try {
-            $memo_id = Memo::store($user_id, $title, $memo_data);
+            $memo_id = Memo::store($user_id, $memo_data, $memo_text);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
             DB::commit();
             return view('EngineerStack.detailed_memo', compact('memo_data',
-                                            'title', 'categories', 'memo_id'));
+                                            'categories', 'memo_id'));
         } catch (Exception $exception) {
             DB::rollback();
             return redirect()->route('dashboard');
@@ -120,7 +115,6 @@ class MemoController extends Controller
     {
         $memo_id = $request->input('memo_id');
         $memo_data = $request->input('memo_data');
-        $title = $request->input('title');
         $categories = $request->input('categories');
         $is_owner = $this->memo->checkOwner($memo_id);
         
@@ -131,13 +125,12 @@ class MemoController extends Controller
 
         try {
             Memo::where('id', $memo_id)
-                    ->update(['memo_data' => $memo_data, 'title' => $title]);
-            $title = Memo::find($memo_id)->title;
+                    ->update(['memo_data' => $memo_data]);
             $this->memo->categoriesSync($memo_id, $categories);
             $memo_data = Memo::find($memo_id)->memo_data;
             DB::commit();
             return view('EngineerStack.detailed_memo'
-                    , compact('title', 'categories', 'memo_data', 'memo_id'));
+                    , compact('categories', 'memo_data', 'memo_id'));
         } catch (Exception $exception) {
             DB::rollback();
             return redirect()->route('dashboard');
