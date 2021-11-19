@@ -18,7 +18,7 @@
                     <div class="control has-icons-left has-icons-right">
                         <form action="{{ route('memos.search') }}" method="GET">
                             @csrf 
-                            <input class="input is-success" type="text" name="search_word" placeholder="キーワードを入力">
+                            <input class="input is-success" type="text" name="search_word" placeholder="キーワードで検索">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-search"></i>
                             </span>
@@ -58,15 +58,39 @@
                 <p class="is-size-4 is-text-weight-bold">メモ一覧</p>
             </div>
             <div class="columns">
-                <div class="column is-2">
+                <div class="column is-4">
                     <div class="category p-5">
-                        @foreach($categories as $category)
-                            <form action="{{ route('memos.search.category') }}">
-                                @csrf 
-                                <input type="hidden" name="search_word" value="{{ $category }}">
-                                <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
-                            </form>
-                        @endforeach
+                        <nav class="panel">
+                            <p class="panel-heading">
+                                カテゴリ
+                            </p>
+                            <div class="control has-icons-left has-icons-right m-1">
+                                <form action="{{ route('memos.search.category') }}" method="GET">
+                                    @csrf 
+                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリで検索">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </form>
+                            </div>
+                            <p class="panel-tabs">
+                                <span>最新15カテゴリ</span>
+                            </p>
+                            <div class="category">
+                                @foreach($categories->chunk(50) as $chunk)
+                                    @foreach ($chunk as $category)
+                                        <div class="panel-block" id="category_{{ $loop->index }}">
+                                            <form action="{{ route('memos.search.category') }}">
+                                                @csrf
+                                                <input type="hidden" name="search_word" value="{{ $category }}">
+                                                <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
+                                            </form>
+                                        </div>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                            <a href="" class="panel-tabs"><span>カテゴリ一覧へ</span></a>
+                        </nav>
                     </div>
                 </div>
                 <div class="memos columns is-multiline">
