@@ -38,9 +38,10 @@ class MemoController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $memos = Memo::where('user_id', $user_id)->paginate(6);
+        $memos = Memo::where('user_id', $user_id)->orderBy('updated_at', 'desc')->paginate(6);
         $posted_memos = Memo::where('user_id', $user_id)->get();
         $categories = $this->memo->getCategories($posted_memos);
+        $categories = $categories->slice(0, 15);
         return view('EngineerStack.home', compact('memos', 'categories'));
     }
 
@@ -207,5 +208,13 @@ class MemoController extends Controller
         }
         Memo::destroy($memo_id);
         return redirect()->route('memos.deleted');
+    }
+
+    public function allCategories()
+    {
+        $user_id = Auth::id();
+        $posted_memos = Memo::where('user_id', $user_id)->get();
+        $categories = $this->memo->getCategories($posted_memos);
+        return view('EngineerStack.all_categories', compact('categories'));
     }
 }

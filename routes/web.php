@@ -10,7 +10,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
-Route::prefix('user')->group(function () {
+Route::prefix('users')->group(function () {
 
 });
 
@@ -24,6 +24,7 @@ Route::prefix('memos')->group(function () {
     Route::post('show', [MemoController::class, 'show'])->name('memos.show');
     Route::get('search', [MemoController::class, 'search'])->name('memos.search');
     Route::get('search_category', [MemoController::class, 'searchCategory'])->name('memos.search.category');
+    Route::get('all_categories', [MemoController::class, 'allCategories'])->name('memos.all_categories');
     Route::get('get/store', function () {
         return view('EngineerStack.input_memo');
     })->middleware('auth')->name('memos.get.input');

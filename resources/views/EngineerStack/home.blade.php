@@ -59,7 +59,7 @@
             </div>
             <div class="columns">
                 <div class="column is-4">
-                    <div class="category p-5">
+                    <div class="categories p-5">
                         <nav class="panel">
                             <p class="panel-heading">
                                 カテゴリ
@@ -77,19 +77,18 @@
                                 <span>最新15カテゴリ</span>
                             </p>
                             <div class="category">
-                                @foreach($categories->chunk(50) as $chunk)
-                                    @foreach ($chunk as $category)
-                                        <div class="panel-block" id="category_{{ $loop->index }}">
-                                            <form action="{{ route('memos.search.category') }}">
-                                                @csrf
-                                                <input type="hidden" name="search_word" value="{{ $category }}">
-                                                <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
-                                            </form>
-                                        </div>
-                                    @endforeach
+                                @foreach($categories as $category)
+                                    <form action="{{ route('memos.search.category') }}">
+                                        @csrf
+                                        <input type="hidden" name="search_word" value="{{ $category }}">
+                                        <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
+                                    </form>
                                 @endforeach
                             </div>
-                            <a href="" class="panel-tabs"><span>カテゴリ一覧へ</span></a>
+                            <form action="{{ route('memos.all_categories') }}">
+                                @csrf
+                                <button type="submit" class="button is-link">カテゴリ一覧へ</button>
+                            </form>
                         </nav>
                     </div>
                 </div>

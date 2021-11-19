@@ -58,19 +58,38 @@
                 <p class="is-size-4 is-text-weight-bold">{{ Str::limit($search_word, 20) }} に関するメモ一覧</p>
             </div>
             <div class="columns">
-                <div class="column is-2">
-                    <div class="category p-5">
-                        @foreach($categories as $category)
-                            <form action="{{ route('memos.search.category') }}" method="GET">
-                                @csrf 
-                                <input type="hidden" name="search_word" value="{{ $category }}">
-                                @if ($category === $search_word)
-                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-primary"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
-                                @else 
-                                    <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span></button>
-                                @endif
+                <div class="column is-4">
+                    <div class="categories p-5">
+                        <nav class="panel">
+                            <p class="panel-heading">
+                                カテゴリ
+                            </p>
+                            <div class="control has-icons-left has-icons-right m-1">
+                                <form action="{{ route('memos.search.category') }}" method="GET">
+                                    @csrf 
+                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリで検索">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </form>
+                            </div>
+                            <p class="panel-tabs">
+                                <span>最新15カテゴリ</span>
+                            </p>
+                            <div class="category">
+                                @foreach($categories as $category)
+                                    <form action="{{ route('memos.search.category') }}">
+                                        @csrf
+                                        <input type="hidden" name="search_word" value="{{ $category }}">
+                                        <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
+                                    </form>
+                                @endforeach
+                            </div>
+                            <form action="{{ route('memos.all_categories') }}">
+                                @csrf
+                                <button type="submit" class="button is-link">カテゴリ一覧へ</button>
                             </form>
-                        @endforeach
+                        </nav>
                     </div>
                 </div>
                 <div class="memos columns is-multiline">

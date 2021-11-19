@@ -99,6 +99,7 @@
         public function getCategories(object $memos)
         {
             $get_categories = app()->make('App\Http\Controllers\CategoryController');
+            $memos = $memos->sortByDesc('id');
             $categories = $get_categories->getCategories($memos);
             return $categories;
         }
@@ -107,6 +108,7 @@
         {
             $memos = collect();
             $category_id = Category::where('name', $category)->pluck('id');
+            if($category_id->isEmpty()) { return; }
             $memo_ids = CategoryMemo::where('category_id', $category_id)->pluck('memo_id');
             $memo_count = count($memo_ids);
             for($index = 0; $index < $memo_count; $index++) {
@@ -162,7 +164,14 @@
             if(empty($current_page)) {
                 $current_page = 1;
             }
-            $memos = $hit_memos->forPage($current_page, 6);
+
+            if($hit_memos === null) {
+                $memos = collect();
+                $hit_memos = collect();
+            } else {
+                $memos = $hit_memos->forPage($current_page, 6);
+            }
+            
             $total_pages = (int)ceil(count($hit_memos)/6);
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories', 'current_page', 'total_pages'));
