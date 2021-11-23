@@ -16,7 +16,7 @@
                 </a>
                 <div class="field mt-4 ml-5">
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="キーワードを入力">
+                        <input class="input is-success" type="text" placeholder="キーワードで検索" required>
                         <span class="icon is-small is-left">
                             <i class="fas fa-search"></i>
                         </span>

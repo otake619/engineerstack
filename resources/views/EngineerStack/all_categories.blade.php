@@ -18,7 +18,7 @@
                     <div class="control has-icons-left has-icons-right">
                         <form action="{{ route('memos.search') }}" method="GET">
                             @csrf 
-                            <input class="input is-success" type="text" name="search_word" placeholder="キーワードで検索">
+                            <input class="input is-success" type="text" name="search_word" placeholder="キーワードで検索" required>
                             <span class="icon is-small is-left">
                                 <i class="fas fa-search"></i>
                             </span>
