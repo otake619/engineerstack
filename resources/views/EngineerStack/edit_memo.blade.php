@@ -128,7 +128,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function() {
-            let memoData = @json($memo_data);
+            let memoData = @json($memo['memo_data']);
             memoData = JSON.parse(memoData);
             let categories = @json($categories);
             $('#category').val(categories);

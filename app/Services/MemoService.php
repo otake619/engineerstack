@@ -125,7 +125,7 @@
          * @return Illuminate\View\View
          * メモ検索結果を返します。
          */
-        public function search(Request $request)
+        public function searchKeyword(Request $request)
         {
             $user_id = Auth::id();
             $search_word = $request->input('search_word');
@@ -139,8 +139,8 @@
             if(empty($current_page)) {
                 $current_page = 1;
             }
-            $memos = $memos->forPage($current_page, 6);
             $total_pages = (int)ceil(count($memos)/6);
+            $memos = $memos->forPage($current_page, 6);
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos', 'categories', 'current_page', 'total_pages'));
         }
@@ -217,7 +217,6 @@
                 }
             }
 
-            $memo_text = htmlspecialchars($memo_text, ENT_QUOTES, 'UTF-8');
             return $memo_text;
         }
 

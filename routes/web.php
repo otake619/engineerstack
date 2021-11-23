@@ -22,7 +22,7 @@ Route::prefix('memos')->group(function () {
     Route::post('update', [MemoController::class, 'update'])->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
     Route::post('show', [MemoController::class, 'show'])->name('memos.show');
-    Route::get('search', [MemoController::class, 'search'])->name('memos.search');
+    Route::get('search', [MemoController::class, 'searchKeyword'])->name('memos.search');
     Route::get('search_category', [MemoController::class, 'searchCategory'])->name('memos.search.category');
     Route::get('all_categories', [MemoController::class, 'allCategories'])->name('memos.all_categories');
     Route::get('get/store', function () {

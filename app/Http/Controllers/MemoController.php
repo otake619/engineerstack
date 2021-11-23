@@ -97,9 +97,8 @@ class MemoController extends Controller
 
         $memo = Memo::find($memo_id);
         $categories = Memo::find($memo_id)->categories->pluck('name');
-        $memo_data = $memo['memo_data'];
         return view('EngineerStack.edit_memo'
-                , compact('memo', 'memo_data', 'categories'));
+                , compact('memo', 'categories'));
     }
 
     /**
@@ -126,8 +125,9 @@ class MemoController extends Controller
         DB::beginTransaction();
 
         try {
+            $memo_text = $this->memo->getMemoText($memo_data);
             Memo::where('id', $memo_id)
-                    ->update(['memo_data' => $memo_data]);
+                    ->update(['memo_data' => $memo_data, 'memo_text' => $memo_text]);
             $this->memo->categoriesSync($memo_id, $categories);
             $memo_data = Memo::find($memo_id)->memo_data;
             DB::commit();
@@ -172,9 +172,9 @@ class MemoController extends Controller
      * @return Illuminate\View\View
      * メモ検索結果を返します。
      */
-    public function search(Request $request)
+    public function searchKeyword(Request $request)
     {
-        return $this->memo->search($request);
+        return $this->memo->searchKeyword($request);
     }
 
     /**

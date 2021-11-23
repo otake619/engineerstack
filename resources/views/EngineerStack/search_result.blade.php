@@ -55,7 +55,7 @@
     @else 
         <section class="content">
             <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">{{ Str::limit($search_word, 20) }} に関するメモ一覧</p>
+                <p class="is-size-4 is-text-weight-bold">{{ Str::limit($search_word, 20) }} に関するメモ {{ $current_page }}ページ目</p>
             </div>
             <div class="columns">
                 <div class="column is-4">
@@ -67,7 +67,7 @@
                             <div class="control has-icons-left has-icons-right m-1">
                                 <form action="{{ route('memos.search.category') }}" method="GET">
                                     @csrf 
-                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリで検索">
+                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリでメモを検索">
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-search"></i>
                                     </span>
@@ -104,7 +104,7 @@
                                     @endif
                                 @endforeach
                             </div><br>
-                            <div id="data_{{ $loop->index }}" style="overflow-wrap: break-word">
+                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word">
                             </div><br>
                             <div class="memo-data mb-3">
                                 <form action="{{ route('memos.show') }}" method="POST">
@@ -125,7 +125,6 @@
                 <div class="column">
                     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                         <ul class="pagination-list">
-                            {{-- 1ページしか存在しない場合 --}}
                             @if ($current_page == 1)
                                 @if ($current_page == $total_pages)
                                     <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}">{{ $current_page }}</a></li>
@@ -168,54 +167,28 @@
     <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-                crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
+                crossorigin="anonymous"></script>
     <script>
         $(function () {
-            let memoData = @json($memos->pluck('memo_data') ?? []);
-            let memoLength = memoData.length;
-
-            for(let index=0;index<memoLength;index++) {
-                let data = memoData[index];
-                data = JSON.parse(data);
-                let post_time = data.time;
-                post_time = new Date(post_time);
-                data = jsonConvertHtml(data);
-                let data_id = `#data_${index}`;
-                $(data_id).html(data);
-                post_time = getStringFromDate(post_time);
-                let time_id = `#time_${index}`;
-                $(time_id).text(post_time);
-            } 
+            const memos = @json($memos);
+            const currentPage = parseInt(@json($current_page));
+            const memosLength = Object.keys(memos).length;
+            const indexStart = (currentPage - 1) * 6;
+            for(let index = indexStart; index < indexStart + memosLength; index++) {
+                let id = `#memo_${memos[index]['id']}`;
+                let text = sanitizeDecode(memos[index]['memo_text']);
+                $(id).text(text);
+                console.log(text);
+                console.log(id);
+            }
         });
 
-        function getStringFromDate(date) {
-        
-            let year_str = date.getFullYear();
-            let month_str = 1 + date.getMonth();
-            let day_str = date.getDate();
-            let hour_str = date.getHours();
-            let minute_str = date.getMinutes();
-            let second_str = date.getSeconds();
-            
-            
-            format_str = 'YYYY年MM月DD日 hh時mm分ss秒に投稿';
-            format_str = format_str.replace(/YYYY/g, year_str);
-            format_str = format_str.replace(/MM/g, month_str);
-            format_str = format_str.replace(/DD/g, day_str);
-            format_str = format_str.replace(/hh/g, hour_str);
-            format_str = format_str.replace(/mm/g, minute_str);
-            format_str = format_str.replace(/ss/g, second_str);
-            
-            return format_str;
-        };
-
-        function jsonConvertHtml(jsonData) {
-            const edjsParser = edjsHTML();
-            let html = edjsParser.parse(jsonData);
-            return html;
+        function sanitizeDecode(text) {
+            return text.replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&amp;/g, '&');
         }
     </script>
 </body>
