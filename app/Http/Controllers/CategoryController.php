@@ -11,7 +11,6 @@ use App\Services\CategoryService;
 class CategoryController extends Controller
 {
     private $category;
-
     /**
      * コンストラクタでmiddleware('auth');
      * を設定しているので、ログイン前では
@@ -24,6 +23,13 @@ class CategoryController extends Controller
     {
         $this->middleware('auth');
         $this->category = $categoryService;
+    }
+
+    public function index(Request $request)
+    {
+        $user_id = Auth::id();
+        $categories = Category::where('user_id', $user_id)->get();
+        return view('EngineerStack.all_categories', compact('categories'));
     }
 
     /**
