@@ -14,17 +14,6 @@
                 <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('dashboard') }}">
                     EngineerStack
                 </a>
-                <div class="field mt-4 ml-5">
-                    <div class="control has-icons-left has-icons-right">
-                        <form action="{{ route('memos.search') }}" method="GET">
-                            @csrf 
-                            <input class="input is-success" type="text" name="search_word" placeholder="キーワードで検索" required>
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </form>
-                    </div>
-                </div>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -33,6 +22,27 @@
             </div>
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="field ml-5">
+                            <div class="control has-icons-left has-icons-right">
+                                <form action="{{ route('memos.search') }}" method="GET" class="is-flex">
+                                    @csrf 
+                                    <div class="input-keyword">
+                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" required>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                    <div class="select">
+                                        <select name="sort">
+                                            <option value="ascend">最新のメモを検索</option>
+                                            <option value="descend">古い順に検索</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <div class="navbar-item">
                         <div class="buttons">
                             <a class="button is-primary" href="{{ route('memos.get.input') }}">
@@ -71,6 +81,12 @@
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-search"></i>
                                     </span>
+                                    <div class="select">
+                                        <select name="sort">
+                                            <option value="ascend">最新のメモを検索</option>
+                                            <option value="descend">古い順に検索</option>
+                                        </select>
+                                    </div>
                                 </form>
                             </div>
                             <p class="panel-tabs">
@@ -87,7 +103,7 @@
                             </div>
                             <form action="{{ route('memos.all_categories') }}">
                                 @csrf
-                                <button type="submit" class="button is-link">カテゴリ一覧へ</button>
+                                <button type="submit" class="button is-link m-3">カテゴリ一覧へ</button>
                             </form>
                         </nav>
                     </div>
