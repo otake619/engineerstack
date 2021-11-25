@@ -17,7 +17,7 @@ class CreateMemosTable extends Migration
             $table->id()->comment('自動増分値');
             $table->integer('user_id')->comment('usersテーブルのid');
             $table->json('memo_data')->comment('editor.jsで作成したjsonメモデータ');
-            $table->string('memo_text')->comment('メモデータのテキスト');
+            $table->text('memo_text')->comment('メモデータのテキスト');
             $table->timestamps();
         });
     }

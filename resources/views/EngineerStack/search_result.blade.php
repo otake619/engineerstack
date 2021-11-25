@@ -28,7 +28,7 @@
                                 <form action="{{ route('memos.search') }}" method="GET" class="is-flex">
                                     @csrf 
                                     <div class="input-keyword">
-                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" required>
+                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" maxlength="100" required>
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -60,7 +60,9 @@
     </section>
     @if($memos->isEmpty())
         <section class="content">
-            <p>{{ Str::limit($search_word, 10) }} はヒットしませんでした。</p>
+            <div class="notification is-warning">
+                <p>{{ Str::limit($search_word, 40) }} はヒットしませんでした。</p>
+            </div>
         </section>
     @else 
         <section class="content">
@@ -77,7 +79,7 @@
                             <div class="control has-icons-left has-icons-right m-1">
                                 <form action="{{ route('memos.search.category') }}" method="GET">
                                     @csrf 
-                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリでメモを検索" required>
+                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリでメモを検索" maxlength="100" required>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-search"></i>
                                     </span>
@@ -194,8 +196,6 @@
                 let id = `#memo_${memos[index]['id']}`;
                 let text = sanitizeDecode(memos[index]['memo_text']);
                 $(id).text(text);
-                console.log(text);
-                console.log(id);
             }
         });
 
