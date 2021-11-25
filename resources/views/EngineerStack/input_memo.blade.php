@@ -14,14 +14,6 @@
                 <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('dashboard') }}">
                     EngineerStack
                 </a>
-                <div class="field mt-4 ml-5">
-                    <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="キーワードで検索" required>
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-search"></i>
-                        </span>
-                    </div>
-                </div>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -31,9 +23,30 @@
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-end">
                     <div class="navbar-item">
+                        <div class="field ml-5">
+                            <div class="control has-icons-left has-icons-right">
+                                <form action="{{ route('memos.search') }}" method="GET" class="is-flex">
+                                    @csrf 
+                                    <div class="input-keyword">
+                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" maxlength="100" required>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                    <div class="select">
+                                        <select name="sort">
+                                            <option value="ascend">最新のメモを検索</option>
+                                            <option value="descend">古い順に検索</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar-item">
                         <div class="buttons">
                             <a class="button is-primary" href="{{ route('memos.get.input') }}">
-                                <i class="fas fa-pen"></i><strong>記録</strong>
+                                <strong>記録</strong>
                             </a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -57,7 +70,7 @@
                         @csrf
                         <div class="errors">
                             @if ($errors->any())
-                                <div class="has-text-danger">
+                                <div class="notification is-danger">
                                     <ul>
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
@@ -67,25 +80,26 @@
                             @endif
                         </div>
                         <div class="field">
-                            <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 合計150文字まで<br>半角カンマ「,」で区切って入力</span></label><br>
+                            <label for="comment">カテゴリ <span class="has-text-danger">半角カンマ「,」で区切って入力</span><br><span class="has-text-danger">*必須 最大5個 カテゴリ1つにつき20文字以内</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
                             <span class="is-primary" id="disp_category"></span>
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" name="categories" class="input is-success" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,..." maxlength="154" required autofocus>
+                                        <input type="text" name="categories" class="input is-success" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,..." maxlength="110" required autofocus>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="editor_field">
-                            <label for="editor">メモ<br><span class="has-text-danger">*必須 3000文字以内</span></label>
-                            <div id="editorjsCnt"></div>
+                            <label for="editor">メモ<br><span class="has-text-danger">*必須 1000文字以内</span></label>
+                            <div id="disp_size"></div>
                             <div class="editor_wrapper p-5">
                                 <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
                                 <input type="hidden" id="categories_count" name="categories_count">
                                 <input type="hidden" id="memo_count" name="memo_count">
                                 <input type="hidden" id="memo_data" name="memo_data" value="">
+                                <input type="hidden" id="category_flg" name="category_flg">
                             </div>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">
@@ -129,6 +143,7 @@
             const editor = new EditorJS({
                 minHeight: 50,
                 holder: 'editorjs',
+                autofocus: true,
                 tools: {
                     header: {
                         class: Header, 
@@ -138,17 +153,19 @@
                     quote: Quote,
                     code: CodeTool
                 },
-                onChange: () => {
-                    let myCode = $('#editorjs').html();
-                    let cleanCode = myCode.replace(/<(?:.|\n)*?>/gm, '').replace(/(\r\n|\n|\r)/gm,"").replace('&nbsp;','');
-                    cleanCode = cleanCode.slice(0, -52);
-                    let numChars = cleanCode.length;
-                    if(numChars < 0) {
-                        numChars = 0;
+                data: {
+
+                },
+                onChange: function(event) {
+                    let text = $('.ce-block').text();
+                    let code = $('.cdx-input').val();
+                    if(code === undefined) {
+                        code = '';
                     }
-                    console.log(cleanCode);
-                    $('#editorjsCnt').text(numChars + "文字入力されています。");
-                    $('#memo_count').val(cleanCode);
+                    let charCnt = (text + code).length;
+                    let dispCntChar = `${charCnt}文字入力されています。`;
+                    $('#disp_size').text(dispCntChar);
+                    $('#memo_count').val(charCnt);
                 }
             });
 
@@ -161,15 +178,30 @@
             });
 
             $("#category").keyup(function() {
+                let flgArr = []
                 const separator = ",";
                 let inputText = $(this).val();
                 let textToArray = separateText(separator, inputText);
-                //let array = checkElement(textToArray);
+                textToArray.forEach(function(element, index) {
+                    let length = Math.max(...element.split(" ").map (element => element.length));
+                    if(length <= 20) {
+                        flgArr[index] = true;
+                    } else {
+                        flgArr[index] = false;
+                    }
+                });
                 let dispText = arrayToText(textToArray);
                 let tags = pushTag(textToArray);
                 $("#disp_category").html(tags);
                 let arrayLength = textToArray.length;
                 $('#categories_count').val(arrayLength);
+                if(flgArr.includes(false)) {
+                    $('#category_flg').val(false);
+                    console.log(false);
+                } else {
+                    $('#category_flg').val(true);
+                    console.log(true);
+                }
             });
         });
 
@@ -221,28 +253,6 @@
                 tags.push(element);
             }
             return tags;
-        }
-        //ここまで
-
-        //タイトルとメモの関数
-        function countText(id, limit, length) {
-            let remain = limit -length;
-            if(remain > 0) {
-                const isNormal = true;
-                const text = "残り" + remain + "文字入力可能";
-                changeText(id, text);
-                changeClass(id, isNormal);
-            } else if(remain === 0) {
-                const isNormal = true;
-                const text = "入力できる最大文字数です。";
-                changeText(id, text);
-                changeClass(id, isNormal);
-            } else {
-                const isNormal = false;
-                const text = "最大文字数を超えています！";
-                changeText(id, text);
-                changeClass(id, isNormal);
-            }
         }
         //ここまで
 

@@ -44,7 +44,7 @@
                     </div>
                     <div class="column is-three-fifths">
                         @if ($errors->any())
-                            <div class="has-text-danger">
+                            <div class="notification is-danger">
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>

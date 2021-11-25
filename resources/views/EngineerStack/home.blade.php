@@ -28,7 +28,7 @@
                                 <form action="{{ route('memos.search') }}" method="GET" class="is-flex">
                                     @csrf 
                                     <div class="input-keyword">
-                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" required>
+                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" maxlength="100" required>
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -77,7 +77,7 @@
                             <div class="control has-icons-left has-icons-right m-1">
                                 <form action="{{ route('memos.search.category') }}" method="GET">
                                     @csrf 
-                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリでメモを検索" required>
+                                    <input class="input is-success" type="text" name="search_word" placeholder="カテゴリでメモを検索" maxlength="100" required>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-search"></i>
                                     </span>
@@ -96,7 +96,7 @@
                                 @foreach($categories as $category)
                                     <form action="{{ route('memos.search.category') }}">
                                         @csrf
-                                        <input type="hidden" name="search_word" value="{{ $category }}">
+                                        <input type="hidden" name="search_word" value="{{ $category }}" maxlength="100">
                                         <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
                                     </form>
                                 @endforeach

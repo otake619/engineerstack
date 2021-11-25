@@ -17,6 +17,10 @@ class StoreMemoRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation() 
+    {
+    }
+
     /**
      * リクエストに適用するルール
      *
@@ -25,8 +29,10 @@ class StoreMemoRequest extends FormRequest
     public function rules()
     {
         return [
-            'categories' => 'required|max:154',
-            'categories_count' => 'required|regex:/[1-5]/',
+            'category_flg' => ['boolean:true'],
+            'categories' => ['required', 'string'],
+            'categories_count' => ['required','integer' , 'max:5'],
+            'memo_count' => ['required','integer', 'max:1000']
         ];
     }
 
@@ -38,8 +44,11 @@ class StoreMemoRequest extends FormRequest
     public function messages()
     {
         return [
-            'categories_count.regex' => 'カテゴリの最大数は5つです。',
-            'categories_count.required' => 'カテゴリは必須です。'
+            'category_flg.boolean' => 'カテゴリは20文字以内です。',
+            'categories_count.max' => 'カテゴリの最大数は5つです。',
+            'categories_count.required' => 'カテゴリは必須です。',
+            'memo_count.max' => 'メモの最大入力文字を超えています。',
+            'memo_count.required' => 'メモの入力は必須です。'
         ];
     }
 
@@ -53,6 +62,8 @@ class StoreMemoRequest extends FormRequest
         return [
             'memo_count' => 'メモの文字数',
             'categories' => 'カテゴリ',
+            'categories_count' => 'カテゴリ数',
+            'category_flg' => '1つのカテゴリ'
         ];
     }
 }

@@ -57,6 +57,7 @@ class MemoController extends Controller
      */
     public function store(StoreMemoRequest $request)
     {
+        $validated = $request->validated();
         $user_id = Auth::id();
         $categories = $request->input('categories');
         $memo_data = $request->input('memo_data');
