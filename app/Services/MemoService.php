@@ -130,11 +130,22 @@
             $user_id = Auth::id();
             $search_word = $request->input('search_word');
             $current_page = $request->input('page');
+            $sort = $request->input('sort');
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos);
-
-            $memos = Memo::where('user_id', $user_id)
+            if($sort == "ascend") {
+                $memos = Memo::where('user_id', $user_id)
+                        ->orderBy('updated_at', 'desc')
                         ->where('memo_text', 'LIKE', "%$search_word%")->get();
+            } elseif($sort == "descend") {
+                $memos = Memo::where('user_id', $user_id)
+                        ->orderBy('updated_at', 'asc')
+                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+            } else {
+                $memos = Memo::where('user_id', $user_id)
+                        ->orderBy('updated_at', 'desc')
+                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+            }
 
             if(empty($current_page)) {
                 $current_page = 1;
@@ -142,7 +153,8 @@
             $total_pages = (int)ceil(count($memos)/6);
             $memos = $memos->forPage($current_page, 6);
             return view('EngineerStack.search_result', 
-                    compact('search_word', 'memos', 'categories', 'current_page', 'total_pages'));
+                    compact('search_word', 'memos', 'categories',
+                     'current_page', 'total_pages', 'sort'));
         }
 
         /**
@@ -173,8 +185,11 @@
             }
             
             $total_pages = (int)ceil(count($hit_memos)/6);
+            //TODO カテゴリの検索結果の昇順・降順機能も実装
+            $sort = $request->input('sort');
             return view('EngineerStack.search_result', 
-                    compact('search_word', 'memos','categories', 'current_page', 'total_pages'));
+                    compact('search_word', 'memos','categories',
+                     'current_page', 'total_pages', 'sort'));
         }
 
         /**
