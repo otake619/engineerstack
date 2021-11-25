@@ -63,8 +63,8 @@
             <div class="column">
             </div>
             <div class="column is-three-fifths has-background-white p-5">
-                <div class="created_at">
-                    <span id="created_at"></span>
+                <div class="updated_at">
+                    <span>{{ $memo->updated_at->format("Y年m月d日 H時i分s秒") }} 作成</span>
                 </div>
                 <div class="category">
                     <i class="fas fa-tape"></i><span id="categories"></span>
@@ -83,7 +83,7 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
                                 <div class="dropdown-content">
-                                    <a href="{{ $memo_id }}/edit" class="dropdown-item has-text-left">メモを編集する</a>
+                                    <a href="{{ $memo->id }}/edit" class="dropdown-item has-text-left">メモを編集する</a>
                                     <hr class="dropdown-divider">
                                     <button id="delete_memo" class="dropdown-item has-text-left has-text-danger" style="background: none; border: 0px; white-space: normal;">
                                         メモを削除する
@@ -104,9 +104,9 @@
                                                 <button class="delete" aria-label="close"></button>
                                             </header>
                                             <footer class="modal-card-foot">
-                                                <form action="{{ $memo_id }}/destroy" method="POST">
+                                                <form action="{{ $memo->id }}/destroy" method="POST">
                                                     @csrf 
-                                                    <input type="hidden" name="memo_id" value="{{ $memo_id }}">
+                                                    <input type="hidden" name="memo_id" value="{{ $memo->id }}">
                                                     <button class="button is-danger"><i class="fas fa-trash-alt"></i>削除</button>
                                                 </form>
                                                 <button id="modal-close" class="button">キャンセル</button>
@@ -155,12 +155,8 @@
     <script>
         $(function () {
             let categories = @json($categories);
-            let memoData = @json($memo_data);
+            let memoData = @json($memo->memo_data);
             memoData = JSON.parse(memoData);
-            let created_at = memoData.time;
-            created_at = new Date(created_at);
-            created_at = getStringFromDate(created_at);
-            $('#created_at').text(created_at);
             $('#categories').text(categories);
 
             $(".settings").click(function() {
@@ -195,27 +191,6 @@
                 },
             });
         });
-
-        function getStringFromDate(date) {
-        
-            let year_str = date.getFullYear();
-            let month_str = 1 + date.getMonth();
-            let day_str = date.getDate();
-            let hour_str = date.getHours();
-            let minute_str = date.getMinutes();
-            let second_str = date.getSeconds();
-            
-            
-            format_str = 'YYYY年MM月DD日 hh時mm分ss秒に投稿';
-            format_str = format_str.replace(/YYYY/g, year_str);
-            format_str = format_str.replace(/MM/g, month_str);
-            format_str = format_str.replace(/DD/g, day_str);
-            format_str = format_str.replace(/hh/g, hour_str);
-            format_str = format_str.replace(/mm/g, minute_str);
-            format_str = format_str.replace(/ss/g, second_str);
-            
-            return format_str;
-        };
     </script>
 </body>
 </html>

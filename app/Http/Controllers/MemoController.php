@@ -152,17 +152,16 @@ class MemoController extends Controller
     public function show(Request $request)
     {
         $memo_id = $request->input('memo_id');
-        $memo_data = $request->input('memo_data');
         $is_owner = $this->memo->checkOwner($memo_id);
         
         if(!$is_owner) {
             return redirect()->route('dashboard');
         }
-        $title = Memo::find($memo_id)->title;
+
+        $memo = Memo::find($memo_id);
         $categories = Memo::find($memo_id)->categories->pluck('name');
-        $memo_data = Memo::find($memo_id)->memo_data;
         return view('EngineerStack.detailed_memo',
-                compact('title', 'categories', 'memo_data', 'memo_id'));
+                compact('memo', 'categories'));
     }
 
     /**

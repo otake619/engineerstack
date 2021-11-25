@@ -132,7 +132,7 @@
             $current_page = $request->input('page');
             $sort = $request->input('sort');
             $all_memos = Memo::where('user_id', $user_id)->get();
-            $categories = $this->getCategories($all_memos);
+            $categories = $this->getCategories($all_memos)->slice(0, 15);
             if($sort == "ascend") {
                 $memos = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
@@ -171,7 +171,7 @@
             $search_word = $category;
             $all_memos = Memo::where('user_id', $user_id)->get();
             $hit_memos = $this->getMemos($category);
-            $categories = $this->getCategories($all_memos);
+            $categories = $this->getCategories($all_memos)->slice(0, 15);
             $current_page = $request->input('page');
             if(empty($current_page)) {
                 $current_page = 1;

@@ -197,10 +197,8 @@
                 $('#categories_count').val(arrayLength);
                 if(flgArr.includes(false)) {
                     $('#category_flg').val(false);
-                    console.log(false);
                 } else {
                     $('#category_flg').val(true);
-                    console.log(true);
                 }
             });
         });

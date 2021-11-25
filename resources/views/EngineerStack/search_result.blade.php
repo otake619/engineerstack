@@ -112,7 +112,7 @@
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px">
+                        <div class="memo column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     @if($category === $search_word)
@@ -122,7 +122,7 @@
                                     @endif
                                 @endforeach
                             </div><br>
-                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word">
+                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word;">
                             </div><br>
                             <div class="memo-data mb-3">
                                 <form action="{{ route('memos.show') }}" method="POST">
@@ -195,9 +195,14 @@
             for(let index = indexStart; index < indexStart + memosLength; index++) {
                 let id = `#memo_${memos[index]['id']}`;
                 let text = sanitizeDecode(memos[index]['memo_text']);
+                text = truncate(text);
                 $(id).text(text);
             }
         });
+
+        function truncate(str){
+            return str.length <= 100 ? str: (str.substr(0, 100)+"...");
+        }
 
         function sanitizeDecode(text) {
             return text.replace(/&lt;/g, '<')

@@ -110,13 +110,13 @@
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px;">
+                        <div class="memo column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
-                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word">
+                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word;">
                             </div><br>
                             <div class="memo-data mb-3">
                                 <form action="{{ route('memos.show') }}" method="POST">
@@ -186,10 +186,15 @@
             const memosLength = memos['data'].length;
             for(let index = 0; index < memosLength; index++) {
                 const id = `#memo_${memos['data'][index]['id']}`;
-                const text = sanitizeDecode(memos['data'][index]['memo_text']);
+                let text = sanitizeDecode(memos['data'][index]['memo_text']);
+                text = truncate(text);
                 $(id).text(text);
             }
         });
+
+        function truncate(str){
+            return str.length <= 100 ? str: (str.substr(0, 100)+"...");
+        }
 
         function sanitizeDecode(text) {
             return text.replace(/&lt;/g, '<')
