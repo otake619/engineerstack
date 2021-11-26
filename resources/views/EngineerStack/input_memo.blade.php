@@ -70,10 +70,10 @@
                         @csrf
                         <div class="errors">
                             @if ($errors->any())
-                                <div class="notification is-danger">
+                                <div class="notification is-danger has-text-centered">
                                     <ul>
                                         @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                                            <p>{{ $error }}</p>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -153,9 +153,6 @@
                     quote: Quote,
                     code: CodeTool
                 },
-                data: {
-
-                },
                 onChange: function(event) {
                     let text = $('.ce-block').text();
                     let code = $('.cdx-input').val();
@@ -182,6 +179,7 @@
                 const separator = ",";
                 let inputText = $(this).val();
                 let textToArray = separateText(separator, inputText);
+                countCategory(textToArray);
                 textToArray.forEach(function(element, index) {
                     let length = Math.max(...element.split(" ").map (element => element.length));
                     if(length <= 20) {

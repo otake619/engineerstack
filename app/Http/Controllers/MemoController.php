@@ -66,14 +66,15 @@ class MemoController extends Controller
         DB::beginTransaction();
 
         try {
+            $message = "メモの投稿が完了しました。";
             $memo_id = Memo::store($user_id, $memo_data, $memo_text);
+            $memo = Memo::find($memo_id);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
             DB::commit();
-            return view('EngineerStack.detailed_memo', compact('memo_data',
-                                            'categories', 'memo_id'));
+            return view('EngineerStack.detailed_memo', compact('memo', 'categories', 'message'));
         } catch (Exception $exception) {
             DB::rollback();
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('message', 'メモの投稿に失敗しました。');
         }
     }
 
@@ -125,17 +126,18 @@ class MemoController extends Controller
         DB::beginTransaction();
 
         try {
+            $message = 'メモの更新が完了しました。';
             $memo_text = $this->memo->getMemoText($memo_data);
             Memo::where('id', $memo_id)
                     ->update(['memo_data' => $memo_data, 'memo_text' => $memo_text]);
             $this->memo->categoriesSync($memo_id, $categories);
-            $memo_data = Memo::find($memo_id)->memo_data;
+            $memo = Memo::find($memo_id);
             DB::commit();
             return view('EngineerStack.detailed_memo'
-                    , compact('categories', 'memo_data', 'memo_id'));
+                    , compact('categories', 'memo', 'message'));
         } catch (Exception $exception) {
             DB::rollback();
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('message', 'メモの更新に失敗しました。');
         }
     }
 

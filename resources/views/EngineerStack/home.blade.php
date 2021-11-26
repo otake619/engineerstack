@@ -58,6 +58,18 @@
             </div>
         </nav>
     </section>
+    <section class="message">
+        @isset($message)
+            <div class="notification is-success has-text-centered">
+                <p>{{ $message }}</p>
+            </div>
+        @endisset
+        @if (session('message'))
+            <div class="notification is-success has-text-centered">
+                {{ session('message') }}
+            </div>
+        @endif
+    </section>
     @if($memos->isEmpty())
         <section class="content">
             <p>まだメモは投稿されていません。</p>

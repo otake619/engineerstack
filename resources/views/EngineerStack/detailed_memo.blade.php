@@ -58,6 +58,13 @@
             </div>
         </nav>
     </section>
+    <section class="message">
+        @isset($message)
+            <div class="notification is-success has-text-centered">
+                <p>{{ $message }}</p>
+            </div>
+        @endisset
+    </section>
     <section class="content has-background-light pt-5 pb-5">
         <div class="columns mt-5">
             <div class="column">

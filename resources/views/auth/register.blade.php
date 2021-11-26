@@ -36,6 +36,13 @@
             </div>
         </nav>
     </section>
+    <section class="message">
+        @if (session('message'))
+            <div class="notification is-success has-text-centered">
+                {{ session('message') }}
+            </div>
+        @endif
+    </section>
     <section class="content has-background-primary m-5 p-5">
         <div class="introduction">
             <div class="columns">
@@ -71,10 +78,10 @@
                         </div>
                         <div class="column is-three-fifths">
                             @if ($errors->any())
-                                <div class="notification is-danger">
+                                <div class="notification is-danger has-text-centered">
                                     <ul>
                                         @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                                            <p>{{ $error }}</p>
                                         @endforeach
                                     </ul>
                                 </div>
