@@ -185,8 +185,8 @@ class MemoController extends Controller
      */
     public function searchKeyword(Request $request)
     {
-        $search_keyword = $request->input('search_word');
-        if(mb_strlen($search_keyword > 40)) {
+        $search_word = $request->input('search_word');
+        if(mb_strlen($search_word) > 40) {
             return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
         }
         return $this->memo->searchKeyword($request);
@@ -201,8 +201,8 @@ class MemoController extends Controller
      */
     public function searchCategory(Request $request)
     {
-        $search_keyword = $request->input('search_word');
-        if(mb_strlen($search_keyword > 40)) {
+        $search_word = $request->input('search_word');
+        if(mb_strlen($search_word) > 40) {
             return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
         }
         return $this->memo->searchCategory($request);
