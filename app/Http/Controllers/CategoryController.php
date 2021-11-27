@@ -42,7 +42,8 @@ class CategoryController extends Controller
      */
     public function store(string $categories, int $memo_id)
     {
-        $this->category->insertCategoryMemos($categories, $memo_id);
+        $insert_categories = $this->category->insertCategoryMemos($categories, $memo_id);
+        return $insert_categories;
     }
 
     /**
@@ -53,7 +54,7 @@ class CategoryController extends Controller
      */
     public function getCategories(object $memos)
     {
-        $categories = $this->category->getCategories($memos);
-        return $categories;
+        $category_arr = $this->category->getCategories($memos);
+        return $category_arr;
     }
 }

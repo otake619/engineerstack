@@ -70,11 +70,21 @@ class MemoController extends Controller
             $memo_id = Memo::store($user_id, $memo_data, $memo_text);
             $memo = Memo::find($memo_id);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
+            if($insert_categories > 5) {
+                DB::rollback();
+                return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大数は5つです。');
+            } else if(mb_strlen($memo_text) > 1000) {
+                DB::rollback();
+                return redirect()->route('memos.get.input')->with('message', 'メモの最大入力文字を超えています。');
+            } else if(mb_strlen($memo_text) == 0) {
+                DB::rollback();
+                return redirect()->route('memos.get.input')->with('message', 'メモの入力は必須です。');
+            }
             DB::commit();
             return view('EngineerStack.detailed_memo', compact('memo', 'categories', 'message'));
         } catch (Exception $exception) {
             DB::rollback();
-            return redirect()->route('dashboard')->with('message', 'メモの投稿に失敗しました。');
+            return redirect()->route('memos.get.input')->with('message', 'メモの投稿に失敗しました。');
         }
     }
 
@@ -121,7 +131,7 @@ class MemoController extends Controller
         $is_owner = $this->memo->checkOwner($memo_id);
         
         if(!$is_owner) {
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('message', 'メモの更新に失敗しました。');
         }
         DB::beginTransaction();
 
@@ -175,6 +185,10 @@ class MemoController extends Controller
      */
     public function searchKeyword(Request $request)
     {
+        $search_keyword = $request->input('search_word');
+        if(mb_strlen($search_keyword > 40)) {
+            return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
+        }
         return $this->memo->searchKeyword($request);
     }
 
@@ -187,6 +201,10 @@ class MemoController extends Controller
      */
     public function searchCategory(Request $request)
     {
+        $search_keyword = $request->input('search_word');
+        if(mb_strlen($search_keyword > 40)) {
+            return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
+        }
         return $this->memo->searchCategory($request);
     }
 

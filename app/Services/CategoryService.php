@@ -45,6 +45,7 @@
                 $insert_category_memos = app()->make('App\Http\Controllers\CategoryMemosController');
                 $insert_category_memos->store($memo_id, $category_id);
             }
+            return $arr_length;
         }
 
         /**

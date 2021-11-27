@@ -20,7 +20,7 @@
         public function insertCategories(string $categories, int $memo_id)
         {
             $insert_categories = app()->make('App\Http\Controllers\CategoryController');
-            $insert_categories->store($categories, $memo_id);
+            return $insert_categories->store($categories, $memo_id);
         }
 
         /**
