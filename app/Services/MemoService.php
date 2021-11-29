@@ -104,7 +104,7 @@
             return $categories;
         }
 
-        public function getMemos(string $category)
+        public function getMemos(string $category, string $sort)
         {
             $memos = collect();
             $category_ids = Category::where('name', 'LIKE', "%$category%")->pluck('id');
@@ -120,6 +120,15 @@
                 $memo = Memo::find($memo_ids[$index]);
                 $memos = $memos->concat($memo);
             }
+
+            if($sort === "ascend") {
+                $memos = $memos->sortByDesc('created_at');
+            } else if($sort === "descend") {
+                $memos = $memos->sortBy('created_at');
+            } else {
+                $memos = $memos->sortByDesc('created_at');
+            }
+
             return $memos;
         }
 
@@ -173,25 +182,24 @@
         {
             $user_id = Auth::id();
             $category = $request->input('search_word');
+            $sort = $request->input('sort');
+            $current_page = $request->input('page');
             $search_word = $category;
             $all_memos = Memo::where('user_id', $user_id)->get();
-            $hit_memos = $this->getMemos($category);
             $categories = $this->getCategories($all_memos)->slice(0, 15);
-            $current_page = $request->input('page');
+            $memo_collection = $this->getMemos($category, $sort);
             if(empty($current_page)) {
                 $current_page = 1;
             }
 
-            if($hit_memos === null) {
-                $memos = collect();
-                $hit_memos = collect();
+            if($memo_collection !== null) {
+                $total_pages = (int)ceil(count($memo_collection)/6);
+                $memos = $memo_collection->forPage($current_page, 6);
             } else {
-                $memos = $hit_memos->forPage($current_page, 6);
+                $memos = collect();
+                $total_pages = 0;
             }
-            
-            $total_pages = (int)ceil(count($hit_memos)/6);
-            //TODO カテゴリの検索結果の昇順・降順機能も実装
-            $sort = $request->input('sort');
+
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories',
                      'current_page', 'total_pages', 'sort'));
