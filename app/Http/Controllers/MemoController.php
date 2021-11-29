@@ -188,6 +188,8 @@ class MemoController extends Controller
         $search_word = $request->input('search_word');
         if(mb_strlen($search_word) > 40) {
             return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
+        } elseif($search_word === null) {
+            return redirect()->route('dashboard')->with('message', '検索語句は必須です。');
         }
         return $this->memo->searchKeyword($request);
     }
@@ -204,6 +206,8 @@ class MemoController extends Controller
         $search_word = $request->input('search_word');
         if(mb_strlen($search_word) > 40) {
             return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
+        } elseif($search_word === null) {
+            return redirect()->route('dashboard')->with('message', '検索語句は必須です。');
         }
         return $this->memo->searchCategory($request);
     }

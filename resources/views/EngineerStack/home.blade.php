@@ -139,7 +139,7 @@
                                 </form>
                             </div>
                             <div class="post-time">
-                                <p>{{ $memo->created_at->diffForHumans() }}</p>
+                                <p>{{ $memo->created_at->format('Y年m月d日 H時i分s秒 投稿') }}</p>
                             </div>
                         </div>
                     @endforeach

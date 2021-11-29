@@ -159,6 +159,8 @@
                 onChange: function(event) {
                     let text = $('.ce-block').text();
                     let code = $('.cdx-input').val();
+                    console.log(code);
+                    console.log(text);
                     if(code === undefined) {
                         code = '';
                     }

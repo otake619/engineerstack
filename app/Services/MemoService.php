@@ -107,12 +107,17 @@
         public function getMemos(string $category)
         {
             $memos = collect();
-            $category_id = Category::where('name', $category)->pluck('id');
-            if($category_id->isEmpty()) { return; }
-            $memo_ids = CategoryMemo::where('category_id', $category_id)->pluck('memo_id');
+            $category_ids = Category::where('name', 'LIKE', "%$category%")->pluck('id');
+            if($category_ids->isEmpty()) { return; }
+            $memo_ids = [];
+            $category_count = count($category_ids);
+            for($index = 0; $index < $category_count; $index++) {
+                $memo_id = CategoryMemo::where('category_id', $category_ids[$index])->pluck('memo_id');
+                array_push($memo_ids, $memo_id);
+            }
             $memo_count = count($memo_ids);
             for($index = 0; $index < $memo_count; $index++) {
-                $memo = Memo::where('id', $memo_ids[$index])->get();
+                $memo = Memo::find($memo_ids[$index]);
                 $memos = $memos->concat($memo);
             }
             return $memos;
