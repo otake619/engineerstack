@@ -117,6 +117,7 @@
             }
             $memo_count = count($memo_ids);
             for($index = 0; $index < $memo_count; $index++) {
+                //checkownerしてない
                 $memo = Memo::find($memo_ids[$index]);
                 $memos = $memos->concat($memo);
             }
@@ -188,11 +189,12 @@
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
             $memo_collection = $this->getMemos($category, $sort);
+            
             if(empty($current_page)) {
                 $current_page = 1;
             }
 
-            if($memo_collection !== null) {
+            if($memo_collection != null) {
                 $total_pages = (int)ceil(count($memo_collection)/6);
                 $memos = $memo_collection->forPage($current_page, 6);
             } else {
