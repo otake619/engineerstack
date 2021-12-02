@@ -34,4 +34,17 @@ class Category extends Model
 
         return $category->id;
     }
+
+    /**
+     * Categoryレコードに紐づくMemoレコードを返す関数。
+     */
+    public function memos()
+    {
+        return $this->belongsToMany(
+            Memo::class,
+            CategoryMemo::class,
+            'category_id',
+            'memo_id'
+        );
+    }
 }

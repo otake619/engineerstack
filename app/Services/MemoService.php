@@ -104,23 +104,19 @@
             return $categories;
         }
 
-        public function getMemos(string $category, string $sort)
-        {
+        public function getMemos(string $search_word, ?string $sort)
+        {                       
             $memos = collect();
-            $category_ids = Category::where('name', 'LIKE', "%$category%")->pluck('id');
-            if($category_ids->isEmpty()) { return; }
-            $memo_ids = [];
-            $category_count = count($category_ids);
-            for($index = 0; $index < $category_count; $index++) {
-                $memo_id = CategoryMemo::where('category_id', $category_ids[$index])->pluck('memo_id');
-                array_push($memo_ids, $memo_id);
-            }
-            $memo_count = count($memo_ids);
-            for($index = 0; $index < $memo_count; $index++) {
-                //checkownerしてない
-                $memo = Memo::find($memo_ids[$index]);
+            $user_id = Auth::id();
+            $categories = Category::where('name', 'LIKE', "%$search_word%")->get();
+
+            $loop_length = count($categories);
+            for($index = 0; $index < $loop_length; $index++) {
+                $memo = $categories[$index]->memos;
                 $memos = $memos->concat($memo);
             }
+
+            $memos = $memos->where('user_id', $user_id);
 
             if($sort === "ascend") {
                 $memos = $memos->sortByDesc('created_at');
@@ -184,18 +180,19 @@
             $user_id = Auth::id();
             $category = $request->input('search_word');
             $sort = $request->input('sort');
-            $current_page = $request->input('page');
+            $current_page = (int)$request->input('page');
             $search_word = $category;
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
             $memo_collection = $this->getMemos($category, $sort);
-            
+
             if(empty($current_page)) {
                 $current_page = 1;
             }
 
             if($memo_collection != null) {
                 $total_pages = (int)ceil(count($memo_collection)/6);
+                //$memos = $this->getItemsForPage($current_page, 6, $memo_collection);
                 $memos = $memo_collection->forPage($current_page, 6);
             } else {
                 $memos = collect();
@@ -205,6 +202,15 @@
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories',
                      'current_page', 'total_pages', 'sort'));
+        }
+
+        public function getItemsForPage(int $current_page,
+                                        int $items_per_page,
+                                        object $items)
+        {
+            $offset = ($current_page - 1) * $items_per_page;
+            $collection = $items->slice($offset, $items_per_page);
+            return $collection;
         }
 
         /**

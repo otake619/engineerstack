@@ -148,7 +148,7 @@
                                     <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}&sort={{ $sort }}">{{ $current_page }}</a></li>
                                 @else 
                                     <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}&sort={{ $sort }}">{{ $current_page }}</a></li>
-                                    <li><a class="pagination-next" href="search?page={{$current_page + 1}}&search_word={{$search_word}}&sort={{ $sort }}">次のページ</a></li>
+                                    <li><a class="pagination-next" href="search?page={{ $current_page + 1}}&search_word={{$search_word}}&sort={{ $sort }}">次のページ</a></li>
                                 @endif
                             @elseif($current_page == $total_pages)
                                 <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}&sort={{ $sort }}">前のページ</a></li>
