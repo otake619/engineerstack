@@ -145,18 +145,82 @@
                         <ul class="pagination-list">
                             @if ($current_page == 1)
                                 @if ($current_page == $total_pages)
-                                    <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}&sort={{ $sort }}">{{ $current_page }}</a></li>
+                                    <li>
+                                        <form action="{{ route('memos.search.category') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                        </form>
+                                    </li>
                                 @else 
-                                    <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}&sort={{ $sort }}">{{ $current_page }}</a></li>
-                                    <li><a class="pagination-next" href="search?page={{ $current_page + 1}}&search_word={{$search_word}}&sort={{ $sort }}">次のページ</a></li>
+                                    <li>
+                                        <form action="{{ route('memos.search.category') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('memos.search.category') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page + 1 }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-next" aria-current="page" value="次のページ">
+                                        </form>
+                                    </li>
                                 @endif
                             @elseif($current_page == $total_pages)
-                                <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}&sort={{ $sort }}">前のページ</a></li>
-                                <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}&sort={{ $sort }}">{{ $current_page }}</a></li>
+                                <li>
+                                    <form action="{{ route('memos.search.category') }}" method="get">
+                                        @csrf
+                                        <input type="hidden" value="{{ $current_page - 1 }}" name="page">
+                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                        <input type="hidden" value="{{ $sort }}" name="sort">
+                                        <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="{{ route('memos.search.category') }}" method="get">
+                                        @csrf
+                                        <input type="hidden" value="{{ $current_page }}" name="page">
+                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                        <input type="hidden" value="{{ $sort }}" name="sort">
+                                        <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                    </form>
+                                </li>
                             @else 
-                                <li><a class="pagination-previous" href="search?page={{$current_page - 1}}&search_word={{$search_word}}&sort={{ $sort }}">前のページ</a></li>
-                                <li><a class="pagination-link is-current" aria-current="page" href="search?page={{$current_page}}&search_word={{$search_word}}&sort={{ $sort }}">{{ $current_page }}</a></li>
-                                <li><a class="pagination-next" href="search?page={{$current_page + 1}}&search_word={{$search_word}}&sort={{ $sort }}">次のページ</a></li>
+                                <li>
+                                    <form action="{{ route('memos.search.category') }}" method="get">
+                                        @csrf
+                                        <input type="hidden" value="{{ $current_page - 1 }}" name="page">
+                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                        <input type="hidden" value="{{ $sort }}" name="sort">
+                                        <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="{{ route('memos.search.category') }}" method="get">
+                                        @csrf
+                                        <input type="hidden" value="{{ $current_page }}" name="page">
+                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                        <input type="hidden" value="{{ $sort }}" name="sort">
+                                        <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="{{ route('memos.search.category') }}" method="get">
+                                        @csrf
+                                        <input type="hidden" value="{{ $current_page + 1 }}" name="page">
+                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                        <input type="hidden" value="{{ $sort }}" name="sort">
+                                        <input type="submit" class="pagination-next" aria-current="page" value="次のページ">
+                                    </form>
+                                </li>
                             @endif
                         </ul>
                     </nav>
@@ -188,13 +252,13 @@
                 crossorigin="anonymous"></script>
     <script>
         $(function () {
-            const memos = @json($memos);
-            const currentPage = parseInt(@json($current_page));
-            const memosLength = Object.keys(memos).length;
-            const indexStart = (currentPage - 1) * 6;
-            for(let index = indexStart; index < indexStart + memosLength; index++) {
-                let id = `#memo_${memos[index]['id']}`;
-                let text = sanitizeDecode(memos[index]['memo_text']);
+            let memos = @json($memos);
+            console.log(memos);
+            memos = JSON.parse(JSON.stringify(memos));
+            
+            for(let key in memos) {
+                let id = `#memo_${memos[key]['id']}`;
+                let text = memos[key]['memo_text'];
                 text = truncate(text);
                 $(id).text(text);
             }

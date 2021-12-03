@@ -138,12 +138,18 @@
          */
         public function searchKeyword(Request $request)
         {
+            $memos = collect();
             $user_id = Auth::id();
             $search_word = $request->input('search_word');
             $current_page = $request->input('page');
             $sort = $request->input('sort');
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
+
+            if(empty($current_page)) {
+                $current_page = 1;
+            }
+
             if($sort == "ascend") {
                 $memos = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
@@ -158,11 +164,13 @@
                         ->where('memo_text', 'LIKE', "%$search_word%")->get();
             }
 
-            if(empty($current_page)) {
-                $current_page = 1;
+            if($memos->isEmpty()) {
+                $total_pages = 0;
+            } else {
+                $total_pages = (int)ceil(count($memos)/6);
+                $memos = $memos->unique('id')->forPage($current_page, 6);
             }
-            $total_pages = (int)ceil(count($memos)/6);
-            $memos = $memos->forPage($current_page, 6);
+
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos', 'categories',
                      'current_page', 'total_pages', 'sort'));
@@ -177,10 +185,11 @@
          */
         public function searchCategory(Request $request)
         {
+            $memos = collect();
             $user_id = Auth::id();
             $category = $request->input('search_word');
             $sort = $request->input('sort');
-            $current_page = (int)$request->input('page');
+            $current_page = $request->input('page');
             $search_word = $category;
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
@@ -190,13 +199,11 @@
                 $current_page = 1;
             }
 
-            if($memo_collection != null) {
-                $total_pages = (int)ceil(count($memo_collection)/6);
-                //$memos = $this->getItemsForPage($current_page, 6, $memo_collection);
-                $memos = $memo_collection->forPage($current_page, 6);
-            } else {
-                $memos = collect();
+            if($memo_collection->isEmpty()) {
                 $total_pages = 0;
+            } else {
+                $total_pages = (int)ceil(count($memo_collection)/6);
+                $memos = $memo_collection->unique('id')->forPage($current_page, 6);
             }
 
             return view('EngineerStack.search_result', 
