@@ -58,6 +58,18 @@
             </div>
         </nav>
     </section>
+    <section class="message">
+        @isset($message)
+            <div class="notification is-success has-text-centered">
+                <p>{{ $message }}</p>
+            </div>
+        @endisset
+        @if (session('message'))
+            <div class="notification is-danger has-text-centered">
+                {{ session('message') }}
+            </div>
+        @endif
+    </section>
     <section class="content">
         <div class="input-memo p-5">
             <div class="columns">
@@ -70,10 +82,10 @@
                         @csrf
                         <div class="errors">
                             @if ($errors->any())
-                                <div class="notification is-danger">
+                                <div class="notification is-danger has-text-centered">
                                     <ul>
                                         @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                                            <p>{{ $error }}</p>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -82,6 +94,7 @@
                         <div class="field">
                             <label for="comment">カテゴリ <span class="has-text-danger">半角カンマ「,」で区切って入力</span><br><span class="has-text-danger">*必須 最大5個 カテゴリ1つにつき20文字以内</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
+                            <span class="has-text-danger" id="flag"></span><br>
                             <span class="is-primary" id="disp_category"></span>
                             <div class="control has-text-centered">
                                 <div class="field">
@@ -93,7 +106,7 @@
                         </div>
                         <div class="editor_field">
                             <label for="editor">メモ<br><span class="has-text-danger">*必須 1000文字以内</span></label>
-                            <div id="disp_size"></div>
+                            <div class="disp_size" id="disp_size"></div>
                             <div class="editor_wrapper p-5">
                                 <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
                                 <input type="hidden" id="categories_count" name="categories_count">
@@ -153,9 +166,6 @@
                     quote: Quote,
                     code: CodeTool
                 },
-                data: {
-
-                },
                 onChange: function(event) {
                     let text = $('.ce-block').text();
                     let code = $('.cdx-input').val();
@@ -164,6 +174,13 @@
                     }
                     let charCnt = (text + code).length;
                     let dispCntChar = `${charCnt}文字入力されています。`;
+                    if(charCnt > 1000) {
+                        $('#disp_size').addClass('has-text-danger');
+                        $('#disp_size').removeClass('has-text-primary');
+                    } else {
+                        $('#disp_size').removeClass('has-text-danger');
+                        $('#disp_size').addClass('has-text-primary');
+                    }
                     $('#disp_size').text(dispCntChar);
                     $('#memo_count').val(charCnt);
                 }
@@ -182,6 +199,7 @@
                 const separator = ",";
                 let inputText = $(this).val();
                 let textToArray = separateText(separator, inputText);
+                countCategory(textToArray);
                 textToArray.forEach(function(element, index) {
                     let length = Math.max(...element.split(" ").map (element => element.length));
                     if(length <= 20) {
@@ -197,10 +215,10 @@
                 $('#categories_count').val(arrayLength);
                 if(flgArr.includes(false)) {
                     $('#category_flg').val(false);
-                    console.log(false);
+                    $('#flag').text('20文字以上のカテゴリは設定できません。');
                 } else {
                     $('#category_flg').val(true);
-                    console.log(true);
+                    $('#flag').text('');
                 }
             });
         });

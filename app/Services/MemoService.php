@@ -20,7 +20,7 @@
         public function insertCategories(string $categories, int $memo_id)
         {
             $insert_categories = app()->make('App\Http\Controllers\CategoryController');
-            $insert_categories->store($categories, $memo_id);
+            return $insert_categories->store($categories, $memo_id);
         }
 
         /**
@@ -104,17 +104,28 @@
             return $categories;
         }
 
-        public function getMemos(string $category)
-        {
+        public function getMemos(string $search_word, ?string $sort)
+        {                       
             $memos = collect();
-            $category_id = Category::where('name', $category)->pluck('id');
-            if($category_id->isEmpty()) { return; }
-            $memo_ids = CategoryMemo::where('category_id', $category_id)->pluck('memo_id');
-            $memo_count = count($memo_ids);
-            for($index = 0; $index < $memo_count; $index++) {
-                $memo = Memo::where('id', $memo_ids[$index])->get();
+            $user_id = Auth::id();
+            $categories = Category::where('name', 'LIKE', "%$search_word%")->get();
+
+            $loop_length = count($categories);
+            for($index = 0; $index < $loop_length; $index++) {
+                $memo = $categories[$index]->memos;
                 $memos = $memos->concat($memo);
             }
+
+            $memos = $memos->where('user_id', $user_id);
+
+            if($sort === "ascend") {
+                $memos = $memos->sortByDesc('created_at');
+            } else if($sort === "descend") {
+                $memos = $memos->sortBy('created_at');
+            } else {
+                $memos = $memos->sortByDesc('created_at');
+            }
+
             return $memos;
         }
 
@@ -127,22 +138,25 @@
          */
         public function searchKeyword(Request $request)
         {
+            $is_search_category = false;
+            $memos = collect();
             $user_id = Auth::id();
             $search_word = $request->input('search_word');
             $current_page = $request->input('page');
             $sort = $request->input('sort');
             $all_memos = Memo::where('user_id', $user_id)->get();
-            $categories = $this->getCategories($all_memos);
+            $categories = $this->getCategories($all_memos)->slice(0, 15);
+
             if($sort == "ascend") {
-                $memos = Memo::where('user_id', $user_id)
+                $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
                         ->where('memo_text', 'LIKE', "%$search_word%")->get();
             } elseif($sort == "descend") {
-                $memos = Memo::where('user_id', $user_id)
+                $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'asc')
                         ->where('memo_text', 'LIKE', "%$search_word%")->get();
             } else {
-                $memos = Memo::where('user_id', $user_id)
+                $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
                         ->where('memo_text', 'LIKE', "%$search_word%")->get();
             }
@@ -150,11 +164,17 @@
             if(empty($current_page)) {
                 $current_page = 1;
             }
-            $total_pages = (int)ceil(count($memos)/6);
-            $memos = $memos->forPage($current_page, 6);
+
+            if($memo_collection->isEmpty()) {
+                $total_pages = 0;
+            } else {
+                $total_pages = (int)ceil(count($memo_collection)/6);
+                $memos = $memo_collection->forPage($current_page, 6);
+            }
+
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos', 'categories',
-                     'current_page', 'total_pages', 'sort'));
+                     'current_page', 'total_pages', 'sort', 'is_search_category'));
         }
 
         /**
@@ -166,30 +186,31 @@
          */
         public function searchCategory(Request $request)
         {
+            $is_search_category = true;
+            $memos = collect();
             $user_id = Auth::id();
             $category = $request->input('search_word');
+            $sort = $request->input('sort');
+            $current_page = $request->input('page');
             $search_word = $category;
             $all_memos = Memo::where('user_id', $user_id)->get();
-            $hit_memos = $this->getMemos($category);
-            $categories = $this->getCategories($all_memos);
-            $current_page = $request->input('page');
+            $categories = $this->getCategories($all_memos)->slice(0, 15);
+            $memo_collection = $this->getMemos($category, $sort);
+
             if(empty($current_page)) {
                 $current_page = 1;
             }
 
-            if($hit_memos === null) {
-                $memos = collect();
-                $hit_memos = collect();
+            if($memo_collection->isEmpty()) {
+                $total_pages = 0;
             } else {
-                $memos = $hit_memos->forPage($current_page, 6);
+                $total_pages = (int)ceil(count($memo_collection)/6);
+                $memos = $memo_collection->unique('id')->forPage($current_page, 6);
             }
-            
-            $total_pages = (int)ceil(count($hit_memos)/6);
-            //TODO カテゴリの検索結果の昇順・降順機能も実装
-            $sort = $request->input('sort');
+
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories',
-                     'current_page', 'total_pages', 'sort'));
+                     'current_page', 'total_pages', 'sort', 'is_search_category'));
         }
 
         /**

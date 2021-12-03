@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Memo::factory(1)->create();
-        Category::factory(5)->create();
+        Memo::factory()->count(10)->create();
+        //Category::factory(5)->create();
     }
 }

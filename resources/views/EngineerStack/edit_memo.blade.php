@@ -67,10 +67,10 @@
                         <h4 class="is-size-4">メモを編集する</h4>
                         <div class="errors">
                             @if ($errors->any())
-                                <div class="notification is-danger">
+                                <div class="notification is-danger has-text-centered">
                                     <ul>
                                         @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                                            <p>{{ $error }}</p>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -81,8 +81,9 @@
                         @csrf 
                         <input type="hidden" id="memo_data" name="memo_data">
                         <input type="hidden" name="memo_id" value="{{ $memo->id }}">
-                        <input type="hidden" id="categories_count" name="categories_count">
-                        <input type="hidden" id="memo_count" name="memo_count">
+                        <input type="hidden" id="categories_count" name="categories_count" value="1">
+                        <input type="hidden" id="memo_count" name="memo_count" value="1">
+                        <input type="hidden" id="category_flg" name="category_flg" value="true">
                         <div class="field">
                             <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 1カテゴリ30文字まで</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
@@ -97,7 +98,7 @@
                         </div>
                         <div class="memo">
                             <label for="editorjs">メモ<br><span class="has-text-danger">*必須</span></label>
-                            <div id="editorjsCnt"></div>
+                            <div id="disp_size"></div>
                             <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">
@@ -155,19 +156,23 @@
                     quote: Quote,
                     code: CodeTool,
                 },
+                onChange: function(event) {
+                    let text = $('.ce-block').text();
+                    let code = $('.cdx-input').val();
+                    console.log(code);
+                    console.log(text);
+                    if(code === undefined) {
+                        code = '';
+                    }
+                    let charCnt = (text + code).length;
+                    let dispCntChar = `${charCnt}文字入力されています。`;
+                    $('#disp_size').text(dispCntChar);
+                    $('#memo_count').val(charCnt);
+                },
                 data: memoData,
             });
 
             $("#post_memo").click(function() {
-                let editorjsTxt = getEditorjsTxt();
-                let cntTxt = getEditorjsCnt(editorjsTxt);
-                let categories = $('#category').val();
-                let categoriesArr = separateText(',', categories);
-                let categories_count = categoriesArr.length;
-
-                $('#categories_count').val(categories_count);
-                $('#memo_count').val(cntTxt);
-
                 editor.save().then((outputData) => {
                     $('#memo_data').val(JSON.stringify(outputData));
                 }).catch((error) => {
@@ -176,14 +181,29 @@
             });
 
             $("#category").keyup(function() {
+                let flgArr = []
                 const separator = ",";
                 let inputText = $(this).val();
                 let textToArray = separateText(separator, inputText);
+                countCategory(textToArray);
+                textToArray.forEach(function(element, index) {
+                    let length = Math.max(...element.split(" ").map (element => element.length));
+                    if(length <= 20) {
+                        flgArr[index] = true;
+                    } else {
+                        flgArr[index] = false;
+                    }
+                });
                 let dispText = arrayToText(textToArray);
                 let tags = pushTag(textToArray);
                 $("#disp_category").html(tags);
                 let arrayLength = textToArray.length;
                 $('#categories_count').val(arrayLength);
+                if(flgArr.includes(false)) {
+                    $('#category_flg').val(false);
+                } else {
+                    $('#category_flg').val(true);
+                }
             });
         });
 

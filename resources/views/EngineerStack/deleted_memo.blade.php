@@ -59,7 +59,7 @@
         </nav>
     </section>
     <section class="content">
-        <h4 class="notification is-primary">メモの削除が完了しました。</h4>
+        <p class="notification is-primary">メモの削除が完了しました。</p>
     </section>
     <section class="footer">
         <div class="columns">

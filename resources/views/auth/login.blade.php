@@ -44,10 +44,10 @@
                     </div>
                     <div class="column is-three-fifths">
                         @if ($errors->any())
-                            <div class="notification is-danger">
+                            <div class="notification is-danger has-text-centered">
                                 <ul>
                                     @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                                        <p>{{ $error }}</p>
                                     @endforeach
                                 </ul>
                             </div>

@@ -23,24 +23,24 @@ class MemoFactory extends Factory
      */
     public function definition()
     {
+        $text = $this->faker->realText(50);
         $memo_data = "{
                         \"time\": \"{$this->faker->unixTime}\",
                         \"blocks\": [
                             {
                                 \"id\": \"0{$this->faker->unixTime}\",
                                 \"data\": {
-                                    \"text\": \"{$this->faker->realText(50)}\"
+                                    \"text\": \"{$text}\"
                                 },
                                 \"type\": \"paragraph\"
                             }
                         ],
                         \"version\": \"2.22.2\"
                     }";
-                
 
         return [
             'user_id' => 1,
-            'title' => $this->faker->sentence,
+            'memo_text' => $text,
             'memo_data' => $memo_data,
             'created_at' => now(),
             'updated_at' => now()

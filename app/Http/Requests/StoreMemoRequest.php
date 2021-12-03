@@ -29,7 +29,7 @@ class StoreMemoRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_flg' => ['boolean:true'],
+            'category_flg' => ['accepted'],
             'categories' => ['required', 'string'],
             'categories_count' => ['required','integer' , 'max:5'],
             'memo_count' => ['required','integer', 'max:1000']
@@ -44,7 +44,7 @@ class StoreMemoRequest extends FormRequest
     public function messages()
     {
         return [
-            'category_flg.boolean' => 'カテゴリは20文字以内です。',
+            'category_flg.accepted' => 'カテゴリは20文字以内です。',
             'categories_count.max' => 'カテゴリの最大数は5つです。',
             'categories_count.required' => 'カテゴリは必須です。',
             'memo_count.max' => 'メモの最大入力文字を超えています。',
