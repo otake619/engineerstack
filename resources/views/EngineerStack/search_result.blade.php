@@ -141,10 +141,50 @@
             </div>
             <div class="columns">
                 <div class="column">
-                    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-                        <ul class="pagination-list">
-                            @if ($current_page == 1)
-                                @if ($current_page == $total_pages)
+                    @if($is_search_category)
+                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <ul class="pagination-list">
+                                @if ($current_page == 1)
+                                    @if ($current_page == $total_pages)
+                                        <li>
+                                            <form action="{{ route('memos.search.category') }}" method="get">
+                                                @csrf
+                                                <input type="hidden" value="{{ $current_page }}" name="page">
+                                                <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                                <input type="hidden" value="{{ $sort }}" name="sort">
+                                                <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                            </form>
+                                        </li>
+                                    @else 
+                                        <li>
+                                            <form action="{{ route('memos.search.category') }}" method="get">
+                                                @csrf
+                                                <input type="hidden" value="{{ $current_page }}" name="page">
+                                                <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                                <input type="hidden" value="{{ $sort }}" name="sort">
+                                                <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="{{ route('memos.search.category') }}" method="get">
+                                                @csrf
+                                                <input type="hidden" value="{{ $current_page + 1 }}" name="page">
+                                                <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                                <input type="hidden" value="{{ $sort }}" name="sort">
+                                                <input type="submit" class="pagination-next" aria-current="page" value="次のページ">
+                                            </form>
+                                        </li>
+                                    @endif
+                                @elseif($current_page == $total_pages)
+                                    <li>
+                                        <form action="{{ route('memos.search.category') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page - 1 }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
+                                        </form>
+                                    </li>
                                     <li>
                                         <form action="{{ route('memos.search.category') }}" method="get">
                                             @csrf
@@ -155,6 +195,15 @@
                                         </form>
                                     </li>
                                 @else 
+                                    <li>
+                                        <form action="{{ route('memos.search.category') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page - 1 }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
+                                        </form>
+                                    </li>
                                     <li>
                                         <form action="{{ route('memos.search.category') }}" method="get">
                                             @csrf
@@ -174,56 +223,93 @@
                                         </form>
                                     </li>
                                 @endif
-                            @elseif($current_page == $total_pages)
-                                <li>
-                                    <form action="{{ route('memos.search.category') }}" method="get">
-                                        @csrf
-                                        <input type="hidden" value="{{ $current_page - 1 }}" name="page">
-                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
-                                        <input type="hidden" value="{{ $sort }}" name="sort">
-                                        <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="{{ route('memos.search.category') }}" method="get">
-                                        @csrf
-                                        <input type="hidden" value="{{ $current_page }}" name="page">
-                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
-                                        <input type="hidden" value="{{ $sort }}" name="sort">
-                                        <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
-                                    </form>
-                                </li>
-                            @else 
-                                <li>
-                                    <form action="{{ route('memos.search.category') }}" method="get">
-                                        @csrf
-                                        <input type="hidden" value="{{ $current_page - 1 }}" name="page">
-                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
-                                        <input type="hidden" value="{{ $sort }}" name="sort">
-                                        <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="{{ route('memos.search.category') }}" method="get">
-                                        @csrf
-                                        <input type="hidden" value="{{ $current_page }}" name="page">
-                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
-                                        <input type="hidden" value="{{ $sort }}" name="sort">
-                                        <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="{{ route('memos.search.category') }}" method="get">
-                                        @csrf
-                                        <input type="hidden" value="{{ $current_page + 1 }}" name="page">
-                                        <input type="hidden" value="{{ $search_word }}" name="search_word">
-                                        <input type="hidden" value="{{ $sort }}" name="sort">
-                                        <input type="submit" class="pagination-next" aria-current="page" value="次のページ">
-                                    </form>
-                                </li>
-                            @endif
-                        </ul>
-                    </nav>
+                            </ul>
+                        </nav>
+                    @else 
+                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <ul class="pagination-list">
+                                @if ($current_page == 1)
+                                    @if ($current_page == $total_pages)
+                                        <li>
+                                            <form action="{{ route('memos.search') }}" method="get">
+                                                @csrf
+                                                <input type="hidden" value="{{ $current_page }}" name="page">
+                                                <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                                <input type="hidden" value="{{ $sort }}" name="sort">
+                                                <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                            </form>
+                                        </li>
+                                    @else 
+                                        <li>
+                                            <form action="{{ route('memos.search') }}" method="get">
+                                                @csrf
+                                                <input type="hidden" value="{{ $current_page }}" name="page">
+                                                <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                                <input type="hidden" value="{{ $sort }}" name="sort">
+                                                <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="{{ route('memos.search') }}" method="get">
+                                                @csrf
+                                                <input type="hidden" value="{{ $current_page + 1 }}" name="page">
+                                                <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                                <input type="hidden" value="{{ $sort }}" name="sort">
+                                                <input type="submit" class="pagination-next" aria-current="page" value="次のページ">
+                                            </form>
+                                        </li>
+                                    @endif
+                                @elseif($current_page == $total_pages)
+                                    <li>
+                                        <form action="{{ route('memos.search') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page - 1 }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('memos.search') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                        </form>
+                                    </li>
+                                @else 
+                                    <li>
+                                        <form action="{{ route('memos.search') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page - 1 }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-previous" aria-current="page" value="前のページ">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('memos.search') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-link is-current" aria-current="page" value="{{ $current_page }}">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('memos.search') }}" method="get">
+                                            @csrf
+                                            <input type="hidden" value="{{ $current_page + 1 }}" name="page">
+                                            <input type="hidden" value="{{ $search_word }}" name="search_word">
+                                            <input type="hidden" value="{{ $sort }}" name="sort">
+                                            <input type="submit" class="pagination-next" aria-current="page" value="次のページ">
+                                        </form>
+                                    </li>
+                                @endif
+                            </ul>
+                        </nav>
+                    @endif
                 </div> 
             </div>
         </section>
