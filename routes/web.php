@@ -8,7 +8,7 @@ Route::get('/', function () {
     return view('auth.register');
 });
 
-Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth:users'])->name('dashboard');
 
 Route::prefix('users')->group(function () {
 
@@ -27,10 +27,10 @@ Route::prefix('memos')->group(function () {
     Route::get('all_categories', [MemoController::class, 'allCategories'])->name('memos.all_categories');
     Route::get('get/store', function () {
         return view('EngineerStack.input_memo');
-    })->middleware('auth')->name('memos.get.input');
+    })->middleware('auth:users')->name('memos.get.input');
     Route::get('get/deleted', function () {
         return view('EngineerStack.deleted_memo');
-    })->middleware('auth')->name('memos.deleted');
+    })->middleware('auth:users')->name('memos.deleted');
 });
 
 require __DIR__.'/auth.php';

@@ -25,7 +25,7 @@ class MemoController extends Controller
      */
     public function __construct(MemoService $memoService)
     {
-        $this->middleware('auth');
+        $this->middleware('auth:users');
         $this->memo = $memoService;
     }
 
