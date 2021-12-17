@@ -57,7 +57,7 @@
                             再び同じエラーに遭遇した際にメモを参照するだけで
                             解決します。
                         </p>
-                        <h4 class="has-text-white is-size-4 mt-5 ml-5">このような使い方もできます！</h4>
+                        <h4 class="has-text-white is-size-4 mt-5 ml-5">このような使い方もできます!</h4>
                         <p class="has-text-white is-size-5 mt-5 ml-5">
                             EngineerStackには、蓄積したメモをCSV形式で
                             出力する機能を備えています。

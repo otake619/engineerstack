@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminMemoController;
+use App\Http\Controllers\AdminCategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/register', [RegisteredUserController::class, 'create'])
@@ -62,5 +65,20 @@ Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store']
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->middleware('auth:admin')
                 ->name('logout');
+
+Route::prefix('users')->group(function () {
+    Route::get('/index', [AdminUserController::class, 'index'])->name('get.users');
+                
+});
+
+Route::prefix('memos')->group(function () {
+    Route::get('/index', [AdminMemoController::class, 'index'])->name('get.memos');
+                
+});
+
+Route::prefix('categories')->group(function () {
+    Route::get('/index', [AdminCategoryController::class, 'index'])->name('get.categories');
+                
+});
 
 

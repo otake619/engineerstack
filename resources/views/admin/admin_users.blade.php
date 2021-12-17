@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>管理者画面 ホーム</title>
+    <title>EngineerStack ユーザー一覧</title>
 </head>
 <body>
     <section class="header">
@@ -35,7 +35,7 @@
         </nav>
     </section>
     <section class="content">
-        <h4 class="title has-text-centered">管理者画面 ホーム</h4>
+        <h4 class="title has-text-centered">ユーザー一覧</h4>
         <div class="columns">
             <div class="select-database column is-one-quarter m-3">
                 <a href="{{ route('admin.dashboard') }}">
@@ -52,11 +52,60 @@
                 </a>
             </div>
             <div class="server-info column is-three-quarter">
-                <div class="contact mt-3">
-                    <div class="box">
-                        <h4 class="is-size-3"><i class="fas fa-envelope"></i>お問い合わせ <span class="has-text-primary">---件</span></h4>
-                    </div>
-                </div> 
+                <div class="user-info column is-three-quarter">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    id
+                                </th>
+                                <th>
+                                    アカウント名
+                                </th>
+                                <th>
+                                    E-mail
+                                </th>
+                                <th>
+                                    作成日
+                                </th>
+                                <th>
+                                    利用停止
+                                </th>
+                                <th>
+                                    アカウント削除
+                                </th>
+                            </tr>
+                            @if($users->isEmpty())
+                                <div class="notification is-warning has-text-centered">
+                                    ユーザーの登録がありません。
+                                </div>
+                            @else 
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <th>
+                                            {{ $user->id }}
+                                        </th>
+                                        <th>
+                                            {{ $user->name }}
+                                        </th>
+                                        <th>
+                                            {{ $user->email }}
+                                        </th>
+                                        <th>
+                                            {{ $user->created_at }}
+                                        </th>
+                                        <th>
+                                            <i class="fas fa-minus-circle has-text-warning"></i>
+                                        </th>
+                                        <th>
+                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                        </th>
+                                    </tr>
+                                 @endforeach
+                            @endif 
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
