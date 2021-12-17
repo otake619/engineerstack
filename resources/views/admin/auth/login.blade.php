@@ -52,7 +52,7 @@
                                 </ul>
                             </div>
 	                    @endif
-                        <form action="{{ route('login') }}" method="POST" >
+                        <form action="{{ route('admin.login') }}" method="POST" >
                             @csrf
                             <h4 class="has-text-white">ご登録情報を入力してください。</h4>
                             <label for="email" class="has-text-white"><span class="has-text-danger">*必須 </span>メールアドレス</label>
@@ -68,7 +68,7 @@
                             <input type="submit" class="button is-primary is-light mt-1" value="ログイン">
                         </form>
                         <br>
-                        <a class="has-text-white" href="{{ route('admin.password.request') }}">パスワードを忘れた場合</a>
+                        <a class="has-text-white" href="{{ route('password.request') }}">パスワードを忘れた場合</a>
                     </div>
                     <div class="column">
                     </div>
