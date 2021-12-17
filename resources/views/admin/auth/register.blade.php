@@ -11,7 +11,7 @@
     <section class="header">
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('login') }}">
+                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('admin.login') }}">
                     EngineerStack
                 </a>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -24,10 +24,10 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary" href="{{ route('register') }}">
+                            <a class="button is-primary" href="{{ route('admin.register') }}">
                                 <strong>アカウント作成</strong>
                             </a>
-                            <a class="button is-light" href="{{ route('login') }}">
+                            <a class="button is-light" href="{{ route('admin.login') }}">
                                 ログイン
                             </a>
                         </div>
@@ -116,7 +116,7 @@
     <section class="footer">
         <div class="columns">
             <div class="column">
-                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="{{ route('login') }}">
+                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="{{ route('admin.login') }}">
                     EngineerStack
                 </a>
                 <span class="m-3">&copy;otake619 2021</span>
