@@ -34,7 +34,7 @@ class AdminMemoController extends Controller
      */
     public function index()
     {
-        $memos = Memo::paginate(50);
+        $memos = Memo::paginate(10);
         return view('admin.admin_memos', compact('memos'));
     }
 

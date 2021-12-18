@@ -104,6 +104,34 @@
             </div>
         </div>
     </section>
+    @if($categories->isEmpty())
+    @else 
+        <section class="paging">
+            <div class="columns">
+                <div class="column">
+                    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                        <ul class="pagination-list">
+                            @if($categories->currentPage() == 1)
+                                @if($categories->currentPage() == $categories->lastPage())
+                                    <li><a class="pagination-link is-current" aria-current="page">{{ $categories->currentPage() }}</a></li>
+                                @else 
+                                    <li><a class="pagination-link is-current" aria-current="page">{{ $categories->currentPage() }}</a></li>
+                                    <li><a class="pagination-next" href="{{ $categories->nextPageUrl() }}">次のページ</a></li>
+                                @endif
+                            @elseif($categories->currentPage() == $categories->lastPage())
+                                <li><a class="pagination-previous" href="{{ $categories->previousPageUrl() }}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page">{{ $categories->currentPage() }}</a></li>
+                            @else 
+                                <li><a class="pagination-previous" href="{{ $categories->previousPageUrl() }}">前のページ</a></li>
+                                <li><a class="pagination-link is-current" aria-current="page">{{ $categories->currentPage() }}</a></li>
+                                <li><a class="pagination-next" href="{{ $categories->nextPageUrl() }}">次のページ</a></li>
+                            @endif
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+    @endif
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
