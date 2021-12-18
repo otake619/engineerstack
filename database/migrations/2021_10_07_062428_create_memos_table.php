@@ -14,10 +14,10 @@ class CreateMemosTable extends Migration
     public function up()
     {
         Schema::create('memos', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id');
-            $table->json('memo_data');
-            $table->text('memo_text');
+            $table->id()->comment('自動増分値');
+            $table->integer('user_id')->comment('usersテーブルのid');
+            $table->json('memo_data')->comment('editor.jsで作成したjsonメモデータ');
+            $table->text('memo_text')->comment('メモデータのテキスト');
             $table->timestamps();
         });
     }
