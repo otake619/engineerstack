@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemoController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
     return view('auth.register');
@@ -31,6 +32,12 @@ Route::prefix('memos')->group(function () {
     Route::get('get/deleted', function () {
         return view('EngineerStack.deleted_memo');
     })->middleware('auth')->name('memos.deleted');
+});
+
+Route::prefix('contact')->group(function () {
+    Route::get('index', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
+    Route::post('send', [ContactController::class, 'send'])->name('contact.send');
 });
 
 require __DIR__.'/auth.php';
