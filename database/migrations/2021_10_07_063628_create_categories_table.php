@@ -14,8 +14,8 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id()->comment('自動増分値');
-            $table->text('name')->comment('カテゴリー名');
+            $table->id();
+            $table->text('name');
             $table->timestamps();
         });
     }
