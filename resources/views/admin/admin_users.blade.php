@@ -98,7 +98,14 @@
                                             <i class="fas fa-minus-circle has-text-warning"></i>
                                         </th>
                                         <th>
-                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                            <form action="{{ route('admin.delete.user') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" value="{{ $user->id }}" name="user_id">
+                                                <button type="submit" style="background-color: transparent; border: none;">
+                                                    <i class="fas fa-trash-alt has-text-danger">
+                                                    </i>
+                                                </button>
+                                            </form>
                                         </th>
                                     </tr>
                                  @endforeach

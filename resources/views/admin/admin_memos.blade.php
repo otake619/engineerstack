@@ -104,7 +104,14 @@
                                             {{ $memo->updated_at }}
                                         </th>
                                         <th>
-                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                            <form action="{{ route('admin.delete.memo') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" value="{{ $memo->id }}" name="memo_id">
+                                                <button type="submit" style="background-color: transparent; border: none;">
+                                                    <i class="fas fa-trash-alt has-text-danger">
+                                                    </i>
+                                                </button>
+                                            </form>
                                         </th>
                                     </tr>
                                 @endforeach

@@ -68,17 +68,17 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 Route::prefix('users')->group(function () {
     Route::get('/index', [AdminUserController::class, 'index'])->name('get.users');
-                
+    Route::post('/destroy', [AdminUserController::class, 'destroy'])->name('delete.user');
 });
 
 Route::prefix('memos')->group(function () {
     Route::get('/index', [AdminMemoController::class, 'index'])->name('get.memos');
-                
+    Route::post('/destroy', [AdminMemoController::class, 'destroy'])->name('delete.memo');        
 });
 
 Route::prefix('categories')->group(function () {
     Route::get('/index', [AdminCategoryController::class, 'index'])->name('get.categories');
-                
+    Route::post('/destroy', [AdminCategoryController::class, 'destroy'])->name('delete.category');            
 });
 
 

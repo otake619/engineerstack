@@ -35,7 +35,7 @@
         </nav>
     </section>
     <section class="content">
-        <h4 class="title has-text-centered">ユーザー一覧</h4>
+        <h4 class="title has-text-centered">カテゴリ一覧</h4>
         <div class="columns">
             <div class="select-database column is-one-quarter m-3">
                 <a href="{{ route('admin.dashboard') }}">
@@ -86,7 +86,14 @@
                                             {{ $category->created_at }}
                                         </th>
                                         <th>
-                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                            <form action="{{ route('admin.delete.category') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" value="{{ $category->id }}" name="category_id">
+                                                <button type="submit" style="background-color: transparent; border: none;">
+                                                    <i class="fas fa-trash-alt has-text-danger">
+                                                    </i>
+                                                </button>
+                                            </form>
                                         </th>
                                     </tr>
                                  @endforeach
