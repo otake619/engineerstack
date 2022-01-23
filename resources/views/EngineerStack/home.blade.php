@@ -127,14 +127,14 @@
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
+                        <div class="column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
                             <div class="memo-container mb-3">
-                                <p>{{ $memo->memo }}</p>
+                                <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
@@ -198,7 +198,7 @@
                 crossorigin="anonymous"></script>
     <script>
         $(function () {
-           
+
         });
 
         function truncate(str){
