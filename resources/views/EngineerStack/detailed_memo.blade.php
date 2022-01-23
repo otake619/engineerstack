@@ -74,15 +74,17 @@
                     <span>{{ $memo->updated_at->format("Y年m月d日 H時i分s秒") }} 作成</span>
                 </div>
                 <div class="category">
-                    <i class="fas fa-tape"></i><span id="categories"></span>
+                    <i class="fas fa-bookmark"></i><span id="categories"></span>
                 </div>
                 <div class="memo mt-5">
-                    <div id="editorjs" style="overflow-wrap: break-word;"></div>
+                    <div class="memo-container">
+                        <p class="is-size-4">{{ $memo->memo }}</p>
+                    </div>
                     <div class="settings has-text-right mt-4">
                         <div class="dropdown">
                             <div class="dropdown-trigger">
                                 <button id="settings" class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-                                    <span><i class="fas fa-cog"></i>設定</span>
+                                    <span>編集・削除</span>
                                     <span class="icon is-small">
                                         <i class="fas fa-angle-down" aria-hidden="true"></i>
                                     </span>
@@ -161,9 +163,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function () {
-            let categories = @json($categories);
-            let memoData = @json($memo->memo_data);
-            memoData = JSON.parse(memoData);
+            const categories = @json($categories);
             $('#categories').text(categories);
 
             $(".settings").click(function() {
@@ -182,21 +182,6 @@
                 $(".modal").toggleClass("is-active");
             });
 
-            const editor = new  EditorJS({
-                holder: 'editorjs',
-                readOnly: true,
-                minHeight: 50,
-                data: memoData,
-                tools: {
-                    header: {
-                        class: Header, 
-                        inlineToolbar: ['link'] 
-                    },        
-                    list: List,        
-                    quote: Quote,
-                    code: CodeTool
-                },
-            });
         });
     </script>
 </body>

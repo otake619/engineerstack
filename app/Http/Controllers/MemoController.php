@@ -109,37 +109,42 @@ class MemoController extends Controller
      * @param Illuminate\Http\Request $request
      * $requestには、
      * メモのid
-     * メモのmemo_data
-     * メモのtitle
+     * メモデータ
      * が含まれています。
      * @return Illuminate\View\View
      * メモ詳細画面を返す。
      */
     public function update(StoreMemoRequest $request)
     {
+        $memo = $request->input('memo');
         $memo_id = $request->input('memo_id');
-        $memo_data = $request->input('memo_data');
         $categories = $request->input('categories');
         $is_owner = $this->memo->checkOwner($memo_id);
         
         if(!$is_owner) {
-            return redirect()->route('dashboard')->with('message', 'メモの更新に失敗しました。');
+            return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
         }
+
         DB::beginTransaction();
 
         try {
             $message = 'メモの更新が完了しました。';
-            $memo_text = $this->memo->getMemoText($memo_data);
             Memo::where('id', $memo_id)
-                    ->update(['memo_data' => $memo_data, 'memo_text' => $memo_text]);
-            $this->memo->categoriesSync($memo_id, $categories);
+                    ->update(['memo' => $memo]);
+            $categories_count = $this->memo->categoriesSync($memo_id, $categories);
+
+            if($categories_count > 5) {
+                DB::rollback();
+                return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
+            }
+
             $memo = Memo::find($memo_id);
             DB::commit();
             return view('EngineerStack.detailed_memo'
                     , compact('categories', 'memo', 'message'));
         } catch (Exception $exception) {
             DB::rollback();
-            return redirect()->route('dashboard')->with('message', 'メモの更新に失敗しました。');
+            return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
         }
     }
 

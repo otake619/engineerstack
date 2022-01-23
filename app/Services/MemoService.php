@@ -73,6 +73,8 @@
             }
             $memo = Memo::find($memo_id);
             $memo->categories()->sync($category_ids);
+            
+            return $arr_length;
         }
 
         /**

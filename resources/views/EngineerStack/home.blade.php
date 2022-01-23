@@ -69,6 +69,11 @@
                 {{ session('message') }}
             </div>
         @endif
+        @isset($alert)
+            <div class="notification is-warning has-text-centered">
+                <p>{{ $alert }}</p>
+            </div>
+        @endisset
     </section>
     @if($memos->isEmpty())
         <section class="content">
@@ -128,13 +133,12 @@
                                     <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
-                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word;">
-                            </div><br>
-                            <div class="memo-data mb-3">
+                            <div class="memo-container mb-3">
+                                <p>{{ $memo->memo }}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
-                                    <input type="hidden" name="memo_data" value="{{ $memo->memo_data }}">
+                                    <input type="hidden" name="memo" value="{{ $memo->memo }}">
                                     <input type="submit" value="メモ詳細へ" class="button is-link">
                                 </form>
                             </div>
@@ -194,26 +198,11 @@
                 crossorigin="anonymous"></script>
     <script>
         $(function () {
-            let memos = @json($memos);
-            const memosLength = memos['data'].length;
-            for(let index = 0; index < memosLength; index++) {
-                const id = `#memo_${memos['data'][index]['id']}`;
-                let text = sanitizeDecode(memos['data'][index]['memo_text']);
-                text = truncate(text);
-                $(id).text(text);
-            }
+           
         });
 
         function truncate(str){
             return str.length <= 100 ? str: (str.substr(0, 100)+"...");
-        }
-
-        function sanitizeDecode(text) {
-            return text.replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&quot;/g, '"')
-            .replace(/&#39;/g, '\'')
-            .replace(/&amp;/g, '&');
         }
     </script>
 </body>

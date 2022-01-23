@@ -79,11 +79,7 @@
                     </div>
                     <form action="{{ route('memos.update') }}" method="POST">
                         @csrf 
-                        <input type="hidden" id="memo_data" name="memo_data">
                         <input type="hidden" name="memo_id" value="{{ $memo->id }}">
-                        <input type="hidden" id="categories_count" name="categories_count" value="1">
-                        <input type="hidden" id="memo_count" name="memo_count" value="1">
-                        <input type="hidden" id="category_flg" name="category_flg" value="true">
                         <div class="field">
                             <label for="comment">カテゴリ<br><span class="has-text-danger">*必須 最大5個 1カテゴリ30文字まで</span></label><br>
                             <span class="has-text-primary" id="count_category">残り5個入力可能</span>
@@ -91,15 +87,15 @@
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input name="categories" id="category" type="text" class="input is-success" placeholder="カテゴリ" maxlength="110" required>
+                                        <input name="categories" id="category" type="text" class="input is-hovered" placeholder="カテゴリ" maxlength="110" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="memo">
-                            <label for="editorjs">メモ<br><span class="has-text-danger">*必須</span></label>
-                            <div id="disp_size"></div>
-                            <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
+                        <div class="memo-container">
+                            <label for="memo">メモ<br><span class="has-text-danger">*必須 5000文字以内</span></label>
+                            <p id="memo-count" class="has-text-primary"></p>
+                            <textarea name="memo" id="memo" class="textarea is-hovered" cols="70" rows="15">{{ $memo->memo }}</textarea>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">
                             <i class="far fa-edit"></i>更新
@@ -132,53 +128,10 @@
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.19.3/dist/editor.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function() {
-            let memoData = @json($memo['memo_data']);
-            memoData = JSON.parse(memoData);
             let categories = @json($categories);
             $('#category').val(categories);
-
-            const editor = new EditorJS({
-                minHeight: 50,
-                holder: 'editorjs',
-                tools: {
-                    header: {
-                        class: Header, 
-                        inlineToolbar: ['link'] 
-                    },        
-                    list: List,        
-                    quote: Quote,
-                    code: CodeTool,
-                },
-                onChange: function(event) {
-                    let text = $('.ce-block').text();
-                    let code = $('.cdx-input').val();
-                    console.log(code);
-                    console.log(text);
-                    if(code === undefined) {
-                        code = '';
-                    }
-                    let charCnt = (text + code).length;
-                    let dispCntChar = `${charCnt}文字入力されています。`;
-                    $('#disp_size').text(dispCntChar);
-                    $('#memo_count').val(charCnt);
-                },
-                data: memoData,
-            });
-
-            $("#post_memo").click(function() {
-                editor.save().then((outputData) => {
-                    $('#memo_data').val(JSON.stringify(outputData));
-                }).catch((error) => {
-
-                });
-            });
 
             $("#category").keyup(function() {
                 let flgArr = []
@@ -205,9 +158,20 @@
                     $('#category_flg').val(true);
                 }
             });
+
+            $("#memo").keyup(function() {
+                let memoCount = $("#memo").val().length;
+
+                if(memoCount <= 5000) {
+                    $("#memo-count").text(memoCount + "文字");
+                    changeClass("#memo-count", true);
+                } else {
+                    $("#memo-count").text("5000文字を超えています!");
+                    changeClass("#memo-count", false);
+                }
+            });
         });
 
-        //カテゴリの関数
         function separateText(separator, text) {
             let splitText = text.split(separator);
             return splitText;
@@ -244,21 +208,19 @@
 
         function pushTag(array) {
             let tags = [];
-            //カテゴリの要素数が5より上の場合は処理を中断
+
             if(array == undefined) {
                 return;
             } else if(array.length > 5) {
                 return;
             }
             for(let i=0; i<array.length; i++) {
-                let element = createElement("i", "fas fa-tape tag is-primary mr-1 mb-1", array[i]);
+                let element = createElement("i", "fas fa-bookmark tag is-primary mr-1 mb-1", array[i]);
                 tags.push(element);
             }
             return tags;
         }
-        //ここまで
 
-        //タイトルとメモの関数
         function countText(id, limit, length) {
             let remain = limit -length;
             if(remain > 0) {
@@ -273,14 +235,12 @@
                 changeClass(id, isNormal);
             } else {
                 const isNormal = false;
-                const text = "最大文字数を超えています！";
+                const text = "最大文字数を超えています!";
                 changeText(id, text);
                 changeClass(id, isNormal);
             }
         }
-        //ここまで
 
-        //共通の関数
         function changeClass(id, isNormal) {
             let normalStatus = "has-text-primary";
             let abnormalStatus = "has-text-danger";
@@ -294,22 +254,6 @@
 
         function changeText(id, text) {
             $(id).text(text);
-        }
-        //ここまで
-        function getEditorjsTxt() {
-            let myCode = $('#editorjs').html();
-            let cleanCode = myCode.replace(/<(?:.|\n)*?>/gm, '').replace(/(\r\n|\n|\r)/gm,"").replace('&nbsp;','');
-            cleanCode = cleanCode.slice(0, -52);
-            return cleanCode;
-        }
-
-        function getEditorjsCnt(text) {
-            let numChars = text.length;
-            if(numChars < 0) {
-                numChars = 0;
-            }
-            $('#editorjsCnt').text(numChars + "文字入力されています。");
-            return numChars;
         }
     </script>
 </body>
