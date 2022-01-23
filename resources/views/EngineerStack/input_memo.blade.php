@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="editor_field">
+                        <div class="memo_field">
                             <label for="memo">メモ<br><span class="has-text-danger">*必須 5000文字以内</span></label>
                             <p id="memo-count"></p>
                             <textarea name="memo" id="memo" class="textarea is-hovered" cols="70" rows="15"></textarea>
@@ -167,10 +167,8 @@
                 let arrayLength = textToArray.length;
                 $('#categories_count').val(arrayLength);
                 if(flgArr.includes(false)) {
-                    $('#category_flg').val(false);
                     $('#flag').text('20文字以上のカテゴリは設定できません。');
                 } else {
-                    $('#category_flg').val(true);
                     $('#flag').text('');
                 }
             });
@@ -206,14 +204,14 @@
             if(remain > 0) {
                 const text = "残り" + remain + "個入力可能";
                 changeText(id, text);
+                changeClass(id, true);
             } else if(remain === 0){
                 const text = "入力できる最大数です。";
                 changeText(id, text);
             } else {
-                const isNormal = false;
                 const text = "最大数を超えています!";
                 changeText(id, text);
-                changeClass(id, isNormal);
+                changeClass(id, false);
             }
         }
 
@@ -230,7 +228,7 @@
                 return;
             }
             for(let i=0; i<array.length; i++) {
-                let element = createElement("i", "fas fa-tape tag is-primary mr-1 mb-1", array[i]);
+                let element = createElement("i", "fas fa-bookmark tag is-info m-2 is-size-6", array[i]);
                 tags.push(element);
             }
             return tags;

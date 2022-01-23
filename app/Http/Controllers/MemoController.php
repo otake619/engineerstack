@@ -59,25 +59,18 @@ class MemoController extends Controller
     {
         $user_id = Auth::id();
         $categories = $request->input('categories');
-        $memo_data = $request->input('memo_data');
-        $memo_text = $this->memo->getMemoText($memo_data);
+        $memo = $request->input('memo');
 
         DB::beginTransaction();
 
         try {
             $message = "メモの投稿が完了しました。";
-            $memo_id = Memo::store($user_id, $memo_data, $memo_text);
+            $memo_id = Memo::store($user_id, $memo);
             $memo = Memo::find($memo_id);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
             if($insert_categories > 5) {
                 DB::rollback();
                 return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大数は5つです。');
-            } else if(mb_strlen($memo_text) > 1000) {
-                DB::rollback();
-                return redirect()->route('memos.get.input')->with('message', 'メモの最大入力文字を超えています。');
-            } else if(mb_strlen($memo_text) == 0) {
-                DB::rollback();
-                return redirect()->route('memos.get.input')->with('message', 'メモの入力は必須です。');
             }
             DB::commit();
             return view('EngineerStack.detailed_memo', compact('memo', 'categories', 'message'));
