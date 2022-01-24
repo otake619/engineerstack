@@ -152,15 +152,15 @@
             if($sort == "ascend") {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
-                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+                        ->where('memo', 'LIKE', "%$search_word%")->get();
             } elseif($sort == "descend") {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'asc')
-                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+                        ->where('memo', 'LIKE', "%$search_word%")->get();
             } else {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
-                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+                        ->where('memo', 'LIKE', "%$search_word%")->get();
             }
 
             if(empty($current_page)) {
