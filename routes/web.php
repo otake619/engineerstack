@@ -12,7 +12,7 @@ Route::get('/', function () {
 Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::prefix('users')->group(function () {
-
+    Route::post('show', [UserController::class, 'show'])->name('user.show');
 });
 
 Route::prefix('memos')->group(function () {
