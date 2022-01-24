@@ -69,11 +69,11 @@
                 {{ session('message') }}
             </div>
         @endif
-        @isset($alert)
+        @if (session('alert'))
             <div class="notification is-warning has-text-centered">
-                <p>{{ $alert }}</p>
+                {{ session('alert') }}
             </div>
-        @endisset
+        @endif
     </section>
     @if($memos->isEmpty())
         <section class="content">
