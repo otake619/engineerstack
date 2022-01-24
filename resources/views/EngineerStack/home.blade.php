@@ -107,14 +107,14 @@
                                 </form>
                             </div>
                             <p class="panel-tabs">
-                                <span>最新15カテゴリ</span>
+                                <span>最新カテゴリ</span>
                             </p>
                             <div class="category">
                                 @foreach($categories as $category)
                                     <form action="{{ route('memos.search.category') }}">
                                         @csrf
                                         <input type="hidden" name="search_word" value="{{ $category }}" maxlength="100">
-                                        <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-size-6 m-1"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
+                                        <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 40) }}</span><br></button>
                                     </form>
                                 @endforeach
                             </div>
@@ -130,7 +130,7 @@
                         <div class="column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <span class="tag is-size-6 m-1"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
+                                    <span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
                             <div class="memo-container mb-3">

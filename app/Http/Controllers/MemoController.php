@@ -86,8 +86,6 @@ class MemoController extends Controller
      * メモの主キーです。
      * @return @return Illuminate\View\View
      * メモの編集画面を返します。
-     * TODO: 後ほど、user_idが異なるアカウントでredirectが
-     * 発動するかテスト
      */
     public function edit(int $id)
     {

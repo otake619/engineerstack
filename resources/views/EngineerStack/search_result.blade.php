@@ -92,7 +92,7 @@
                                 </form>
                             </div>
                             <p class="panel-tabs">
-                                <span>最新15カテゴリ</span>
+                                <span>最新カテゴリ</span>
                             </p>
                             <div class="category">
                                 @foreach($categories as $category)

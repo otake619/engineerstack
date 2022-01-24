@@ -27,7 +27,6 @@
          * この関数はメモに対して何らの処理を加える際に、
          * メモの所有者以外のアカウントがメモに処理を加え
          * ることを防ぐ処理を担当しています。
-         * 
          * @param int $memo_id
          * メモの主キーです。
          * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
@@ -106,6 +105,10 @@
             return $categories;
         }
 
+        /**
+         * 
+         * 
+         */
         public function getMemos(string $search_word, ?string $sort)
         {                       
             $memos = collect();
