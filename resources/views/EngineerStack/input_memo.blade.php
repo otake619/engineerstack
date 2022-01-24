@@ -99,21 +99,15 @@
                             <div class="control has-text-centered">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="text" name="categories" class="input is-success" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,..." maxlength="110" required autofocus>
+                                        <input type="text" name="categories" class="input is-hovered" id="category" placeholder="カテゴリ1, カテゴリ2, カテゴリ3,..." required autofocus>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="editor_field">
-                            <label for="editor">メモ<br><span class="has-text-danger">*必須 1000文字以内</span></label>
-                            <div class="disp_size" id="disp_size"></div>
-                            <div class="editor_wrapper p-5">
-                                <div id="editorjs" style="border: 1px solid #00d1b2; border-radius: 4px;"></div>
-                                <input type="hidden" id="categories_count" name="categories_count">
-                                <input type="hidden" id="memo_count" name="memo_count">
-                                <input type="hidden" id="memo_data" name="memo_data" value="">
-                                <input type="hidden" id="category_flg" name="category_flg">
-                            </div>
+                        <div class="memo_field">
+                            <label for="memo">メモ<br><span class="has-text-danger">*必須 5000文字以内</span></label>
+                            <p id="memo-count"></p>
+                            <textarea name="memo" id="memo" class="textarea is-hovered" cols="70" rows="15"></textarea>
                         </div>
                         <button id="post_memo" class="button is-primary m-2">
                             <p class="is-size-4"><i class="fas fa-save"></i>保存</p>
@@ -146,54 +140,8 @@
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.19.3/dist/editor.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
     <script>
         $(function() {
-            const editor = new EditorJS({
-                minHeight: 50,
-                holder: 'editorjs',
-                autofocus: true,
-                tools: {
-                    header: {
-                        class: Header, 
-                        inlineToolbar: ['link'] 
-                    },        
-                    list: List,        
-                    quote: Quote,
-                    code: CodeTool
-                },
-                onChange: function(event) {
-                    let text = $('.ce-block').text();
-                    let code = $('.cdx-input').val();
-                    if(code === undefined) {
-                        code = '';
-                    }
-                    let charCnt = (text + code).length;
-                    let dispCntChar = `${charCnt}文字入力されています。`;
-                    if(charCnt > 1000) {
-                        $('#disp_size').addClass('has-text-danger');
-                        $('#disp_size').removeClass('has-text-primary');
-                    } else {
-                        $('#disp_size').removeClass('has-text-danger');
-                        $('#disp_size').addClass('has-text-primary');
-                    }
-                    $('#disp_size').text(dispCntChar);
-                    $('#memo_count').val(charCnt);
-                }
-            });
-
-            $("#post_memo").click(function() {
-                editor.save().then((outputData) => {
-                    $('#memo_data').val(JSON.stringify(outputData));
-                }).catch((error) => {
-
-                });
-            });
-
             $("#category").keyup(function() {
                 let flgArr = []
                 const separator = ",";
@@ -214,16 +162,25 @@
                 let arrayLength = textToArray.length;
                 $('#categories_count').val(arrayLength);
                 if(flgArr.includes(false)) {
-                    $('#category_flg').val(false);
                     $('#flag').text('20文字以上のカテゴリは設定できません。');
                 } else {
-                    $('#category_flg').val(true);
                     $('#flag').text('');
+                }
+            });
+
+            $("#memo").keyup(function() {
+                let memoCount = $(this).val().length;
+
+                if(memoCount <= 5000) {
+                    $("#memo-count").text(memoCount + "文字");
+                    changeClass("#memo-count", true);
+                } else {
+                    $("#memo-count").text("5000文字を超えています!");
+                    changeClass("#memo-count", false);
                 }
             });
         });
 
-        //カテゴリの関数
         function separateText(separator, text) {
             let splitText = text.split(separator);
             return splitText;
@@ -242,14 +199,14 @@
             if(remain > 0) {
                 const text = "残り" + remain + "個入力可能";
                 changeText(id, text);
+                changeClass(id, true);
             } else if(remain === 0){
                 const text = "入力できる最大数です。";
                 changeText(id, text);
             } else {
-                const isNormal = false;
                 const text = "最大数を超えています!";
                 changeText(id, text);
-                changeClass(id, isNormal);
+                changeClass(id, false);
             }
         }
 
@@ -260,21 +217,18 @@
 
         function pushTag(array) {
             let tags = [];
-            //カテゴリの要素数が5より上の場合は処理を中断
             if(array == undefined) {
                 return;
             } else if(array.length > 5) {
                 return;
             }
             for(let i=0; i<array.length; i++) {
-                let element = createElement("i", "fas fa-tape tag is-primary mr-1 mb-1", array[i]);
+                let element = createElement("i", "fas fa-bookmark tag is-info m-2 is-size-6", array[i]);
                 tags.push(element);
             }
             return tags;
         }
-        //ここまで
 
-        //共通の関数
         function changeClass(id, isNormal) {
             let normalStatus = "has-text-primary";
             let abnormalStatus = "has-text-danger";
@@ -289,7 +243,6 @@
         function changeText(id, text) {
             $(id).text(text);
         }
-        //ここまで
     </script>
 </body>
 </html>

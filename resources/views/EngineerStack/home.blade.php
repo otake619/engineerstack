@@ -69,6 +69,11 @@
                 {{ session('message') }}
             </div>
         @endif
+        @if (session('alert'))
+            <div class="notification is-warning has-text-centered">
+                {{ session('alert') }}
+            </div>
+        @endif
     </section>
     @if($memos->isEmpty())
         <section class="content">
@@ -102,14 +107,14 @@
                                 </form>
                             </div>
                             <p class="panel-tabs">
-                                <span>最新15カテゴリ</span>
+                                <span>最新カテゴリ</span>
                             </p>
                             <div class="category">
                                 @foreach($categories as $category)
                                     <form action="{{ route('memos.search.category') }}">
                                         @csrf
                                         <input type="hidden" name="search_word" value="{{ $category }}" maxlength="100">
-                                        <button style="background: none; border: 0px; white-space: normal;"><span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 40) }}</span><br></button>
+                                        <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 40) }}</span><br></button>
                                     </form>
                                 @endforeach
                             </div>
@@ -122,19 +127,18 @@
                 </div>
                 <div class="memos columns is-multiline">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
+                        <div class="column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
-                                    <span class="tag"><i class="fas fa-tape"></i>{{ Str::limit($category, 15) }}</span>
+                                    <span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
-                            <div id="memo_{{ $memo->id }}" style="overflow-wrap: break-word;">
-                            </div><br>
-                            <div class="memo-data mb-3">
+                            <div class="memo-container mb-3">
+                                <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
-                                    <input type="hidden" name="memo_data" value="{{ $memo->memo_data }}">
+                                    <input type="hidden" name="memo" value="{{ $memo->memo }}">
                                     <input type="submit" value="メモ詳細へ" class="button is-link">
                                 </form>
                             </div>
@@ -194,26 +198,11 @@
                 crossorigin="anonymous"></script>
     <script>
         $(function () {
-            let memos = @json($memos);
-            const memosLength = memos['data'].length;
-            for(let index = 0; index < memosLength; index++) {
-                const id = `#memo_${memos['data'][index]['id']}`;
-                let text = sanitizeDecode(memos['data'][index]['memo_text']);
-                text = truncate(text);
-                $(id).text(text);
-            }
+
         });
 
         function truncate(str){
             return str.length <= 100 ? str: (str.substr(0, 100)+"...");
-        }
-
-        function sanitizeDecode(text) {
-            return text.replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&quot;/g, '"')
-            .replace(/&#39;/g, '\'')
-            .replace(/&amp;/g, '&');
         }
     </script>
 </body>

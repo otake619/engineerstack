@@ -27,7 +27,6 @@
          * この関数はメモに対して何らの処理を加える際に、
          * メモの所有者以外のアカウントがメモに処理を加え
          * ることを防ぐ処理を担当しています。
-         * 
          * @param int $memo_id
          * メモの主キーです。
          * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
@@ -73,6 +72,8 @@
             }
             $memo = Memo::find($memo_id);
             $memo->categories()->sync($category_ids);
+            
+            return $arr_length;
         }
 
         /**
@@ -104,6 +105,10 @@
             return $categories;
         }
 
+        /**
+         * 
+         * 
+         */
         public function getMemos(string $search_word, ?string $sort)
         {                       
             $memos = collect();
@@ -150,15 +155,15 @@
             if($sort == "ascend") {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
-                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+                        ->where('memo', 'LIKE', "%$search_word%")->get();
             } elseif($sort == "descend") {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'asc')
-                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+                        ->where('memo', 'LIKE', "%$search_word%")->get();
             } else {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
-                        ->where('memo_text', 'LIKE', "%$search_word%")->get();
+                        ->where('memo', 'LIKE', "%$search_word%")->get();
             }
 
             if(empty($current_page)) {
@@ -211,84 +216,5 @@
             return view('EngineerStack.search_result', 
                     compact('search_word', 'memos','categories',
                      'current_page', 'total_pages', 'sort', 'is_search_category'));
-        }
-
-        /**
-         * editor.jsで作成されたjsonデータを受け取り、
-         * text部分を抽出してtextを返す関数。
-         * @param string $memo_data
-         * メモ入力画面にて作成されたメモデータ。
-         * @return string $memo_text
-         * メモ入力画面にて作成されたメモデータの
-         * テキスト部分。
-         */
-        public function getMemoText(string $memo_data)
-        {
-            $memo_data = json_decode($memo_data, true);
-            $memo_text = "";
-            $block_length = count($memo_data['blocks']);
-            $block = $memo_data['blocks'];
-    
-            for($block_index = 0; $block_index < $block_length; $block_index++) {
-                $type = $block[$block_index]['type'];
-
-                switch($type) {
-                    case "paragraph": 
-                        $memo_text .= $this->getParagraphText($block[$block_index]);
-                        break;
-                    case "code": 
-                        $memo_text .= $this->getCodeText($block[$block_index]);
-                        break;
-                    case "quote": 
-                        $memo_text .= $this->getQuoteText($block[$block_index]);
-                        break;
-                    case "header":
-                        $memo_text .= $this->getHeaderText($block[$block_index]);
-                        break;
-                    case "list":
-                        $memo_text .= $this->getListText($block[$block_index]);
-                        break;
-                    default: 
-                        return;
-                }
-            }
-
-            return $memo_text;
-        }
-
-        public function getParagraphText(array $data) {
-            $text = "";
-            $text .= $data['data']['text'];
-            return $text . "\n";
-        }
-
-        public function getCodeText(array $data) {
-            $text = "";
-            $text .= $data['data']['code'];
-            return $text . "\n";
-        }
-
-        public function getQuoteText(array $data) {
-            $text = "";
-            $text .= $data['data']['text'];
-            $text .= $data['data']['caption'];
-            return $text . "\n";
-        }
-
-        public function getHeaderText(array $data) {
-            $text = "";
-            $text .= $data['data']['text'];
-            return $text . "\n";
-        }
-
-        public function getListText(array $data) {
-            $text = "";
-            $item_length = count($data['data']['items']);
-
-            for($index = 0; $index < $item_length; $index++) {
-                $text .= $data['data']['items'][$index];
-            }
-
-            return $text . "\n";
         }
     }

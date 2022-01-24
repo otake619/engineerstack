@@ -57,28 +57,20 @@ class MemoController extends Controller
      */
     public function store(StoreMemoRequest $request)
     {
-        $validated = $request->validated();
         $user_id = Auth::id();
         $categories = $request->input('categories');
-        $memo_data = $request->input('memo_data');
-        $memo_text = $this->memo->getMemoText($memo_data);
+        $memo = $request->input('memo');
 
         DB::beginTransaction();
 
         try {
             $message = "メモの投稿が完了しました。";
-            $memo_id = Memo::store($user_id, $memo_data, $memo_text);
+            $memo_id = Memo::store($user_id, $memo);
             $memo = Memo::find($memo_id);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
             if($insert_categories > 5) {
                 DB::rollback();
                 return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大数は5つです。');
-            } else if(mb_strlen($memo_text) > 1000) {
-                DB::rollback();
-                return redirect()->route('memos.get.input')->with('message', 'メモの最大入力文字を超えています。');
-            } else if(mb_strlen($memo_text) == 0) {
-                DB::rollback();
-                return redirect()->route('memos.get.input')->with('message', 'メモの入力は必須です。');
             }
             DB::commit();
             return view('EngineerStack.detailed_memo', compact('memo', 'categories', 'message'));
@@ -94,8 +86,6 @@ class MemoController extends Controller
      * メモの主キーです。
      * @return @return Illuminate\View\View
      * メモの編集画面を返します。
-     * TODO: 後ほど、user_idが異なるアカウントでredirectが
-     * 発動するかテスト
      */
     public function edit(int $id)
     {
@@ -117,37 +107,42 @@ class MemoController extends Controller
      * @param Illuminate\Http\Request $request
      * $requestには、
      * メモのid
-     * メモのmemo_data
-     * メモのtitle
+     * メモデータ
      * が含まれています。
      * @return Illuminate\View\View
      * メモ詳細画面を返す。
      */
     public function update(StoreMemoRequest $request)
     {
+        $memo = $request->input('memo');
         $memo_id = $request->input('memo_id');
-        $memo_data = $request->input('memo_data');
         $categories = $request->input('categories');
         $is_owner = $this->memo->checkOwner($memo_id);
         
         if(!$is_owner) {
-            return redirect()->route('dashboard')->with('message', 'メモの更新に失敗しました。');
+            return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
         }
+
         DB::beginTransaction();
 
         try {
             $message = 'メモの更新が完了しました。';
-            $memo_text = $this->memo->getMemoText($memo_data);
             Memo::where('id', $memo_id)
-                    ->update(['memo_data' => $memo_data, 'memo_text' => $memo_text]);
-            $this->memo->categoriesSync($memo_id, $categories);
+                    ->update(['memo' => $memo]);
+            $categories_count = $this->memo->categoriesSync($memo_id, $categories);
+
+            if($categories_count > 5) {
+                DB::rollback();
+                return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
+            }
+
             $memo = Memo::find($memo_id);
             DB::commit();
             return view('EngineerStack.detailed_memo'
                     , compact('categories', 'memo', 'message'));
         } catch (Exception $exception) {
             DB::rollback();
-            return redirect()->route('dashboard')->with('message', 'メモの更新に失敗しました。');
+            return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
         }
     }
 
