@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class UserController extends Controller
 {
@@ -26,5 +28,26 @@ class UserController extends Controller
     {
         $user = User::find(Auth::id());
         return view('EngineerStack.account', compact('user'));
+    }
+
+    public function updateAccountName(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+        ]);
+        $name = $request->input('name');
+
+        DB::beginTransaction();
+
+        try {
+            User::where('id', Auth::id())->update(['name' => $name]);
+            $message = "アカウント名を更新しました。";
+            DB::commit();
+            return view('EngineerStack.account', compact('message'));
+        } catch(Exception $exception) {
+            DB::rollback();
+            return redirect()->route('user.show')->with('message', 'アカウントの編集に失敗しました。');
+        }
+
     }
 }
