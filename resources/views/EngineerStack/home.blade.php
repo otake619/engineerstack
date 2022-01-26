@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="navbar-item">
-                        <form action="{{ route('user.show') }}" method="POST">
+                        <form action="{{ route('user.show') }}" method="GET">
                             @csrf
                             <button style="background: transparent; border:transparent"><i class="fas fa-user has-text-info is-size-4"></i></button>
                         </form>

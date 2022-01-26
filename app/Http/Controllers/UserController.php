@@ -41,9 +41,10 @@ class UserController extends Controller
 
         try {
             User::where('id', Auth::id())->update(['name' => $name]);
+            $user = User::find(Auth::id());
             $message = "アカウント名を更新しました。";
             DB::commit();
-            return view('EngineerStack.account', compact('message'));
+            return view('EngineerStack.account', compact('message', 'user'));
         } catch(Exception $exception) {
             DB::rollback();
             return redirect()->route('user.show')->with('message', 'アカウントの編集に失敗しました。');

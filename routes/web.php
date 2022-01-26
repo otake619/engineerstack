@@ -12,7 +12,8 @@ Route::get('/', function () {
 Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::prefix('users')->group(function () {
-    Route::post('show', [UserController::class, 'show'])->name('user.show');
+    Route::get('show', [UserController::class, 'show'])->name('user.show');
+    Route::post('update_name', [UserController::class, 'updateAccountName'])->name('user.update.name');
 });
 
 Route::prefix('memos')->group(function () {

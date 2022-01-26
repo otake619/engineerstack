@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="navbar-item">
-                        <form action="{{ route('user.show') }}" method="POST">
+                        <form action="{{ route('user.show') }}" method="GET">
                             @csrf
                             <button style="background: transparent; border:transparent"><i class="fas fa-user has-text-info is-size-4"></i></button>
                         </form>
@@ -82,17 +82,29 @@
         @endif
     </section>
     <section class="content">
-        <div class="title has-text-centered m-5">
-            <p class="is-size-4 is-text-weight-bold">アカウント設定</p>
-        </div>
-        <div class="account has-text-centered">
-            <p>アカウント名: {{ $user->name }}</p>
-            <a href="" class="has-text-info">アカウント名を変更する場合はこちら</a>
-            <p class="mt-3">Email: {{ $user->email }}</p>
-            <a href="" class="has-text-info">Emailを変更する場合はこちら</a>
-            <p class="mt-3">PassWord: *********</p>
-            <a href="" class="has-text-info">PassWordを変更する場合はこちら</a><br><br><br>
-            <a href="{{ route('dashboard') }}" class="has-text-info">ホームへ戻る</a>
+        <div class="columns">
+            <div class="column"></div>
+            <div class="column">
+                <div class="title has-text-centered m-5">
+                    <p class="is-size-4 is-text-weight-bold">アカウント設定</p>
+                </div>
+                <div class="account has-text-centered">
+                    <label for="name">アカウント名</label>
+                    <div class="control">
+                        <form action="{{ route('user.update.name') }}" method="POST">
+                            @csrf
+                            <input type="text" id="name" name="name" class="input is-hovered" value="{{ $user->name }}">
+                            <input type="submit" class="button is-primary mt-4" value="変更">
+                        </form>
+                    </div>
+                    <p class="mt-3">Email: {{ $user->email }}</p>
+                    <a href="" class="has-text-info">Emailを変更する場合はこちら</a>
+                    <p class="mt-3">PassWord: *********</p>
+                    <a href="" class="has-text-info">PassWordを変更する場合はこちら</a><br><br><br>
+                    <a href="{{ route('dashboard') }}" class="has-text-info">ホームへ戻る</a>
+                </div>
+            </div>
+            <div class="column"></div>
         </div>
     </section>
     <section class="footer">
