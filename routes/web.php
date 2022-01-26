@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ChangeEmailController;
 
 Route::get('/', function () {
     return view('auth.register');
@@ -14,6 +15,11 @@ Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])
 Route::prefix('users')->group(function () {
     Route::get('show', [UserController::class, 'show'])->name('user.show');
     Route::post('update_name', [UserController::class, 'updateAccountName'])->name('user.update.name');
+    Route::get('update_email_form', function (){
+        return view('EngineerStack.change-email-form');
+    })->middleware('auth')->name('user.update.email.form');
+    Route::post('update_email', [ChangeEmailController::class, 'sendChangeEmailLink'])->name('user.update.email');
+    Route::get('reset/{token}', [ChangeEmailController::class, 'reset'])->name('email.reset');
 });
 
 Route::prefix('memos')->group(function () {

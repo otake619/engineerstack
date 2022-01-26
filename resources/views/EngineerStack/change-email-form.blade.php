@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>アカウント設定</title>
+    <title>Email更新</title>
 </head>
 <body>
     <section class="header">
@@ -65,11 +65,6 @@
         </nav>
     </section>
     <section class="message">
-        @isset($message)
-            <div class="notification is-success has-text-centered">
-                <p>{{ $message }}</p>
-            </div>
-        @endisset
         @if (session('message'))
             <div class="notification is-success has-text-centered">
                 {{ session('message') }}
@@ -85,33 +80,12 @@
         <div class="columns">
             <div class="column"></div>
             <div class="column">
-                <div class="title has-text-centered m-5">
-                    <p class="is-size-4 is-text-weight-bold">アカウント設定</p>
-                </div>
-                <div class="account has-text-centered">
-                    <label for="name">アカウント名</label>
-                    <div class="control mt-3">
-                        <form action="{{ route('user.update.name') }}" method="POST">
-                            @csrf
-                            <input type="text" id="name" name="name" class="input is-hovered" value="{{ $user->name }}">
-                            <input type="submit" class="button is-primary mt-4" value="変更">
-                        </form>
-                    </div>
-                    <div class="email mt-5">
-                        <p class="mt-3">Email</p>
-                        <p class="mt-3">{{ $user->email }}</p>
-                        <a href="{{ route('user.update.email.form') }}" class="has-text-info">Emailを変更する場合はこちら</a>
-                    </div>
-                    <div class="password mt-5 mb-5">
-                        <p class="mt-3">パスワード</p>
-                        <p class="mt-3">*********</p>
-                        <a href="" class="has-text-info">パスワードを変更する場合はこちら</a>
-                    </div>
-                    <div class="account-delete mt-5 mb-5">
-                        <a href="" class="has-text-info">退会する場合はこちら</a>
-                    </div>
-                    <a href="{{ route('dashboard') }}" class="has-text-info">ホームへ戻る</a>
-                </div>
+                <p>新しいメールアドレスを入力してください。</p>
+                <form action="{{ route('user.update.email') }}" method="POST">
+                    @csrf
+                    <input type="email" name="new_email">
+                    <input type="submit" class="button is-primary" value="送信">
+                </form>
             </div>
             <div class="column"></div>
         </div>
