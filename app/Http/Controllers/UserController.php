@@ -13,10 +13,8 @@ class UserController extends Controller
     private $user;
 
     /**
-     * コンストラクタでmiddleware('auth');
-     * を設定しているので、ログイン前では
-     * ユーザーに関するデータにはアクセスできません。
-     * 
+     * ログイン前ではユーザーに関するデータには
+     * アクセスできません。
      * @return void
      */
     public function __construct()
@@ -24,12 +22,25 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * アカウント画面を返す。
+     * @param void
+     * @return Illuminate\View\View
+     */
     public function show()
     {
         $user = User::find(Auth::id());
         return view('EngineerStack.account', compact('user'));
     }
 
+    /**
+     * アカウント名の更新処理。トランザクション処理が正常に完了した場合は、
+     * アカウント画面を返し、問題があった場合は処理を中断しアカウント画面
+     * に通知を表示する。
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\View\View
+     * アカウント画面を返す。
+     */
     public function updateAccountName(Request $request)
     {
         $validated = $request->validate([
@@ -50,5 +61,29 @@ class UserController extends Controller
             return redirect()->route('user.show')->with('message', 'アカウントの編集に失敗しました。');
         }
 
+    }
+
+    /**
+     * パスワードの更新処理。
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\View\View
+     * アカウント画面を返す。
+     */
+    public function updatePassWord(Request $request)
+    {
+        $user = Auth::user();
+        $old_password = $request->input('old_password');
+        $password_check = Hash::check($old_password, $user->password);
+        if(!$password_check) {
+            return redirect()->route('user.show')
+                    ->with('alert', '正しいパスワードを入力してください。');
+        }
+        $new_password = $request->input('new_password');
+        $validated = $request->validate([
+            'new_password' => 'required|Password::min(8)|confirmed',
+        ]);
+        $user->update(['password' => bcrypt($new_password)]);
+        return redirect()->route('user.show')
+                ->with('message', 'パスワードを変更しました。');
     }
 }
