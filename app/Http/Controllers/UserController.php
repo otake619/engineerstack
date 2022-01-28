@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -80,7 +81,7 @@ class UserController extends Controller
         }
         $new_password = $request->input('new_password');
         $validated = $request->validate([
-            'new_password' => 'required|Password::min(8)|confirmed',
+            'new_password' => 'required|min:8|max:16|confirmed',
         ]);
         $user->update(['password' => bcrypt($new_password)]);
         return redirect()->route('user.show')

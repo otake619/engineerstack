@@ -105,7 +105,7 @@
                     <div class="password mt-5 mb-5">
                         <p class="mt-3">パスワード</p>
                         <p class="mt-3">*********</p>
-                        <a href="" class="has-text-info">パスワードを変更する場合はこちら</a>
+                        <a href="{{ route('user.update.password.form') }}" class="has-text-info">パスワードを変更する場合はこちら</a>
                     </div>
                     <div class="account-delete mt-5 mb-5">
                         <a href="" class="has-text-info">退会する場合はこちら</a>

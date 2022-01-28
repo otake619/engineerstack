@@ -19,6 +19,10 @@ Route::prefix('users')->group(function () {
         return view('EngineerStack.change-email-form');
     })->middleware('auth')->name('user.update.email.form');
     Route::post('update_email', [ChangeEmailController::class, 'sendChangeEmailLink'])->name('user.update.email');
+    Route::get('update_password_form', function (){
+        return view('EngineerStack.change-password-form');
+    })->middleware('auth')->name('user.update.password.form');
+    Route::post('update_password', [UserController::class, 'updatePassword'])->name('user.update.password');
     Route::get('reset/{token}', [ChangeEmailController::class, 'reset'])->name('email.reset');
 });
 
