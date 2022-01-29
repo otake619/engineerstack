@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Mail\ContactSendmail;
+use App\Mail\ContactSendMail;
 use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
