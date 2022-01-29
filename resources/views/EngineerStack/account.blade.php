@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>カテゴリ一覧 EngineerStack</title>
+    <title>アカウント設定</title>
 </head>
 <body>
     <section class="header">
@@ -64,30 +64,58 @@
             </div>
         </nav>
     </section>
-    @if($categories->isEmpty())
-        <section class="content">
-            <div class="notification is-warning">
-                <p>まだカテゴリは投稿されていません。</p>
+    <section class="message">
+        @isset($message)
+            <div class="notification is-success has-text-centered">
+                <p>{{ $message }}</p>
             </div>
-        </section>
-    @else 
-        <section class="content">
-            <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">カテゴリ一覧</p>
+        @endisset
+        @if (session('message'))
+            <div class="notification is-success has-text-centered">
+                {{ session('message') }}
             </div>
-            <div class="columns is-multiline categories p-5">
-                @foreach($categories as $category)
-                    <div class="column category">
-                        <form action="{{ route('memos.search.category') }}">
+        @endif
+        @if (session('alert'))
+            <div class="notification is-warning has-text-centered">
+                {{ session('alert') }}
+            </div>
+        @endif
+    </section>
+    <section class="content">
+        <div class="columns">
+            <div class="column"></div>
+            <div class="column">
+                <div class="title has-text-centered m-5">
+                    <p class="is-size-4 is-text-weight-bold">アカウント設定</p>
+                </div>
+                <div class="account has-text-centered">
+                    <label for="name">アカウント名</label>
+                    <div class="control mt-3">
+                        <form action="{{ route('user.update.name') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="search_word" value="{{ $category }}">
-                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 40) }}</span><br></button>
+                            <input type="text" id="name" name="name" class="input is-hovered" value="{{ $user->name }}">
+                            <input type="submit" class="button is-primary mt-4" value="変更">
                         </form>
                     </div>
-                @endforeach
+                    <div class="email mt-5">
+                        <p class="mt-3">Email</p>
+                        <p class="mt-3">{{ $user->email }}</p>
+                        <a href="{{ route('user.update.email.form') }}" class="has-text-info">Emailを変更する場合はこちら</a>
+                    </div>
+                    <div class="password mt-5 mb-5">
+                        <p class="mt-3">パスワード</p>
+                        <p class="mt-3">*********</p>
+                        <a href="{{ route('user.update.password.form') }}" class="has-text-info">パスワードを変更する場合はこちら</a>
+                    </div>
+                    <div class="account-delete mt-5 mb-5">
+                        <a href="" class="has-text-info">退会する場合はこちら</a>
+                    </div>
+                    <a href="{{ route('dashboard') }}" class="has-text-info">ホームへ戻る</a>
+                </div>
             </div>
-        </section>
-    @endif
+            <div class="column"></div>
+        </div>
+    </section>
     <section class="footer">
         <div class="columns">
             <div class="column">
@@ -101,7 +129,7 @@
                 <a class="has-text-primary" href="">利用規約</a><br>
                 <a class="has-text-primary" href="">リリース</a><br>
                 <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>
@@ -109,9 +137,11 @@
     <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-                crossorigin="anonymous">
+                crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
 </body>
 </html>

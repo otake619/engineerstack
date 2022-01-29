@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>カテゴリ一覧 EngineerStack</title>
+    <title>Email更新</title>
 </head>
 <body>
     <section class="header">
@@ -64,30 +64,32 @@
             </div>
         </nav>
     </section>
-    @if($categories->isEmpty())
-        <section class="content">
-            <div class="notification is-warning">
-                <p>まだカテゴリは投稿されていません。</p>
+    <section class="message">
+        @if (session('message'))
+            <div class="notification is-success has-text-centered">
+                {{ session('message') }}
             </div>
-        </section>
-    @else 
-        <section class="content">
-            <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">カテゴリ一覧</p>
+        @endif
+        @if (session('alert'))
+            <div class="notification is-warning has-text-centered">
+                {{ session('alert') }}
             </div>
-            <div class="columns is-multiline categories p-5">
-                @foreach($categories as $category)
-                    <div class="column category">
-                        <form action="{{ route('memos.search.category') }}">
-                            @csrf
-                            <input type="hidden" name="search_word" value="{{ $category }}">
-                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 40) }}</span><br></button>
-                        </form>
-                    </div>
-                @endforeach
+        @endif
+    </section>
+    <section class="content">
+        <div class="columns">
+            <div class="column"></div>
+            <div class="column">
+                <p>新しいメールアドレスを入力してください。</p>
+                <form action="{{ route('user.update.email') }}" method="POST">
+                    @csrf
+                    <input type="email" name="new_email">
+                    <input type="submit" class="button is-primary" value="送信">
+                </form>
             </div>
-        </section>
-    @endif
+            <div class="column"></div>
+        </div>
+    </section>
     <section class="footer">
         <div class="columns">
             <div class="column">
@@ -101,7 +103,7 @@
                 <a class="has-text-primary" href="">利用規約</a><br>
                 <a class="has-text-primary" href="">リリース</a><br>
                 <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>
@@ -109,9 +111,11 @@
     <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-                crossorigin="anonymous">
+                crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
 </body>
 </html>

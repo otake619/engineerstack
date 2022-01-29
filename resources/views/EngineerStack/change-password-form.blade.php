@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>カテゴリ一覧 EngineerStack</title>
+    <title>パスワード変更</title>
 </head>
 <body>
     <section class="header">
@@ -64,30 +64,55 @@
             </div>
         </nav>
     </section>
-    @if($categories->isEmpty())
-        <section class="content">
-            <div class="notification is-warning">
-                <p>まだカテゴリは投稿されていません。</p>
+    <section class="message">
+        @isset($message)
+            <div class="notification is-success has-text-centered">
+                <p>{{ $message }}</p>
             </div>
-        </section>
-    @else 
-        <section class="content">
-            <div class="title has-text-centered m-5">
-                <p class="is-size-4 is-text-weight-bold">カテゴリ一覧</p>
+        @endisset
+        @if (session('message'))
+            <div class="notification is-success has-text-centered">
+                {{ session('message') }}
             </div>
-            <div class="columns is-multiline categories p-5">
-                @foreach($categories as $category)
-                    <div class="column category">
-                        <form action="{{ route('memos.search.category') }}">
-                            @csrf
-                            <input type="hidden" name="search_word" value="{{ $category }}">
-                            <button style="background: none; border: 0px; white-space: normal;"><span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 40) }}</span><br></button>
-                        </form>
-                    </div>
-                @endforeach
+        @endif
+        @if (session('alert'))
+            <div class="notification is-warning has-text-centered">
+                {{ session('alert') }}
             </div>
-        </section>
-    @endif
+        @endif
+        @if ($errors->any())
+            <div class="notification is-danger has-text-centered">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </section>
+    <section class="content">
+        <div class="columns">
+            <div class="column"></div>
+            <div class="column">
+                <div class="title has-text-centered m-5">
+                    <p class="is-size-4 is-text-weight-bold">パスワード変更</p>
+                </div>
+                <div class="password-form">
+                    <form action="{{ route('user.update.password') }}" method="POST">
+                        @csrf 
+                        <label for="old-password">現在のパスワードを入力してください。</label>
+                        <input type="password" name="old_password" id="old-password" class="input is-hovered mt-3">
+                        <label for="new-password">新しいパスワードを設定してください。</label>
+                        <input type="password" name="new_password" id="new-password" class="input is-hovered mt-3">
+                        <label for="new-password-confirmation">新しいパスワードの確認</label>
+                        <input type="password" name="new_password_confirmation" id="new-password-confirmation" class="input is-hovered mt-3">
+                        <input type="submit" class="button is-primary mt-3" value="パスワードを変更する">
+                    </form>
+                </div>
+            </div>
+            <div class="column"></div>
+        </div>
+    </section>
     <section class="footer">
         <div class="columns">
             <div class="column">
@@ -101,7 +126,7 @@
                 <a class="has-text-primary" href="">利用規約</a><br>
                 <a class="has-text-primary" href="">リリース</a><br>
                 <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>
@@ -109,9 +134,11 @@
     <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-                crossorigin="anonymous">
+                crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
 </body>
 </html>
