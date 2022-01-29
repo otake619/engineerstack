@@ -71,7 +71,7 @@ class ContactController extends Controller
                 ->withInput($inputs);
 
         } else {
-            \Mail::to($inputs['email'])->send(new ContactSendmail($inputs));
+            Mail::to($inputs['email'])->send(new ContactSendMail($inputs));
             $request->session()->regenerateToken();
             return view('contact.thanks');
         }
