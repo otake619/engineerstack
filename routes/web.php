@@ -24,6 +24,7 @@ Route::prefix('users')->group(function () {
     })->middleware('auth')->name('user.update.password.form');
     Route::post('update_password', [UserController::class, 'updatePassword'])->name('user.update.password');
     Route::get('reset/{token}', [ChangeEmailController::class, 'reset'])->name('email.reset');
+    Route::post('destroy', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 Route::prefix('memos')->group(function () {

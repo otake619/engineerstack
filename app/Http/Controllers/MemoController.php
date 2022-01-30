@@ -228,6 +228,10 @@ class MemoController extends Controller
         return redirect()->route('memos.deleted');
     }
 
+    /**
+     * 
+     * 
+     */
     public function allCategories()
     {
         $user_id = Auth::id();

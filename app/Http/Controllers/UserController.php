@@ -87,4 +87,25 @@ class UserController extends Controller
         return redirect()->route('user.show')
                 ->with('message', 'パスワードを変更しました。');
     }
+
+    /**
+     * アカウントの削除
+     * @param void
+     * @return Illuminate\Support\Facades\Redirect;
+     */
+    public function destroy() 
+    {
+        $user = Auth::user();
+
+        DB::beginTransaction();
+        try {
+            $user->delete();
+            Auth::logout();
+            DB::commit();
+            return redirect()->route('register')->with('message', '退会処理が完了しました。');
+        } catch(Exception $exception){
+            DB::rollback();
+            return redirect()->route('user.show')->with('message', '退会に失敗しました。');
+        }
+    }
 }
