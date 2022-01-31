@@ -94,7 +94,7 @@
                         <form action="{{ route('user.update.name') }}" method="POST">
                             @csrf
                             <input type="text" id="name" name="name" class="input is-hovered" value="{{ $user->name }}">
-                            <input type="submit" class="button is-primary mt-4" value="変更">
+                            <input type="submit" class="button is-primary mt-4" value="アカウント名を変更">
                         </form>
                     </div>
                     <div class="email mt-5">
@@ -108,7 +108,26 @@
                         <a href="{{ route('user.update.password.form') }}" class="has-text-info">パスワードを変更する場合はこちら</a>
                     </div>
                     <div class="account-delete mt-5 mb-5">
-                        <a href="" class="has-text-info">退会する場合はこちら</a>
+                        <button id="modal-open" class="button is-danger">退会する場合はこちら</button>
+                    </div>
+                    <div class="modal">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title">退会しますか？</p>
+                                <button class="delete" aria-label="close" id="modal-delete"></button>
+                            </header>
+                            <section class="modal-card-body">
+                                <p class="has-text-danger">退会処理を確定してしまうと、これまでの記録はデータベースから削除されますがよろしいですか？</p>
+                            </section>
+                            <footer class="modal-card-foot">
+                                <form action="{{ route('user.destroy') }}" method="POST">
+                                    @csrf
+                                    <input type="submit" class="button is-danger" value="退会を確定">
+                                </form>
+                                <button class="button" id="modal-cancel">キャンセル</button>
+                            </footer>
+                        </div>
                     </div>
                     <a href="{{ route('dashboard') }}" class="has-text-info">ホームへ戻る</a>
                 </div>
@@ -140,7 +159,17 @@
                 crossorigin="anonymous"></script>
     <script>
         $(function () {
+            $('#modal-open').on('click', function() {
+                $('.modal').toggleClass('is-active');
+            });
 
+            $('#modal-cancel').on('click', function() {
+                $('.modal').toggleClass('is-active');
+            });
+
+            $('#modal-delete').on('click', function() {
+                $('.modal').toggleClass('is-active');
+            });
         });
     </script>
 </body>
