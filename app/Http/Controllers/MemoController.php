@@ -68,6 +68,7 @@ class MemoController extends Controller
             $memo_id = Memo::store($user_id, $memo);
             $memo = Memo::find($memo_id);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
+            $request->session()->regenerateToken();
             if($insert_categories > 5) {
                 DB::rollback();
                 return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大数は5つです。');
@@ -130,6 +131,7 @@ class MemoController extends Controller
             Memo::where('id', $memo_id)
                     ->update(['memo' => $memo]);
             $categories_count = $this->memo->categoriesSync($memo_id, $categories);
+            $request->session()->regenerateToken();
 
             if($categories_count > 5) {
                 DB::rollback();

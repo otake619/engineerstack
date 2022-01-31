@@ -14,7 +14,7 @@ Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])
 
 Route::prefix('users')->group(function () {
     Route::get('show', [UserController::class, 'show'])->name('user.show');
-    Route::post('update_name', [UserController::class, 'updateAccountName'])->name('user.update.name');
+    Route::post('update_name', [UserController::class, 'updateAccountName'])->middleware('throttle:3, 1')->name('user.update.name');
     Route::get('update_email_form', function (){
         return view('EngineerStack.change-email-form');
     })->middleware('auth')->name('user.update.email.form');
@@ -22,7 +22,7 @@ Route::prefix('users')->group(function () {
     Route::get('update_password_form', function (){
         return view('EngineerStack.change-password-form');
     })->middleware('auth')->name('user.update.password.form');
-    Route::post('update_password', [UserController::class, 'updatePassword'])->name('user.update.password');
+    Route::post('update_password', [UserController::class, 'updatePassword'])->middleware('throttle:3, 1')->name('user.update.password');
     Route::get('reset/{token}', [ChangeEmailController::class, 'reset'])->name('email.reset');
     Route::post('destroy', [UserController::class, 'destroy'])->name('user.destroy');
 });
@@ -30,7 +30,7 @@ Route::prefix('users')->group(function () {
 Route::prefix('memos')->group(function () {
     Route::get('index', [MemoController::class, 'index'])->name('memos.index');
     Route::get('create', [MemoController::class, 'create'])->name('memos.create');
-    Route::post('store', [MemoController::class, 'store'])->name('memos.store');
+    Route::post('store', [MemoController::class, 'store'])->middleware('throttle:3, 1')->name('memos.store');
     Route::get('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
     Route::post('update', [MemoController::class, 'update'])->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');

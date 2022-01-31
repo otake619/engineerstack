@@ -56,6 +56,7 @@ class UserController extends Controller
             $user = User::find(Auth::id());
             $message = "アカウント名を更新しました。";
             DB::commit();
+            $request->session()->regenerateToken();
             return view('EngineerStack.account', compact('message', 'user'));
         } catch(Exception $exception) {
             DB::rollback();
@@ -84,6 +85,7 @@ class UserController extends Controller
             'new_password' => 'required|min:8|max:16|confirmed',
         ]);
         $user->update(['password' => bcrypt($new_password)]);
+        $request->session()->regenerateToken();
         return redirect()->route('user.show')
                 ->with('message', 'パスワードを変更しました。');
     }
