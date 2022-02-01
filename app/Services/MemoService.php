@@ -25,9 +25,7 @@
                     return false;
                 }
             });
-            if($category_check == false) {
-                return -1;
-            }
+            if($category_check === false) return -1;
             $insert_categories = app()->make('App\Http\Controllers\CategoryController');
             return $insert_categories->store($categories, $memo_id);
         }
@@ -73,7 +71,7 @@
                     return false;
                 }
             });
-            if($category_check == false) {
+            if($category_check === false) {
                 return -1;
             }
             $arr_length = count($categories_arr);
@@ -106,11 +104,6 @@
             $categories_arr = explode($separater, $categories);
             $categories_arr = array_filter($categories_arr, "strlen");
             $categories_arr = array_map("trim", $categories_arr);
-            array_filter($categories_arr, function($val) {
-                if(mb_strlen($val) > 20){
-                    return false;
-                }
-            });
             return $categories_arr;
         }
 
@@ -165,18 +158,15 @@
          * @return Illuminate\View\View
          * メモ検索結果を返します。
          */
-        public function searchKeyword(Request $request)
+        public function searchKeyword(string $search_word, int $current_page, string $sort)
         {
             $is_search_category = false;
             $memos = collect();
             $user_id = Auth::id();
-            $search_word = $request->input('search_word');
-            $current_page = $request->input('page');
-            $sort = $request->input('sort');
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
 
-            if($sort == "ascend") {
+            if($sort == 'ascend') {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
                         ->where('memo', 'LIKE', "%$search_word%")->get();
@@ -213,15 +203,12 @@
          * @return Illuminate\View\View
          * メモ検索結果を返します。
          */
-        public function searchCategory(Request $request)
+        public function searchCategory(string $search_word, ?int $current_page, ?string $sort)
         {
             $is_search_category = true;
             $memos = collect();
             $user_id = Auth::id();
-            $category = $request->input('search_word');
-            $sort = $request->input('sort');
-            $current_page = $request->input('page');
-            $search_word = $category;
+            $category = $search_word;
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
             $memo_collection = $this->getMemos($category, $sort);

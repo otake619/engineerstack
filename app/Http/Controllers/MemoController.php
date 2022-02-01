@@ -17,10 +17,8 @@ class MemoController extends Controller
     private $memo;
 
     /**
-     * コンストラクタでmiddleware('auth');
-     * を設定しているので、ログイン前では
-     * メモに関するデータにはアクセスできません。
-     * 
+     * 認証前ではメモに関するデータにはアクセス不可
+     * @param App\Services\MemoService $memoService メモのサービスクラス
      * @return void
      */
     public function __construct(MemoService $memoService)
@@ -30,10 +28,9 @@ class MemoController extends Controller
     }
 
     /**
-     * この関数はメモの全件取得を担当しています。
+     * メモの全件取得
      * @param void
-     * @return Illuminate\View\View
-     * ホーム画面を返します。
+     * @return Illuminate\View\View ホーム画面
      */
     public function index()
     {
@@ -46,14 +43,9 @@ class MemoController extends Controller
     }
 
     /**
-     * この関数はメモの保存処理を担当しています。
-     * @param  \App\Http\Requests\StoreMemoRequest  $request
-     * $requestには、
-     * メモのmemo_data
-     * カテゴリーのcategories
-     * が含まれています。
-     * @return Illuminate\View\View
-     * メモの詳細画面を返します。
+     * メモの保存
+     * @param  \App\Http\Requests\StoreMemoRequest  $request memoとcategory
+     * @return Illuminate\View\View メモの詳細画面
      */
     public function store(StoreMemoRequest $request)
     {
@@ -64,41 +56,34 @@ class MemoController extends Controller
         DB::beginTransaction();
 
         try {
-            $message = "メモの投稿が完了しました。";
             $memo_id = Memo::store($user_id, $memo);
-            $memo = Memo::find($memo_id);
             $insert_categories = $this->memo->insertCategories($categories, $memo_id);
             $request->session()->regenerateToken();
             if($insert_categories > 5) {
                 DB::rollback();
-                return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大数は5つです。');
+                return redirect()->route('memos.get.input')->with('alert', 'カテゴリーの最大数は5つです。');
             } else if($insert_categories < 0) {
-                return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大文字数を超えています。');
+                return redirect()->route('memos.get.input')->with('alert', 'カテゴリーの最大文字数を超えています。');
             }
             DB::commit();
+            $message = "メモの投稿が完了しました。";
+            $memo = Memo::find($memo_id);
             return view('EngineerStack.detailed_memo', compact('memo', 'categories', 'message'));
         } catch (Exception $exception) {
             DB::rollback();
-            return redirect()->route('memos.get.input')->with('message', 'メモの投稿に失敗しました。');
+            return redirect()->route('memos.get.input')->with('alert', 'メモの投稿に失敗しました。');
         }
     }
 
     /**
-     * この関数はメモの編集フォームの返却を担当しています。
-     * @param int $id
-     * メモの主キーです。
-     * @return @return Illuminate\View\View
-     * メモの編集画面を返します。
+     * メモの編集画面の表示
+     * @param int $id メモの主キー
+     * @return @return Illuminate\View\View メモの編集画面
      */
-    public function edit(int $id)
+    public function edit(int $memo_id)
     {
-        $memo_id = $id;
         $is_owner = $this->memo->checkOwner($memo_id);
-        
-        if(!$is_owner) {
-            return redirect()->route('dashboard');
-        }
-
+        if($is_owner === false) return redirect()->route('dashboard');
         $memo = Memo::find($memo_id);
         $categories = Memo::find($memo_id)->categories->pluck('name');
         return view('EngineerStack.edit_memo'
@@ -106,14 +91,9 @@ class MemoController extends Controller
     }
 
     /**
-     * この関数はメモデータの更新処理を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには、
-     * メモのid
-     * メモデータ
-     * が含まれています。
-     * @return Illuminate\View\View
-     * メモ詳細画面を返す。
+     * メモの更新
+     * @param Illuminate\Http\Request $request メモのidとmemo
+     * @return Illuminate\View\View メモ詳細画面
      */
     public function update(StoreMemoRequest $request)
     {
@@ -121,15 +101,12 @@ class MemoController extends Controller
         $memo_id = $request->input('memo_id');
         $categories = $request->input('categories');
         $is_owner = $this->memo->checkOwner($memo_id);
-        
-        if(!$is_owner) {
-            return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
-        }
+        if($is_owner === false) return redirect()->route('dashboard')
+                            ->with('alert', 'メモの更新に失敗しました。');
 
         DB::beginTransaction();
 
         try {
-            $message = 'メモの更新が完了しました。';
             Memo::where('id', $memo_id)
                     ->update(['memo' => $memo]);
             $categories_count = $this->memo->categoriesSync($memo_id, $categories);
@@ -139,11 +116,12 @@ class MemoController extends Controller
                 DB::rollback();
                 return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
             } else if($categories_count < 0) {
-                return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大文字数を超えています。');
+                return redirect()->route('memos.get.input')->with('alert', 'カテゴリの最大文字数を超えています。');
             }
 
-            $memo = Memo::find($memo_id);
             DB::commit();
+            $message = 'メモの更新が完了しました。';
+            $memo = Memo::find($memo_id);
             return view('EngineerStack.detailed_memo'
                     , compact('categories', 'memo', 'message'));
         } catch (Exception $exception) {
@@ -153,24 +131,16 @@ class MemoController extends Controller
     }
 
     /** 
-     * この関数はメモ一件の詳細画面を作成を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには
-     * メモのid
-     * メモのmemo_data 
-     * が含まれています。
-     * @return Illuminate\View\View
-     * メモ詳細画面を返す。
+     * メモ一件の詳細
+     * @param Illuminate\Http\Request $request メモのidとmemo
+     * @return Illuminate\View\View メモ詳細画面
      */
     public function show(Request $request)
     {
         $memo_id = $request->input('memo_id');
         $is_owner = $this->memo->checkOwner($memo_id);
-        
-        if(!$is_owner) {
-            return redirect()->route('dashboard');
-        }
-
+        if($is_owner === false) return redirect()->route('dashboard')
+                            ->with('alert', 'アクセス不可なIDです。');
         $memo = Memo::find($memo_id);
         $categories = Memo::find($memo_id)->categories->pluck('name');
         return view('EngineerStack.detailed_memo',
@@ -178,65 +148,60 @@ class MemoController extends Controller
     }
 
     /**
-     * この関数はキーワードでのメモ検索を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには、キーワード、現在のページ番号が入っています。
-     * @return Illuminate\View\View
-     * メモ検索結果を返します。
+     * キーワードでのメモ検索
+     * @param Illuminate\Http\Request $request 現在のページ番号, キーワード
+     * @return Illuminate\View\View メモの検索結果
      */
     public function searchKeyword(Request $request)
     {
         $search_word = $request->input('search_word');
+        $current_page = $request->input('page');
+        $sort = $request->input('sort');
         if(mb_strlen($search_word) > 40) {
             return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
         } elseif($search_word === null) {
             return redirect()->route('dashboard')->with('message', '検索語句は必須です。');
         }
-        return $this->memo->searchKeyword($request);
+        return $this->memo->searchKeyword($search_word, $current_page, $sort);
     }
 
     /**
-     * この関数はカテゴリでのメモ検索を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには、カテゴリ名が入っています。
-     * @return Illuminate\View\View
-     * メモ検索結果を返します。
+     * カテゴリでのメモ検索
+     * @param Illuminate\Http\Request $request category
+     * @return Illuminate\View\View メモ検索結果
      */
     public function searchCategory(Request $request)
     {
         $search_word = $request->input('search_word');
+        $current_page = $request->input('page');
+        $sort = $request->input('sort');
+
         if(mb_strlen($search_word) > 40) {
-            return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
+            return redirect()->route('dashboard')->with('alert', '検索語句が長すぎます。');
         } elseif($search_word === null) {
-            return redirect()->route('dashboard')->with('message', '検索語句は必須です。');
+            return redirect()->route('dashboard')->with('alert', '検索語句は必須です。');
         }
-        return $this->memo->searchCategory($request);
+        return $this->memo->searchCategory($search_word, $current_page, $sort);
     }
 
     /**
-     * この関数はメモ一件を削除する処理を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには、
-     * メモのid
-     * が含まれています。
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     * メモ削除完了後画面を返します。
+     * メモの削除
+     * @param Illuminate\Http\Request $request　メモのid
+     * @return Illuminate\Http\RedirectResponse メモ削除完了後画面
      */
     public function destroy(Request $request)
     {
         $memo_id = $request->input('memo_id');
         $is_owner = $this->memo->checkOwner($memo_id);
-        
-        if(!$is_owner) {
-            return redirect()->route('dashboard');
-        }
+        if($is_owner == false) return redirect()->route('dashboard')
+                            ->with('alert', 'アクセス不可なIDです。');
         Memo::destroy($memo_id);
         return redirect()->route('memos.deleted');
     }
 
     /**
-     * 
-     * 
+     * カテゴリーの全件取得
+     * @return Illuminate\View\View カテゴリー一覧 
      */
     public function allCategories()
     {
