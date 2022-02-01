@@ -58,6 +58,13 @@
             </div>
         </nav>
     </section>
+    <section class="message">
+        @if (session('alert'))
+            <div class="notification is-warning has-text-centered">
+                {{ session('alert') }}
+            </div>
+        @endif
+    </section>
     <section class="content">
         <div class="title has-text-centered">
             <h4 class="is-size-3">お問い合わせ</h4>

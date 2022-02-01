@@ -14,7 +14,7 @@ class CategoryController extends Controller
     /**
      * コンストラクタでmiddleware('auth');
      * を設定しているので、ログイン前では
-     * カテゴリに関するデータにはアクセスできません。
+     * カテゴリーに関するデータにはアクセスできません。
      * @param $categoryService
      * カテゴリーに関するサービスクラス。
      * @return void
@@ -25,6 +25,12 @@ class CategoryController extends Controller
         $this->category = $categoryService;
     }
 
+    /**
+     * カテゴリーを一覧表示。
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\View\View 
+     * カテゴリ一覧画面を返す。
+     */
     public function index(Request $request)
     {
         $user_id = Auth::id();
@@ -33,8 +39,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * この関数にはメモ記録画面で入力されたカテゴリを受け取り
-     * 1つずつカテゴリtableに保存する機能があります。
+     * この関数にはメモ記録画面で入力されたカテゴリーを受け取り
+     * 1つずつカテゴリーtableに保存する機能があります。
      *
      * @param string $categories : メモ記録画面で入力されたカテゴリ
      * @param int $memo_id : メモのid
@@ -47,6 +53,7 @@ class CategoryController extends Controller
     }
 
     /**
+     * メモに対応するカテゴリを取得する。
      * @param object $memos
      * memoコレクション。
      * @return object $categories
