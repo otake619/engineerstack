@@ -72,6 +72,8 @@ class MemoController extends Controller
             if($insert_categories > 5) {
                 DB::rollback();
                 return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大数は5つです。');
+            } else if($insert_categories < 0) {
+                return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大文字数を超えています。');
             }
             DB::commit();
             return view('EngineerStack.detailed_memo', compact('memo', 'categories', 'message'));
@@ -136,6 +138,8 @@ class MemoController extends Controller
             if($categories_count > 5) {
                 DB::rollback();
                 return redirect()->route('dashboard')->with('alert', 'メモの更新に失敗しました。');
+            } else if($categories_count < 0) {
+                return redirect()->route('memos.get.input')->with('message', 'カテゴリの最大文字数を超えています。');
             }
 
             $memo = Memo::find($memo_id);
