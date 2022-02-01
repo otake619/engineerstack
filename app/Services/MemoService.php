@@ -19,6 +19,15 @@
          */
         public function insertCategories(string $categories, int $memo_id)
         {
+            $categories_arr = $this->strToArr($categories);
+            $category_check = array_filter($categories_arr, function($val) {
+                if(mb_strlen($val) > 20){
+                    return false;
+                }
+            });
+            if($category_check == false) {
+                return -1;
+            }
             $insert_categories = app()->make('App\Http\Controllers\CategoryController');
             return $insert_categories->store($categories, $memo_id);
         }
@@ -59,6 +68,14 @@
         public function categoriesSync(int $memo_id, string $categories)
         {
             $categories_arr = $this->strToArr($categories);
+            $category_check = array_filter($categories_arr, function($val) {
+                if(mb_strlen($val) > 20){
+                    return false;
+                }
+            });
+            if($category_check == false) {
+                return -1;
+            }
             $arr_length = count($categories_arr);
             $category_ids = [];
             for($index = 0; $index < $arr_length; $index++) {
@@ -78,6 +95,8 @@
 
         /**
          * カテゴリー文字列を配列に変換して返す。
+         * カテゴリの文字数が20文字を超えていた場合、
+         * 処理を中断する。
          * @param string: $categories
          * @return array: $categories_arr
          */
@@ -87,6 +106,11 @@
             $categories_arr = explode($separater, $categories);
             $categories_arr = array_filter($categories_arr, "strlen");
             $categories_arr = array_map("trim", $categories_arr);
+            array_filter($categories_arr, function($val) {
+                if(mb_strlen($val) > 20){
+                    return false;
+                }
+            });
             return $categories_arr;
         }
 
