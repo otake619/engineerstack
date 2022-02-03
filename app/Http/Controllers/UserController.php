@@ -14,8 +14,7 @@ class UserController extends Controller
     private $user;
 
     /**
-     * ログイン前ではユーザーに関するデータには
-     * アクセスできません。
+     * 認証前ではメモに関するデータにはアクセス不可
      * @return void
      */
     public function __construct()
@@ -24,9 +23,9 @@ class UserController extends Controller
     }
 
     /**
-     * アカウント画面を返す。
+     * アカウント画面を表示
      * @param void
-     * @return Illuminate\View\View
+     * @return Illuminate\View\View アカウント画面
      */
     public function show()
     {
@@ -35,12 +34,9 @@ class UserController extends Controller
     }
 
     /**
-     * アカウント名の更新処理。トランザクション処理が正常に完了した場合は、
-     * アカウント画面を返し、問題があった場合は処理を中断しアカウント画面
-     * に通知を表示する。
+     * アカウント名の更新
      * @param Illuminate\Http\Request $request
-     * @return Illuminate\View\View
-     * アカウント画面を返す。
+     * @return Illuminate\View\View アカウント画面
      */
     public function updateAccountName(Request $request)
     {
@@ -66,10 +62,9 @@ class UserController extends Controller
     }
 
     /**
-     * パスワードの更新処理。
+     * パスワードの更新
      * @param Illuminate\Http\Request $request
-     * @return Illuminate\View\View
-     * アカウント画面を返す。
+     * @return Illuminate\View\View アカウント画面
      */
     public function updatePassWord(Request $request)
     {
