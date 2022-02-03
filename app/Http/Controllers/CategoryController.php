@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
-use App\Models\Memo;
-use Illuminate\Http\Request;
 use App\Services\CategoryService;
 
 class CategoryController extends Controller

@@ -16,11 +16,6 @@
             $categories_arr = explode($separater, $categories);
             $categories_arr = array_filter($categories_arr, "strlen");
             $categories_arr = array_map("trim", $categories_arr);
-            array_filter($categories_arr, function($val) {
-                if(mb_strlen($val) > 20){
-                    return false;
-                }
-            });
             return $categories_arr;
         }
 

@@ -102,7 +102,7 @@
                         @csrf 
                         <label for="old-password">現在のパスワードを入力してください。</label>
                         <input type="password" name="old_password" id="old-password" class="input is-hovered mt-3">
-                        <label for="new-password">新しいパスワードを設定してください。</label>
+                        <label for="new-password">新しいパスワードを設定してください。<br><span class="has-text-danger">*8文字以上50文字以下の半角英数字</span></label>
                         <input type="password" name="new_password" id="new-password" class="input is-hovered mt-3">
                         <label for="new-password-confirmation">新しいパスワードの確認</label>
                         <input type="password" name="new_password_confirmation" id="new-password-confirmation" class="input is-hovered mt-3">
