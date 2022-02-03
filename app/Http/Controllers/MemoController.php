@@ -27,7 +27,7 @@ class MemoController extends Controller
     }
 
     /**
-     * メモの全件取得
+     * メモの一覧を取得
      * @param void
      * @return Illuminate\View\View ホーム画面
      */
@@ -43,8 +43,9 @@ class MemoController extends Controller
 
     /**
      * メモの保存
-     * @param  \App\Http\Requests\StoreMemoRequest  $request memoとcategory
-     * @return Illuminate\View\View メモの詳細画面
+     * @param App\Http\Requests\StoreMemoRequest $request memoとcategory
+     * @return Illuminate\View\View メモの詳細画面(store成功)
+     * @return Illuminate\Http\RedirectResponse メモ記録画面(store失敗)
      */
     public function store(StoreMemoRequest $request)
     {
@@ -75,9 +76,10 @@ class MemoController extends Controller
     }
 
     /**
-     * メモの編集画面の表示
-     * @param int $id メモの主キー
-     * @return @return Illuminate\View\View メモの編集画面
+     * メモの編集画面を表示
+     * @param int $id メモのid
+     * @return Illuminate\View\View メモの編集画面(通常)
+     * @return Illuminate\Http\RedirectResponse ホーム画面(異常時)
      */
     public function edit(int $memo_id)
     {
@@ -91,8 +93,10 @@ class MemoController extends Controller
 
     /**
      * メモの更新
-     * @param Illuminate\Http\Request $request メモのidとmemo
-     * @return Illuminate\View\View メモ詳細画面
+     * @param App\Http\Requests\StoreMemoRequest $request メモのidとmemo、カテゴリー
+     * @return Illuminate\View\View メモ詳細画面(通常)
+     * @return Illuminate\Http\RedirectResponse ホーム画面(他アカウントのメモにアクセスを試行)
+     * @return Illuminate\Http\RedirectResponse メモ記録画面(カテゴリーが20文字より多い)
      */
     public function update(StoreMemoRequest $request)
     {
@@ -101,7 +105,7 @@ class MemoController extends Controller
         $categories = $request->input('categories');
         $is_owner = $this->memo->checkOwner($memo_id);
         if($is_owner === false) return redirect()->route('dashboard')
-                            ->with('alert', 'メモの更新に失敗しました。');
+                            ->with('alert', 'アクセス不可なIDです。');
 
         DB::beginTransaction();
 
@@ -130,9 +134,10 @@ class MemoController extends Controller
     }
 
     /** 
-     * メモ一件の詳細
+     * メモ一件の詳細を取得
      * @param Illuminate\Http\Request $request メモのidとmemo
-     * @return Illuminate\View\View メモ詳細画面
+     * @return Illuminate\View\View メモ詳細画面(通常)
+     * @return Illuminate\Http\RedirectResponse ホーム画面(他アカウントのメモにアクセスを試行)
      */
     public function show(Request $request)
     {
@@ -147,9 +152,10 @@ class MemoController extends Controller
     }
 
     /**
-     * キーワードでのメモ検索
-     * @param Illuminate\Http\Request $request 現在のページ番号, キーワード
-     * @return Illuminate\View\View メモの検索結果
+     * キーワードに合致するメモを部分一致で取得
+     * @param Illuminate\Http\Request $request 検索語句,ページ番号,ソート方法
+     * @return Illuminate\View\View メモの検索結果(通常)
+     * @return Illuminate\Http\RedirectResponse ホーム画面(検索語句に異常)
      */
     public function searchKeyword(Request $request)
     {
@@ -167,9 +173,10 @@ class MemoController extends Controller
     }
 
     /**
-     * カテゴリでのメモ検索
-     * @param Illuminate\Http\Request $request category
-     * @return Illuminate\View\View メモ検索結果
+     * カテゴリーに関連するメモを検索して取得
+     * @param Illuminate\Http\Request $request 検索語句,ページ番号,ソート方法
+     * @return Illuminate\View\View メモ検索結果(通常)
+     * @return Illuminate\Http\RedirectResponse ホーム画面(検索語句に異常)
      */
     public function searchCategory(Request $request)
     {
@@ -187,8 +194,9 @@ class MemoController extends Controller
 
     /**
      * メモの削除
-     * @param Illuminate\Http\Request $request　メモのid
-     * @return Illuminate\Http\RedirectResponse メモ削除完了後画面
+     * @param Illuminate\Http\Request $request メモのid
+     * @return Illuminate\Http\RedirectResponse メモ削除完了後画面(通常)
+     * @return Illuminate\Http\RedirectResponse ホーム画面(他アカウントのメモにアクセスを試行)
      */
     public function destroy(Request $request)
     {

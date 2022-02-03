@@ -14,10 +14,7 @@ use Exception;
 class AdminUserController extends Controller
 {
     /**
-     * コンストラクタでmiddleware('auth:admin');
-     * を設定しているので、ログイン前では
-     * メモ・ユーザーに関するデータにはアクセスできません。
-     * 
+     * 認証前はアクセス不可。
      * @return void
      */
     public function __construct()
@@ -27,10 +24,8 @@ class AdminUserController extends Controller
 
     /**
      * ユーザーの管理画面で、ページネーションを使用して
-     * 1画面につき50件のユーザーを返します。
-     * 
-     * @return Illuminate\View\View
-     * ユーザー管理画面を返します。
+     * 1ページにつき10件のユーザーを返します。
+     * @return Illuminate\View\View ユーザー管理画面
      */
     public function index()
     {
@@ -39,19 +34,14 @@ class AdminUserController extends Controller
     }
 
     /**
-     * この関数はユーザー一件を削除する処理を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには、
-     * ユーザーのid
-     * が含まれています。
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     * ユーザー管理画面を返します。
+     * ユーザーの削除。
+     * @param Illuminate\Http\Request $request ユーザーID
+     * @return \Illuminate\Http\RedirectResponse ユーザー管理画面
      */
     public function destroy(Request $request)
     {
         $user_id = $request->input('user_id');
         User::destroy($user_id);
-
         return redirect()->route('admin.get.users');
     }
 

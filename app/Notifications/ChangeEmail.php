@@ -13,8 +13,8 @@ class ChangeEmail extends Notification
     public $token;
 
     /**
-     * Create a new notification instance.
-     *
+     * インスタンスを作成する。
+     * @param string $token トークン
      * @return void
      */
     public function __construct($token)

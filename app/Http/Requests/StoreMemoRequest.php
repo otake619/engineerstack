@@ -9,7 +9,6 @@ class StoreMemoRequest extends FormRequest
     /**
      * 現在認証されているユーザーがリクエストによって
      * 表されるアクションを実行できるか
-     *
      * @return bool
      */
     public function authorize()
@@ -19,7 +18,6 @@ class StoreMemoRequest extends FormRequest
 
     /**
      * リクエストに適用するルール
-     *
      * @return array
      */
     public function rules()
@@ -32,7 +30,6 @@ class StoreMemoRequest extends FormRequest
 
     /**
      * バリデーションエラーのカスタムメッセージ
-     *
      * @return array
      */
     public function messages()
@@ -44,7 +41,6 @@ class StoreMemoRequest extends FormRequest
 
     /**
      * バリデーションエラーのカスタム属性の取得
-     *
      * @return array
      */
     public function attributes()

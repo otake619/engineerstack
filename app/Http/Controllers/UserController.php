@@ -35,8 +35,9 @@ class UserController extends Controller
 
     /**
      * アカウント名の更新
-     * @param Illuminate\Http\Request $request
-     * @return Illuminate\View\View アカウント画面
+     * @param Illuminate\Http\Request $request アカウント名
+     * @return Illuminate\View\View アカウント画面(update成功)
+     * @return Illuminate\Http\RedirectResponse アカウント画面(update失敗)
      */
     public function updateAccountName(Request $request)
     {
@@ -63,8 +64,8 @@ class UserController extends Controller
 
     /**
      * パスワードの更新
-     * @param Illuminate\Http\Request $request
-     * @return Illuminate\View\View アカウント画面
+     * @param Illuminate\Http\Request $request パスワード
+     * @return Illuminate\Http\RedirectResponse アカウント画面
      */
     public function updatePassWord(Request $request)
     {
@@ -88,7 +89,8 @@ class UserController extends Controller
     /**
      * アカウントの削除
      * @param void
-     * @return Illuminate\Support\Facades\Redirect;
+     * @return Illuminate\Http\RedirectResponse アカウント登録画面(delete成功)
+     * @return Illuminate\Http\RedirectResponse アカウント画面(delete失敗)
      */
     public function destroy() 
     {

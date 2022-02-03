@@ -16,15 +16,14 @@ class Category extends Model
     ];
 
     protected $fillable = [
-        'name',
+        'name'
     ];
 
     /**
-     * メモ記録画面で入力されたカテゴリをDBへ格納する関数。
-     * @param string $name
-     * メモ入力画面で入力されたカテゴリ名。
-     * @return int $category->id
-     * DBにinsertされたcategoryレコードのid。
+     * テーブルにカテゴリーを保存して、保存したカテゴリーの
+     * IDを取得。
+     * @param string $name カテゴリーのname
+     * @return int $category->id カテゴリーID
      */
     public static function store(string $name)
     {
@@ -36,7 +35,9 @@ class Category extends Model
     }
 
     /**
-     * Categoryレコードに紐づくMemoレコードを返す関数。
+     * カテゴリーに紐づくメモを取得。
+     * @return mixed Illuminate\Database\Eloquent\Relations\BelongsToMany 
+     * メモのcollection
      */
     public function memos()
     {

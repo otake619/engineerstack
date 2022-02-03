@@ -14,10 +14,7 @@ use Exception;
 class AdminMemoController extends Controller
 {
     /**
-     * コンストラクタでmiddleware('auth:admin');
-     * を設定しているので、ログイン前では
-     * メモ・ユーザーに関するデータにはアクセスできません。
-     * 
+     * 認証前はアクセス不可。
      * @return void
      */
     public function __construct()
@@ -27,10 +24,8 @@ class AdminMemoController extends Controller
 
     /**
      * メモの管理画面で、ページネーションを使用して
-     * 1画面につき50件のカテゴリを返します。
-     * 
-     * @return Illuminate\View\View
-     * メモ管理画面を返します。
+     * 1ページにつき10件のカテゴリを返します。
+     * @return Illuminate\View\View メモ管理画面
      */
     public function index()
     {
@@ -39,19 +34,14 @@ class AdminMemoController extends Controller
     }
 
     /**
-     * この関数はメモ一件を削除する処理を担当しています。
-     * @param Illuminate\Http\Request $request
-     * $requestには、
-     * メモのid
-     * が含まれています。
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     * メモ管理画面を返します。
+     * メモの削除。
+     * @param Illuminate\Http\Request $request メモのID
+     * @return \Illuminate\Http\RedirectResponse メモの管理画面
      */
     public function destroy(Request $request)
     {
         $memo_id = $request->input('memo_id');
         Memo::destroy($memo_id);
-
         return redirect()->route('admin.get.memos');
     }
 

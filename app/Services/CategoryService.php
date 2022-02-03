@@ -5,30 +5,24 @@
 
     class CategoryService {
         /**
-         * メモ記録画面で入力されたカテゴリー文字列を配列に変換してMemoController
-         * へ返す。
-         * @param string: $categories
-         * @return array: $categories_arr
+         * 文字列を配列に変換
+         * @param string $str 文字列
+         * @return array $arr 配列
          */
-        public function strToArr(string $categories)
+        public function strToArr(string $str)
         {
             $separater = ",";
-            $categories_arr = explode($separater, $categories);
-            $categories_arr = array_filter($categories_arr, "strlen");
-            $categories_arr = array_map("trim", $categories_arr);
-            return $categories_arr;
+            $arr = explode($separater, $str);
+            $arr = array_filter($arr, "strlen");
+            $arr = array_map("trim", $arr);
+            return $arr;
         }
 
         /**
-         * メモ記録画面で入力されたカテゴリで重複があった場合は無視し、
-         * カテゴリがなかった場合は新規にカテゴリtableへinsertする。
-         * また、カテゴリtableとメモtableを紐づけるCategoryMemosへ
-         * 外部キーをinsertする。
-         * @param string $categories
-         * メモ記録画面で入力されたカテゴリ。
-         * @param int $memo_id
-         * メモのinsert時に取得したメモのid。
-         * @return void
+         * 中間テーブルにメモとカテゴリーのidを挿入
+         * @param string $categories カテゴリーの文字列
+         * @param int $memo_id メモのid
+         * @return int $arr_length カテゴリーの配列の要素数
          */
         public function insertCategoryMemos(string $categories, int $memo_id)
         {
@@ -49,12 +43,9 @@
         }
 
         /**
-         * この関数はmemoコレクションを受け取ってmemoコレクションに対応する
-         * categoryを重複を許さないコレクションとして返す。
-         * @param object $memos
-         * memoコレクション。
-         * @return object $unique_categories
-         * 一意なcategoryコレクション。
+         * 引数のメモに対応したカテゴリーを取得
+         * @param object $memos　メモのcollection
+         * @return object $unique_categories カテゴリーのcollection
          */
         public function getCategories(object $memos) 
         {
