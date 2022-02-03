@@ -77,7 +77,7 @@ class UserController extends Controller
         }
         $new_password = $request->input('new_password');
         $validated = $request->validate([
-            'new_password' => 'required|min:8|max:16|confirmed',
+            'new_password' => 'required|min:8|max:50|confirmed',
         ]);
         $user->update(['password' => bcrypt($new_password)]);
         $request->session()->regenerateToken();

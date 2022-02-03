@@ -1,79 +1,71 @@
 <?php
     namespace App\Services;
 
-    use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Auth;
     use App\Models\Memo;
     use App\Models\Category;
-    use App\Models\CategoryMemo;
 
     class MemoService {
         /**
          * categoriesテーブルにカテゴリを挿入
-         * 
-         * @param string $categories
-         * メモ記録画面で入力されたカテゴリ文字列
-         * @param int $memo_id
-         * memoレコードのid。
-         * @return void
+         * @param string $categories カテゴリ文字列
+         * @param int $memo_id メモのid
+         * @return int $insert_categories カテゴリの配列数
          */
         public function insertCategories(string $categories, int $memo_id)
         {
             $categories_arr = $this->strToArr($categories);
-            $category_check = array_filter($categories_arr, function($val) {
-                if(mb_strlen($val) > 20){
-                    return false;
-                }
-            });
+            $category_check = $this->arrValidation($categories_arr);
             if($category_check === false) return -1;
             $insert_categories = app()->make('App\Http\Controllers\CategoryController');
             return $insert_categories->store($categories, $memo_id);
         }
 
         /**
-         * この関数はメモに対して何らの処理を加える際に、
-         * メモの所有者以外のアカウントがメモに処理を加え
-         * ることを防ぐ処理を担当しています。
-         * @param int $memo_id
-         * メモの主キーです。
-         * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-         * ホーム画面へリダイレクト。
+         * カテゴリーの文字数が20文字よりも多いか判定
+         * @param array $categories カテゴリ
+         * @return Boolean false 20文字よりも多い場合
+         * @return array $categories 20文字以下の場合
+         */
+        function arrValidation(array $categories)
+        {
+            foreach($categories as $category) {
+                $count_category = mb_strlen($category);
+                if($count_category > 20) {
+                    return false;
+                }
+            }
+
+            return $categories;
+        }
+
+        /**
+         * メモにアクセスする際に所有者か判定
+         * @param int $memo_id メモのid
+         * @return Boolean true 所有者だった場合
+         * @return Boolean false 所有者ではなかった場合
          */
         public function checkOwner(int $memo_id)
         {   
             $is_exist = Memo::where('id', $memo_id)->first();
-
-            if(is_null($is_exist)) {
-                return false;
-            }
-
+            if(is_null($is_exist))  return false;
             $memo_owner = Memo::find($memo_id)->user_id;
-            
-            if($memo_owner != Auth::id()) {
-                return false;
-            }
-
+            if($memo_owner != Auth::id())  return false;
             return true;
         }
 
         /**
-         * カテゴリとメモの中間テーブルの更新処理。
-         * @param int $memo_id
-         * memoレコードのid。
-         * @param string $categories
-         * メモ編集画面で入力されたカテゴリの文字列。
+         * 中間テーブル(CategoryMemos)の更新
+         * @param int $memo_id　メモのid。
+         * @param string $categories カテゴリ
+         * @return int $arr_length カテゴリ配列の要素数(カテゴリが20文字以内)
+         * @return int -1 カテゴリが20文字より多かった場合
          */
         public function categoriesSync(int $memo_id, string $categories)
         {
             $categories_arr = $this->strToArr($categories);
-            $category_check = array_filter($categories_arr, function($val) {
-                if(mb_strlen($val) > 20){
-                    return false;
-                }
-            });
-            if($category_check === false) {
-                return -1;
-            }
+            $category_check = $this->arrValidation($categories_arr);
+            if($category_check === false) return -1;
             $arr_length = count($categories_arr);
             $category_ids = [];
             for($index = 0; $index < $arr_length; $index++) {
@@ -92,11 +84,9 @@
         }
 
         /**
-         * カテゴリー文字列を配列に変換して返す。
-         * カテゴリの文字数が20文字を超えていた場合、
-         * 処理を中断する。
-         * @param string: $categories
-         * @return array: $categories_arr
+         * カテゴリー文字列を配列に変換。
+         * @param string $categories
+         * @return array $categories_arr
          */
         public function strToArr(string $categories)
         {
@@ -108,11 +98,9 @@
         }
 
         /**
-         * memoのidと一致するcategoryレコードのnameを取得して返す。
-         * @param object $memos 
-         * memoのコレクション
-         * @return object $categories
-         * categoryコレクションのnameカラムだけ抜き出したコレクション。
+         * メモに紐づくカテゴリを取得
+         * @param object $memos メモのcollection
+         * @return object $categories カテゴリーのname
          */
         public function getCategories(object $memos)
         {
@@ -166,11 +154,11 @@
             $all_memos = Memo::where('user_id', $user_id)->get();
             $categories = $this->getCategories($all_memos)->slice(0, 15);
 
-            if($sort == 'ascend') {
+            if($sort === 'ascend') {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'desc')
                         ->where('memo', 'LIKE', "%$search_word%")->get();
-            } elseif($sort == "descend") {
+            } elseif($sort === "descend") {
                 $memo_collection = Memo::where('user_id', $user_id)
                         ->orderBy('updated_at', 'asc')
                         ->where('memo', 'LIKE', "%$search_word%")->get();
@@ -180,9 +168,7 @@
                         ->where('memo', 'LIKE', "%$search_word%")->get();
             }
 
-            if(empty($current_page)) {
-                $current_page = 1;
-            }
+            if(empty($current_page)) $current_page = 1;
 
             if($memo_collection->isEmpty()) {
                 $total_pages = 0;
@@ -213,9 +199,7 @@
             $categories = $this->getCategories($all_memos)->slice(0, 15);
             $memo_collection = $this->getMemos($category, $sort);
 
-            if(empty($current_page)) {
-                $current_page = 1;
-            }
+            if(empty($current_page)) $current_page = 1;
 
             if($memo_collection->isEmpty()) {
                 $total_pages = 0;

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreMemoRequest;
 use App\Models\Memo;
-use App\Models\Category;
 use App\Services\MemoService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
@@ -157,6 +156,8 @@ class MemoController extends Controller
         $search_word = $request->input('search_word');
         $current_page = $request->input('page');
         $sort = $request->input('sort');
+
+        if($current_page === null) $current_page = 1;
         if(mb_strlen($search_word) > 40) {
             return redirect()->route('dashboard')->with('message', '検索語句が長すぎます。');
         } elseif($search_word === null) {
