@@ -11,12 +11,10 @@ use App\Services\CategoryService;
 class CategoryController extends Controller
 {
     private $category;
+
     /**
-     * コンストラクタでmiddleware('auth');
-     * を設定しているので、ログイン前では
-     * カテゴリに関するデータにはアクセスできません。
-     * @param $categoryService
-     * カテゴリーに関するサービスクラス。
+     * 認証前ではカテゴリーに関するデータにはアクセス不可
+     * @param App\Services\CategoryService $categoryService カテゴリーのサービスクラス
      * @return void
      */
     public function __construct(CategoryService $categoryService)
@@ -25,7 +23,12 @@ class CategoryController extends Controller
         $this->category = $categoryService;
     }
 
-    public function index(Request $request)
+    /**
+     * カテゴリーの全権取得
+     * @return Illuminate\View\View 
+     * @return Illuminate\View\View カテゴリ一覧画面
+     */
+    public function index()
     {
         $user_id = Auth::id();
         $categories = Category::where('user_id', $user_id)->get();
@@ -33,11 +36,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * この関数にはメモ記録画面で入力されたカテゴリを受け取り
-     * 1つずつカテゴリtableに保存する機能があります。
-     *
-     * @param string $categories : メモ記録画面で入力されたカテゴリ
-     * @param int $memo_id : メモのid
+     * カテゴリーの保存
+     * @param string $categories メモ記録画面で入力されたカテゴリ
+     * @param int $memo_id メモのid
      * @return void
      */
     public function store(string $categories, int $memo_id)
@@ -47,10 +48,11 @@ class CategoryController extends Controller
     }
 
     /**
+     * メモに対応するカテゴリを取得
      * @param object $memos
-     * memoコレクション。
+     * memoのcollection
      * @return object $categories
-     * categoryコレクション。
+     * categoryのcollection
      */
     public function getCategories(object $memos)
     {

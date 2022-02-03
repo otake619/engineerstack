@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Mail\ContactSendMail;
 use Illuminate\Support\Facades\Mail;
+use Exception;
 
 class ContactController extends Controller
 {
@@ -72,9 +73,17 @@ class ContactController extends Controller
                 ->withInput($inputs);
 
         } else {
-            Mail::to($inputs['email'])->send(new ContactSendMail($inputs));
-            $request->session()->regenerateToken();
-            return view('contact.thanks');
+            try {
+                $admin_email = "ryoheiotake@gmail.com";
+                Mail::to($admin_email)->send(new ContactSendMail($inputs));
+                Mail::to($inputs['email'])->send(new ContactSendMail($inputs));
+                $request->session()->regenerateToken();
+                return view('contact.thanks');
+            } catch(Exception $e) {
+                return redirect()
+                    ->route('contact.index')
+                    ->with('alert', 'お問い合わせに失敗しました。');
+            }
         }
     }
 }

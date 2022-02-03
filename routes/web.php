@@ -32,7 +32,7 @@ Route::prefix('memos')->group(function () {
     Route::get('create', [MemoController::class, 'create'])->name('memos.create');
     Route::post('store', [MemoController::class, 'store'])->middleware('throttle:3, 1')->name('memos.store');
     Route::get('{memo_id}/edit', [MemoController::class, 'edit'])->name('memos.edit');
-    Route::post('update', [MemoController::class, 'update'])->name('memos.update');
+    Route::post('update', [MemoController::class, 'update'])->middleware('throttle:10, 1')->name('memos.update');
     Route::post('{memo_id}/destroy', [MemoController::class, 'destroy'])->name('memos.destroy');
     Route::post('show', [MemoController::class, 'show'])->name('memos.show');
     Route::get('search', [MemoController::class, 'searchKeyword'])->name('memos.search');

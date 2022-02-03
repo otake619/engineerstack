@@ -70,9 +70,9 @@
                 <p>{{ $message }}</p>
             </div>
         @endisset
-        @if (session('message'))
+        @if (session('alert'))
             <div class="notification is-danger has-text-centered">
-                {{ session('message') }}
+                {{ session('alert') }}
             </div>
         @endif
     </section>
