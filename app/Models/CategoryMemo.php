@@ -21,13 +21,10 @@ class CategoryMemo extends Model
     ];
 
     /**
-     * メモ記録画面で入力されたメモデータのうち、
-     * メモとカテゴリを紐づける役割であるCategoryMemoレコードを
-     * DBへ格納する関数。
-     * @param int $memo_id
-     * memoレコードのid。
-     * @param int $category_id
-     * categoryレコードのid。
+     * カテゴリーに重複がないようにメモIDとカテゴリーIDを対応させて
+     * 中間テーブルにレコードを保存。
+     * @param int $memo_id メモのID
+     * @param int $category_id カテゴリーのID
      * @return void
      */
     public static function store(int $memo_id, int $category_id)

@@ -22,13 +22,10 @@ class Memo extends Model
     ];
 
     /**
-     * メモ記録画面で入力されたメモをDBへ格納する関数。
-     * @param int $user_id
-     * ユーザーのid。
-     * @param string $memo
-     * メモデータ。
-     * @return int $memo->id 
-     * DBに格納されたmemoレコードのid。
+     * メモの保存
+     * @param int $user_id ユーザーID
+     * @param string $memo メモのテキスト
+     * @return int $memo->id メモのID
      */
     public static function store(int $user_id, string $memo)
     {
@@ -41,8 +38,8 @@ class Memo extends Model
     }
 
     /**
-     * Memoレコードに紐づくCategoryレコードを返す関数。
-     * @return mixed Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * 中間テーブルを使用してメモに対応するカテゴリーを取得
+     * @return mixed Illuminate\Database\Eloquent\Relations\BelongsToMany カテゴリー
      */
     public function categories()
     {

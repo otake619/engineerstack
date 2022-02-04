@@ -22,9 +22,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * カテゴリーの全権取得
-     * @return Illuminate\View\View 
-     * @return Illuminate\View\View カテゴリ一覧画面
+     * カテゴリーの一覧取得
+     * @return Illuminate\View\View カテゴリー一覧画面
      */
     public function index()
     {
@@ -35,26 +34,24 @@ class CategoryController extends Controller
 
     /**
      * カテゴリーの保存
-     * @param string $categories メモ記録画面で入力されたカテゴリ
-     * @param int $memo_id メモのid
-     * @return void
+     * @param string $categories カテゴリーのname
+     * @param int $memo_id メモのID
+     * @return int $count_category カテゴリーの要素数
      */
     public function store(string $categories, int $memo_id)
     {
-        $insert_categories = $this->category->insertCategoryMemos($categories, $memo_id);
-        return $insert_categories;
+        $count_category = $this->category->insertCategoryMemos($categories, $memo_id);
+        return $count_category;
     }
 
     /**
      * メモに対応するカテゴリを取得
-     * @param object $memos
-     * memoのcollection
-     * @return object $categories
-     * categoryのcollection
+     * @param Illuminate\Support\Collection $memos メモのcollection
+     * @return Illuminate\Support\Collection $categories カテゴリーのcollection
      */
     public function getCategories(object $memos)
     {
-        $category_arr = $this->category->getCategories($memos);
-        return $category_arr;
+        $categories = $this->category->getCategories($memos);
+        return $categories;
     }
 }

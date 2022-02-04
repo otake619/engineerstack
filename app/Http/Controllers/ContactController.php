@@ -10,9 +10,9 @@ use Exception;
 class ContactController extends Controller
 {
     /**
+     * お問い合わせ画面を返す。
      * @param void
-     * @return Illuminate\View\View
-     * お問い合わせ画面を返します。
+     * @return Illuminate\View\View お問い合わせ画面
      */
     public function index()
     {
@@ -20,15 +20,10 @@ class ContactController extends Controller
     }
 
     /**
-     * お問い合わせ画面で入力された内容にバリデーションを
-     * かけて、問題がなければお問い合わせ内容の確認画面を
-     * 返します。入力内容に問題があった場合は、お問い合わせ画面
-     * にリダイレクトし、エラー内容が表示されます。
-     * 
-     * @param Illuminate\Http\Request $request
-     * name, email, category, bodyが入っています。
-     * @return Illuminate\View\View
-     * お問い合わせ内容の確認画面を返します。
+     * バリデーションを実行し、入力値の確認画面を返す。
+     * 入力値に問題があれば、お問い合わせ画面でエラーを表示。
+     * @param Illuminate\Http\Request $request メールの差出人,アドレス,相談種別,本文
+     * @return Illuminate\View\View お問い合わせ内容の確認画面
      */
     public function confirm(Request $request)
     {
@@ -47,13 +42,11 @@ class ContactController extends Controller
     }
 
     /**
-     * 入力値にバリデーションをかけて、問題がなければ
-     * メールを運営に送信します。送信後、お問い合わせ送信
-     * 完了画面を返します。
+     * バリデーションをかけて、メールを送信し完了画面を表示。
+     * 入力値に問題があった場合はエラーが表示される。
      * @param Illuminate\Http\Request $request
-     * name, email, category, body, actionが入っています。
-     * @return Illuminate\View\View
-     * お問い合わせ送信完了画面を返します。
+     * メールの差出人,アドレス,相談種別,本文,アクション
+     * @return Illuminate\View\View お問い合わせ送信完了画面
      */
     public function send(Request $request)
     {

@@ -11,10 +11,7 @@ use App\Models\CategoryMemo;
 class CategoryMemosController extends Controller
 {
     /**
-     * コンストラクタでmiddleware('auth');
-     * を設定しているので、ログイン前では
-     * メモに関するデータにはアクセスできません。
-     * 
+     * 認証前はアクセス不可。
      * @return void
      */
     public function __construct()
@@ -23,12 +20,9 @@ class CategoryMemosController extends Controller
     }
 
     /**
-     * memoレコードとcategoryレコードを紐づけるための
-     * CategoryMemosレコードをDBへinsertする。
-     * @param int $memo_id
-     * memoレコードのid。
-     * @param int $category_id
-     * categoryレコードのid。
+     * 中間テーブルにメモとカテゴリーを紐づけるレコードを保存。
+     * @param int $memo_id メモのID
+     * @param int $category_id カテゴリーのID
      * @return void
      */
     public function store(int $memo_id, int $category_id)

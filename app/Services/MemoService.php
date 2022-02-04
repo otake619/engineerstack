@@ -7,10 +7,11 @@
 
     class MemoService {
         /**
-         * categoriesテーブルにカテゴリを挿入
+         * テーブルにカテゴリーを挿入してカテゴリーの要素数を取得
          * @param string $categories カテゴリ文字列
-         * @param int $memo_id メモのid
-         * @return int $insert_categories カテゴリの配列数
+         * @param int $memo_id メモID
+         * @return int $insert_categories カテゴリの要素数(通常)
+         * @return int -1 カテゴリーの要素数が異常(異常)
          */
         public function insertCategories(string $categories, int $memo_id)
         {
@@ -22,7 +23,8 @@
         }
 
         /**
-         * カテゴリーの文字数が20文字よりも多いか判定
+         * カテゴリーの文字数が20文字よりも多いか判定して
+         * 20文字以下ならカテゴリーを返す
          * @param array $categories カテゴリ
          * @return Boolean false 20文字よりも多い場合
          * @return array $categories 20文字以下の場合
@@ -40,8 +42,8 @@
         }
 
         /**
-         * メモにアクセスする際に所有者か判定
-         * @param int $memo_id メモのid
+         * メモIDからアクセスが所有者によるものか判定
+         * @param int $memo_id メモID
          * @return Boolean true 所有者だった場合
          * @return Boolean false 所有者ではなかった場合
          */
@@ -55,11 +57,13 @@
         }
 
         /**
-         * 中間テーブル(CategoryMemos)の更新
-         * @param int $memo_id　メモのid。
-         * @param string $categories カテゴリ
-         * @return int $arr_length カテゴリ配列の要素数(カテゴリが20文字以内)
-         * @return int -1 カテゴリが20文字より多かった場合
+         * 中間テーブル(CategoryMemos)のレコードの更新を行う。
+         * カテゴリーの要素数が6以上なら更新しない。
+         * カテゴリーの要素数を返す。
+         * @param int $memo_id　メモID
+         * @param string $categories カテゴリーのname
+         * @return int $arr_length カテゴリーの要素数
+         * @return int -1 カテゴリーの要素数が6以上
          */
         public function categoriesSync(int $memo_id, string $categories)
         {
@@ -84,23 +88,23 @@
         }
 
         /**
-         * カテゴリー文字列を配列に変換。
-         * @param string $categories
-         * @return array $categories_arr
+         * 文字列を配列に変換。
+         * @param string $str 文字列
+         * @return array $arr 配列
          */
-        public function strToArr(string $categories)
+        public function strToArr(string $str)
         {
             $separater = ",";
-            $categories_arr = explode($separater, $categories);
-            $categories_arr = array_filter($categories_arr, "strlen");
-            $categories_arr = array_map("trim", $categories_arr);
-            return $categories_arr;
+            $arr = explode($separater, $str);
+            $arr = array_filter($arr, "strlen");
+            $arr = array_map("trim", $arr);
+            return $arr;
         }
 
         /**
-         * メモに紐づくカテゴリを取得
+         * メモに紐づくカテゴリを取得。
          * @param object $memos メモのcollection
-         * @return object $categories カテゴリーのname
+         * @return object $categories カテゴリーのcollection
          */
         public function getCategories(object $memos)
         {
@@ -111,8 +115,10 @@
         }
 
         /**
-         * 
-         * 
+         * 検索語句と部分一致するカテゴリーに紐づくメモの取得。
+         * @param string $search_word 検索語句
+         * @param string $sort ソート方法
+         * @return Illuminate\Support\Collection $memos メモのcollection
          */
         public function getMemos(string $search_word, ?string $sort)
         {                       
@@ -140,11 +146,9 @@
         }
 
         /**
-         * この関数はキーワードでのメモ検索を担当しています。
-         * @param Illuminate\Http\Request $request
-         * $requestには、キーワード、現在のページ番号が入っています。
-         * @return Illuminate\View\View
-         * メモ検索結果を返します。
+         * 検索語句に部分一致するメモを取得。
+         * @param Illuminate\Http\Request $request 検索語句, 現在のページ番号,ソート方法
+         * @return Illuminate\View\View メモ検索結果
          */
         public function searchKeyword(string $search_word, int $current_page, string $sort)
         {
@@ -183,11 +187,12 @@
         }
 
         /**
-         * この関数はカテゴリでのメモ検索を担当しています。
-         * @param Illuminate\Http\Request $request
-         * $requestには、カテゴリ名が入っています。
-         * @return Illuminate\View\View
-         * メモ検索結果を返します。
+         * 検索語句に部分一致するカテゴリーを取得して、
+         * カテゴリーに紐づくメモを取得。
+         * @param string $search_word 検索語句
+         * @param ?int $current_page 現在のページ番号
+         * @param ?string $sort ソート方法
+         * @return Illuminate\View\View メモ検索結果
          */
         public function searchCategory(string $search_word, ?int $current_page, ?string $sort)
         {
