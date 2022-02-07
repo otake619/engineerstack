@@ -45,32 +45,32 @@
     </section>
     <section class="content has-background-primary m-5 p-5">
         <div class="introduction">
-            <div class="columns">
+            <div class="columns is-multiline is-align-items-center">
                 <div class="column">
-                </div>
-                <div class="column is-three-fifths">
                     <div class="introduction">
-                        <h4 class="has-text-white is-size-4 ml-5">EngineerStack(エンジニアスタック)とは？</h4>
-                        <p class="has-text-white is-size-5 ml-5">
+                        <h4 class="has-text-white is-size-4 m-5">EngineerStackとは？</h4>
+                        <p class="has-text-white is-size-5 m-5">
                             EngineerStackは、エンジニア向けのメモです。
-                            つまづいた点をメモとして蓄積することで、
-                            再び同じエラーに遭遇した際にメモを参照するだけで
-                            解決します。
-                        </p>
-                        <h4 class="has-text-white is-size-4 mt-5 ml-5">このような使い方もできます！</h4>
-                        <p class="has-text-white is-size-5 mt-5 ml-5">
-                            EngineerStackには、蓄積したメモをCSV形式で
-                            出力する機能を備えています。
-                            転職の際に表計算ソフトにまとめて、
-                            採用担当者に提出することで、ご自身の
-                            転職への熱意や知識量、学習量を伝えることができます。
+                            つまづいた点をメモとして蓄積することで、再び同じエラーに遭遇した際にメモを参照するだけで解決します。
                         </p>
                     </div>
-                    <hr>
                 </div>
                 <div class="column">
+                    <img src="{{ asset('images/home_screen.png' )}}" alt="ホーム画面のスクリーンショット">
                 </div>
             </div>   
+            <div class="columns is-multiline is-align-items-center">
+                <div class="column">
+                    <img src="{{ asset('images/input_screen.png') }}" alt="メモ記録画面のスクリーンショット">
+                </div>
+                <div class="column">
+                    <div class="introduction-second">
+                        <p class="has-text-white is-size-5 m-5">
+                            メモには、カテゴリーを5つまで付与することが出来ます。カテゴリーを設定することで、検索しやすさが向上します。
+                        </p>
+                    </div>
+                </div>
+            </div> 
             <div class="form">
                 <div class="m-5">
                     <div class="columns">
@@ -126,7 +126,7 @@
                 <a class="has-text-primary" href="">利用規約</a><br>
                 <a class="has-text-primary" href="">リリース</a><br>
                 <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>
