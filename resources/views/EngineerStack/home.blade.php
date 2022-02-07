@@ -28,7 +28,7 @@
                                 <form action="{{ route('memos.search') }}" method="GET" class="is-flex">
                                     @csrf 
                                     <div class="input-keyword">
-                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" maxlength="100" required>
+                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="メモ本文を検索" required>
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -89,6 +89,7 @@
         <section class="content">
             <div class="title has-text-centered m-5">
                 <p class="is-size-4 is-text-weight-bold">メモ一覧</p>
+                <p class="is-size-4 is-text-weight-bold">Showing {{ $memos->firstItem() }} to {{ $memos->lastItem() }} of {{ $memos->total() }} results</p>
             </div>
             <div class="columns">
                 <div class="column is-4">
@@ -131,15 +132,15 @@
                         </nav>
                     </div>
                 </div>
-                <div class="memos columns is-multiline">
+                <div class="memos columns is-multiline is-centered p-5">
                     @foreach($memos as $memo)
-                        <div class="column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
+                        <div class="column is-four-fifths box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     <span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
-                            <div class="memo-container mb-3">
+                            <div class="memo-container mb-3" style="word-break: break-all">
                                 <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 

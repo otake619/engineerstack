@@ -116,9 +116,9 @@
                         </nav>
                     </div>
                 </div>
-                <div class="memos columns is-multiline">
+                <div class="memos columns is-multiline is-centered p-5">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
+                        <div class="memo column is-four-fifths box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     @if($category === $search_word)
@@ -128,7 +128,7 @@
                                     @endif
                                 @endforeach
                             </div><br>
-                            <div class="memo-container mb-3">
+                            <div class="memo-container mb-3" style="word-wrap: break-word;">
                                 <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
