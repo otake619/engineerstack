@@ -25,6 +25,12 @@ Route::prefix('users')->group(function () {
     Route::post('update_password', [UserController::class, 'updatePassword'])->middleware('throttle:3, 1')->name('user.update.password');
     Route::get('reset/{token}', [ChangeEmailController::class, 'reset'])->name('email.reset');
     Route::post('destroy', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('guidelines', function (){
+        return view('EngineerStack.guidelines');
+    })->name('guidelines');
+    Route::get('privacy_policy', function (){
+        return view('EngineerStack.privacy_policy');
+    })->name('privacy_policy');
 });
 
 Route::prefix('memos')->group(function () {

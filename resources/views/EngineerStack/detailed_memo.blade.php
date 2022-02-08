@@ -83,7 +83,7 @@
                     <i class="fas fa-bookmark"></i><span id="categories"></span>
                 </div>
                 <div class="memo mt-5">
-                    <div class="memo-container">
+                    <div class="memo-container" style="word-break: break-all">
                         <p class="is-size-4">{{ $memo->memo }}</p>
                     </div>
                     <div class="settings has-text-right mt-4">
@@ -150,10 +150,9 @@
             </div>
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
-                <a class="has-text-primary" href="">利用規約</a><br>
-                <a class="has-text-primary" href="">リリース</a><br>
-                <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>
@@ -187,7 +186,6 @@
             $("#modal-close").click(function() {
                 $(".modal").toggleClass("is-active");
             });
-
         });
     </script>
 </body>

@@ -89,7 +89,7 @@
                     <p class="is-size-4 is-text-weight-bold">アカウント設定</p>
                 </div>
                 <div class="account has-text-centered">
-                    <label for="name">アカウント名</label>
+                    <label for="name">アカウント名<span class="has-text-danger">255文字以内</span></label>
                     <div class="control mt-3">
                         <form action="{{ route('user.update.name') }}" method="POST">
                             @csrf
@@ -145,9 +145,8 @@
             </div>
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
-                <a class="has-text-primary" href="">利用規約</a><br>
-                <a class="has-text-primary" href="">リリース</a><br>
-                <a class="has-text-primary" href="">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
                 <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>

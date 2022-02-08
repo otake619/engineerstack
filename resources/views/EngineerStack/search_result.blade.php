@@ -116,9 +116,9 @@
                         </nav>
                     </div>
                 </div>
-                <div class="memos columns is-multiline">
+                <div class="memos columns is-multiline is-centered p-5">
                     @foreach($memos as $memo)
-                        <div class="memo column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
+                        <div class="memo column is-four-fifths box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     @if($category === $search_word)
@@ -128,8 +128,8 @@
                                     @endif
                                 @endforeach
                             </div><br>
-                            <div class="memo-container mb-3">
-                                <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
+                            <div class="memo-container mb-3" style="word-wrap: break-word;">
+                                <p class="memo" style="word-wrap: break-word;">{!! nl2br(e(Str::limit($memo->memo, 100))) !!}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
@@ -329,10 +329,9 @@
             </div>
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
-                <a class="has-text-primary" href="">利用規約</a><br>
-                <a class="has-text-primary" href="">リリース</a><br>
-                <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>

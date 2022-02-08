@@ -28,7 +28,7 @@
                                 <form action="{{ route('memos.search') }}" method="GET" class="is-flex">
                                     @csrf 
                                     <div class="input-keyword">
-                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="キーワードで検索" maxlength="100" required>
+                                        <input class="input is-success is-6" type="text" name="search_word" placeholder="メモ本文を検索" required>
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -89,6 +89,7 @@
         <section class="content">
             <div class="title has-text-centered m-5">
                 <p class="is-size-4 is-text-weight-bold">メモ一覧</p>
+                <p class="is-size-4 is-text-weight-bold">Showing {{ $memos->firstItem() }} to {{ $memos->lastItem() }} of {{ $memos->total() }} results</p>
             </div>
             <div class="columns">
                 <div class="column is-4">
@@ -131,16 +132,16 @@
                         </nav>
                     </div>
                 </div>
-                <div class="memos columns is-multiline">
+                <div class="memos columns is-multiline is-centered p-5">
                     @foreach($memos as $memo)
-                        <div class="column is-5 box m-3" style="min-width: 300px; max-height: 300px;">
+                        <div class="column is-four-fifths box m-3" style="min-width: 300px; max-height: 300px;">
                             <div class="category">
                                 @foreach($memo->categories->pluck('name') as $category)
                                     <span class="tag is-size-6 m-1"><i class="fas fa-bookmark"></i>{{ Str::limit($category, 15) }}</span>
                                 @endforeach
                             </div><br>
-                            <div class="memo-container mb-3">
-                                <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
+                            <div class="memo-container mb-3" style="word-break: break-all">
+                                <p class="memo" style="word-wrap: break-word;">{!! nl2br(e(Str::limit($memo->memo, 100))) !!}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
@@ -190,9 +191,8 @@
             </div>
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
-                <a class="has-text-primary" href="">利用規約</a><br>
-                <a class="has-text-primary" href="">リリース</a><br>
-                <a class="has-text-primary" href="">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
                 <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
@@ -202,14 +202,5 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"
                 integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous"></script>
-    <script>
-        $(function () {
-
-        });
-
-        function truncate(str){
-            return str.length <= 100 ? str: (str.substr(0, 100)+"...");
-        }
-    </script>
 </body>
 </html>
