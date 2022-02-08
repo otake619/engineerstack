@@ -83,7 +83,7 @@
                     <i class="fas fa-bookmark"></i><span id="categories"></span>
                 </div>
                 <div class="memo mt-5">
-                    <div class="memo-container">
+                    <div class="memo-container" style="word-break: break-all">
                         <p class="is-size-4">{{ $memo->memo }}</p>
                     </div>
                     <div class="settings has-text-right mt-4">
@@ -186,7 +186,6 @@
             $("#modal-close").click(function() {
                 $(".modal").toggleClass("is-active");
             });
-
         });
     </script>
 </body>
