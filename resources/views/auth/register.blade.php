@@ -89,7 +89,7 @@
                             <h4 class="has-text-white">登録項目を入力してください。</h4>
                             <form action="{{ route('register') }}" method="POST">
                                 @csrf
-                                <label for="name" class="has-text-white"><span class="has-text-danger">*必須 40文字以内 </span>アカウント名</label>
+                                <label for="name" class="has-text-white"><span class="has-text-danger">*必須 255文字以内 </span>アカウント名</label>
                                 <input class="input" id="name" type="text" name="name" placeholder="stack.json" required autofocus>
                                 <label for="email" class="has-text-white"><span class="has-text-danger">*必須 </span>メールアドレス</label>
                                 <input class="input" id="email" name="email" type="email" placeholder="engineer@stack.com" required>
@@ -98,10 +98,10 @@
                                 <label for="password" class="has-text-white"><span class="has-text-danger">*必須 </span>パスワード(確認用)</label>
                                 <input class="input" id="password" name="password_confirmation" type="password" placeholder="********" required>
                                 <label class="checkbox has-text-white mt-3">
-                                    <input type="checkbox">
-                                    <a href="#">利用規約</a>に同意する
+                                    <input type="checkbox" id="read_guidelines">
+                                    <a class="has-text-white is-underlined" href="{{ route('guidelines') }}">利用規約</a>に同意する
                                 </label><br>
-                                <input type="submit" class="button is-primary is-light mt-5" value="アカウント作成">
+                                <input type="submit" id="submit" class="button is-primary is-light mt-5" value="アカウント作成" disabled>
                             </form>
                             <br>
                             <a class="has-text-white" href="{{ route('login') }}">登録済みの場合はこちら</a>
@@ -131,5 +131,18 @@
     </section>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/navbar.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+                integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+                crossorigin="anonymous"></script>
+    <script>
+        $('input[type="checkbox"]').change(function() {
+            let is_checked = $(this).prop('checked');
+            if(is_checked) {
+                $('#submit').prop('disabled', false);
+            } else {
+                $('#submit').prop('disabled', true);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -89,7 +89,7 @@
                     <p class="is-size-4 is-text-weight-bold">アカウント設定</p>
                 </div>
                 <div class="account has-text-centered">
-                    <label for="name">アカウント名</label>
+                    <label for="name">アカウント名<span class="has-text-danger">255文字以内</span></label>
                     <div class="control mt-3">
                         <form action="{{ route('user.update.name') }}" method="POST">
                             @csrf
