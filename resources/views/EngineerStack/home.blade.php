@@ -141,7 +141,7 @@
                                 @endforeach
                             </div><br>
                             <div class="memo-container mb-3" style="word-break: break-all">
-                                <p class="memo" style="word-wrap: break-word;">{{ Str::limit($memo->memo, 100) }}</p>
+                                <p class="memo" style="word-wrap: break-word;">{!! nl2br(e(Str::limit($memo->memo, 100))) !!}</p>
                                 <form action="{{ route('memos.show') }}" method="POST">
                                     @csrf 
                                     <input type="hidden" name="memo_id" value="{{ $memo->id }}">
