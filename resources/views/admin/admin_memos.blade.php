@@ -63,10 +63,7 @@
                                     user_id
                                 </th>
                                 <th>
-                                    memo_data
-                                </th>
-                                <th>
-                                    memo_text
+                                    memo
                                 </th>
                                 <th>
                                     作成日
@@ -92,10 +89,7 @@
                                             {{ $memo->user_id }}
                                         </th>
                                         <th>
-                                            {{ $memo->memo_data }}
-                                        </th>
-                                        <th>
-                                            {{ $memo->memo_text }}
+                                            {{ $memo->memo }}
                                         </th>
                                         <th>
                                             {{ $memo->created_at }}
