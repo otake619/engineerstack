@@ -77,8 +77,7 @@
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
                 <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
-                <a class="has-text-primary" href="">リリース</a><br>
-                <a class="has-text-primary" href="">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
                 <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>

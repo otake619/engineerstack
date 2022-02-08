@@ -28,7 +28,9 @@ Route::prefix('users')->group(function () {
     Route::get('guidelines', function (){
         return view('EngineerStack.guidelines');
     })->name('guidelines');
-    
+    Route::get('privacy_policy', function (){
+        return view('EngineerStack.privacy_policy');
+    })->name('privacy_policy');
 });
 
 Route::prefix('memos')->group(function () {
