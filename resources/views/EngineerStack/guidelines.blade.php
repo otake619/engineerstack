@@ -153,7 +153,7 @@
                 <li>当方はユーザーに対し、前項による本規約の変更にあたり、事前に、本規約を変更する旨及び変更後の本規約の内容並びにその効力発生時期を通知します。</li>
             </ol>
             <h1 class="has-text-white">第9条（個人情報の取扱い）</h1>
-            <p class="has-text-white">当社は，本サービスの利用によって取得する個人情報については，当社「プライバシーポリシー」に従い適切に取り扱うものとします。</p>
+            <p class="has-text-white">当方は，本サービスの利用によって取得する個人情報については，当方「プライバシーポリシー」に従い適切に取り扱うものとします。</p>
             <h1 class="has-text-white">第10条（準拠法・裁判管轄）</h1>
             <ol class="has-text-white">
                 <li>本規約の解釈にあたっては，日本法を準拠法とします。</li>
@@ -173,7 +173,7 @@
             </div>
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
-                <a class="has-text-primary" href="">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
                 <a class="has-text-primary" href="">リリース</a><br>
                 <a class="has-text-primary" href="">プライバシーポリシー</a><br>
                 <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
