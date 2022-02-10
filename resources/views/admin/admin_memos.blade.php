@@ -72,6 +72,9 @@
                                     更新日
                                 </th>
                                 <th>
+                                    削除日
+                                </th>
+                                <th>
                                     削除
                                 </th>
                             </tr>
@@ -96,6 +99,9 @@
                                         </th>
                                         <th>
                                             {{ $memo->updated_at }}
+                                        </th>
+                                        <th>
+                                            {{ $memo->deleted_at }}
                                         </th>
                                         <th>
                                             <form action="{{ route('admin.delete.memo') }}" method="POST">
