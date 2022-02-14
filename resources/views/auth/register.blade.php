@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <title>アカウント作成 EngineerStack</title>
-    <meta name="google-site-verification" content="6Z83FzF_pB3AY2FWDQHOU5hvrGqRQLR8TfOruIae2T0" />
 </head>
 <body>
     <section class="header">
