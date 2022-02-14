@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Models\Admin;
+use Google2FA;
 
 class RegisteredUserController extends Controller
 {
@@ -47,6 +48,6 @@ class RegisteredUserController extends Controller
 
         Auth::guard('admin')->login($user);
 
-        return redirect(RouteServiceProvider::ADMIN_HOME)->with('message', '会員登録が完了しました。');
+        return redirect(RouteServiceProvider::ADMIN_HOME)->with('message', '管理者登録が完了しました。');
     }
 }

@@ -11,14 +11,8 @@ use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminMemoController;
 use App\Http\Controllers\AdminCategoryController;
+use App\Http\Controllers\AdminHomeController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/register', [RegisteredUserController::class, 'create'])
-                ->middleware('guest:admin')
-                ->name('register');
-
-Route::post('/register', [RegisteredUserController::class, 'store'])
-                ->middleware('guest:admin');
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
                 ->middleware('guest:admin')
@@ -80,5 +74,3 @@ Route::prefix('categories')->group(function () {
     Route::get('/index', [AdminCategoryController::class, 'index'])->name('get.categories');
     Route::post('/destroy', [AdminCategoryController::class, 'destroy'])->name('delete.category');            
 });
-
-

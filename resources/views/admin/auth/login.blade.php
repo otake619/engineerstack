@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>ログイン EngineerStack</title>
+    <title>管理者ログイン EngineerStack</title>
 </head>
 <body>
     <section class="header">
@@ -24,9 +24,6 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary" href="{{ route('admin.register') }}">
-                                <strong>アカウント作成</strong>
-                            </a>
                             <a class="button is-light" href="{{ route('admin.login') }}">
                                 ログイン
                             </a>
@@ -52,6 +49,11 @@
                                 </ul>
                             </div>
 	                    @endif
+                        @if (session('alert'))
+                            <div class="notification is-danger has-text-centered">
+                                {{ session('alert') }}
+                            </div>
+                        @endif
                         <form action="{{ route('admin.login') }}" method="POST" >
                             @csrf
                             <h4 class="has-text-white">ご登録情報を入力してください。</h4>
@@ -59,6 +61,8 @@
                             <input class="input" id="email" type="email" name="email" placeholder="engineer@stack.com" required autofocus>
                             <label for="password" class="has-text-white"><span class="has-text-danger">*必須 </span>パスワード</label>
                             <input class="input" id="password" name="password" type="password" placeholder="********" required>
+                            <label for="one_time_password" class="has-text-white"><span class="has-text-danger">*必須 </span>ワンタイムパスワード</label>
+                            <input class="input" id="one_time_password" name="one_time_password" type="one_time_password" placeholder="********" required>
                             <div class="block mt-4">
                                 <label for="remember_me" class="inline-flex items-center">
                                     <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
@@ -68,7 +72,7 @@
                             <input type="submit" class="button is-primary is-light mt-1" value="ログイン">
                         </form>
                         <br>
-                        <a class="has-text-white" href="{{ route('password.request') }}">パスワードを忘れた場合</a>
+                        <a class="has-text-white" href="{{ route('admin.password.request') }}">パスワードを忘れた場合</a>
                     </div>
                     <div class="column">
                     </div>
@@ -86,10 +90,9 @@
             </div>
             <div class="column m-3">
                 <p class="mb-3">EngineerStack</p>
-                <a class="has-text-primary" href="">利用規約</a><br>
-                <a class="has-text-primary" href="">リリース</a><br>
-                <a class="has-text-primary" href="">プライバシーポリシー</a><br>
-                <a class="has-text-primary" href="">お問い合わせ</a>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
         </div>
     </section>

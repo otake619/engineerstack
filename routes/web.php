@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ChangeEmailController;
+use App\Http\Controllers\AdminHomeController;
 
 Route::get('/', function () {
     return view('auth.register');
@@ -61,10 +62,6 @@ Route::prefix('contact')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::prefix('admin')->name('admin.')->group(function(){
-
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->middleware(['auth:admin'])->name('dashboard');
-    
+    Route::get('/dashboard', [AdminHomeController::class, 'index'])->name('dashboard');
     require __DIR__.'/admin.php';
 });

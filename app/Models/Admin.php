@@ -16,11 +16,13 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
+        'google2fa_secret',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'google2fa_secret',
     ];
 
     protected $casts = [

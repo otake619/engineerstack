@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <title>管理者画面 ホーム</title>
+    <title>管理者認証</title>
 </head>
 <body>
     <section class="header">
@@ -69,13 +69,24 @@
                 </a>
             </div>
             <div class="server-info column is-three-quarter">
-                <div class="contact mt-3">
-                    <div class="box">
-                        <div class="QRCode">
-                            {!! $qr !!}
+                <div class="admin-auth">
+                    <div class="panel panel-info">
+                        <div class="panel-header with-border">
+                            <h3 class="panel-title">ワンタイムキーで認証する</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form class="form-horizontal" method="POST" action="{{ route('admin.2fa') }}">
+                                @csrf
+                                <div class="input-group input-group-lg">
+                                    <input id="one_time_password" type="number" class="form-control" name="one_time_password" placeholder="123456" required>
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-info"><i class="fa fa-check"></i> 認証</button>
+                                    </span>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </section>
