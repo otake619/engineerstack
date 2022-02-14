@@ -24,9 +24,6 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary" href="{{ route('admin.register') }}">
-                                <strong>アカウント作成</strong>
-                            </a>
                             <a class="button is-light" href="{{ route('admin.login') }}">
                                 ログイン
                             </a>
