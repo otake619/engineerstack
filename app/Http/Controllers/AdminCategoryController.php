@@ -10,6 +10,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Exception;
+use App\Http\Controllers\AdminHomeController;
 
 class AdminCategoryController extends Controller
 {
@@ -19,7 +20,7 @@ class AdminCategoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:admin');
+        $this->middleware(['auth:admin']);
     }
 
     /**

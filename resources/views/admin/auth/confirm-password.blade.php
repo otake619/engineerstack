@@ -1,36 +1,76 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
-
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <title>管理者パスワード確認 EngineerStack</title>
+</head>
+<body>
+    <section class="header">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item is-size-3 has-text-weight-semibold has-text-primary" href="{{ route('admin.login') }}">
+                    EngineerStack
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-light" href="{{ route('admin.login') }}">
+                                ログイン
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section class="content has-background-primary m-5 p-5">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <form method="POST" action="{{ route('admin.password.confirm') }}">
+                    @csrf
+                    <div>
+                        <label for="password">パスワード</label>
+                        <input id="password" class="mt-1"
+                                        type="password"
+                                        name="password"
+                                        required autocomplete="current-password" />
+                    </div>
+                    <div class="mt-4">
+                        <button>
+                            送信
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
-        <form method="POST" action="{{ route('password.confirm') }}">
-            @csrf
-
-            <!-- Password -->
-            <div>
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full"
-                                type="password"
-                                name="password"
-                                required autocomplete="current-password" />
+    </section>
+    <section class="footer">
+        <div class="columns">
+            <div class="column">
+                <a class="navbar-item is-size-5 has-text-weight-semibold has-text-primary" href="{{ route('admin.login') }}">
+                    EngineerStack
+                </a>
+                <span class="m-3">&copy;otake619 2021</span>
             </div>
-
-            <div class="flex justify-end mt-4">
-                <x-button>
-                    {{ __('Confirm') }}
-                </x-button>
+            <div class="column m-3">
+                <p class="mb-3">EngineerStack</p>
+                <a class="has-text-primary" href="{{ route('guidelines') }}">利用規約</a><br>
+                <a class="has-text-primary" href="{{ route('privacy_policy') }}">プライバシーポリシー</a><br>
+                <a class="has-text-primary" href="{{ route('contact.index') }}">お問い合わせ</a>
             </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+        </div>
+    </section>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/navbar.js') }}"></script>
+</body>
+</html>

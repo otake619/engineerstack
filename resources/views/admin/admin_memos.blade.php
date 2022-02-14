@@ -63,16 +63,16 @@
                                     user_id
                                 </th>
                                 <th>
-                                    memo_data
-                                </th>
-                                <th>
-                                    memo_text
+                                    memo
                                 </th>
                                 <th>
                                     作成日
                                 </th>
                                 <th>
                                     更新日
+                                </th>
+                                <th>
+                                    削除日
                                 </th>
                                 <th>
                                     削除
@@ -92,16 +92,16 @@
                                             {{ $memo->user_id }}
                                         </th>
                                         <th>
-                                            {{ $memo->memo_data }}
-                                        </th>
-                                        <th>
-                                            {{ $memo->memo_text }}
+                                            {{ $memo->memo }}
                                         </th>
                                         <th>
                                             {{ $memo->created_at }}
                                         </th>
                                         <th>
                                             {{ $memo->updated_at }}
+                                        </th>
+                                        <th>
+                                            {{ $memo->deleted_at }}
                                         </th>
                                         <th>
                                             <form action="{{ route('admin.delete.memo') }}" method="POST">
