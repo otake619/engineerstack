@@ -19,8 +19,8 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 
-    AuthUserFile /app/.htpasswd
-    AuthType Basic
-    AuthName "Restricted Access"
-    Require valid-user
+    #AuthUserFile /app/.htpasswd
+    #AuthType Basic
+    #AuthName "Restricted Access"
+    #Require valid-user
 </IfModule>
