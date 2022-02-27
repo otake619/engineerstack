@@ -11,7 +11,7 @@ Route::get('/', function () {
     return view('auth.register');
 });
 
-Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [MemoController::class, 'index'])->middleware(['auth','verified'])->name('dashboard');
 
 Route::prefix('users')->group(function () {
     Route::get('show', [UserController::class, 'show'])->name('user.show');

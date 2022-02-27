@@ -40,7 +40,7 @@
         <div class="columns is-centered">
             <div class="column is-half">
                 <div class="mb-4">
-                    <p>アカウント登録ありがとうございます。アプリをご使用になる前に、ただいま送信させていただいたメールのリンクをクリックして認証してください。もしメールが届いていない場合は、もう一度メールを送らせて頂きます。</p>
+                    <p class="has-text-white">アカウント登録ありがとうございます。アプリをご使用になる前に、ただいま送信させていただいたメールのリンクをクリックして認証してください。もしメールが届いていない場合は、もう一度メールを送らせて頂きます。</p>
                 </div>
                 @if (session('status') == 'verification-link-sent')
                     <div class="mb-4">
@@ -51,14 +51,14 @@
                     <form method="POST" action="{{ route('verification.send') }}">
                         @csrf
                         <div>
-                            <button>
+                            <button class="button is-light">
                                 認証メールを再送信する
                             </button>
                         </div>
                     </form>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit">
+                        <button class="button is-light mt-5" type="submit">
                             ログアウト
                         </button>
                     </form>
