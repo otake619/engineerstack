@@ -84,7 +84,7 @@
                 </div>
                 <div class="memo mt-5">
                     <div class="memo-container" style="word-break: break-all">
-                        <p class="is-size-4">{{ $memo->memo }}</p>
+                        <p class="memo is-size-4" style="word-wrap: break-word;">{!! nl2br(e($memo->memo)) !!}</p>
                     </div>
                     <div class="settings has-text-right mt-4">
                         <div class="dropdown">
